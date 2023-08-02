@@ -1,0 +1,406 @@
+{% extends 'lms_main/base.html' %}
+{% load static %}
+
+{% block style %} 
+    .background-image-container-s1 {
+        /* Set your other CSS properties here */
+        background-image: url("{% static 'images/slider/s-1.jpg' %}");
+}
+
+    .background-image-container-s2 {
+        /* Set your other CSS properties here */
+        background-image: url("{% static 'images/slider/s-2.jpg' %}");
+    }
+
+    .background-image-container-s3 {
+        /* Set your other CSS properties here */
+        background-image: url("{% static 'images/slider/s-3.jpg' %}");
+    }
+
+{% endblock %}
+
+{% block navbar %}
+    {% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+{% block main %}
+
+<section id="slider-part" class="slider-active">
+    <div class="single-slider bg_cover pt-150 background-image-container-s1" data-overlay="4">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-7 col-lg-9">
+                    <div class="slider-cont">
+                        <h1 data-animation="bounceInLeft" data-delay="1s">Choose the right theme for education</h1>
+                        <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus.
+                            Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt Sed fringilla mauri amet
+                            nibh.</p>
+                        <ul>
+                            <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a>
+                            </li>
+                            <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get
+                                    Started</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- single slider -->
+
+    <div class="single-slider bg_cover pt-150 background-image-container-s2" data-overlay="4">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-7 col-lg-9">
+                    <div class="slider-cont">
+                        <h1 data-animation="bounceInLeft" data-delay="1s">Choose the right theme for education</h1>
+                        <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus.
+                            Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt Sed fringilla mauri amet
+                            nibh.</p>
+                        <ul>
+                            <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a>
+                            </li>
+                            <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get
+                                    Started</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- single slider -->
+
+    <div class="single-slider bg_cover pt-150 background-image-container-s3" data-overlay="4">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-7 col-lg-9">
+                    <div class="slider-cont">
+                        <h1 data-animation="bounceInLeft" data-delay="1s">Choose the right theme for education</h1>
+                        <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus.
+                            Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt Sed fringilla mauri amet
+                            nibh.</p>
+                        <ul>
+                            <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a>
+                            </li>
+                            <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get
+                                    Started</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- single slider -->
+</section>
+<!--====== COURSE PART START ======-->
+
+<section id="course-part" class="pt-115 pb-120 gray-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="section-title pb-45">
+                    <h5>Our course</h5>
+                    <h2>Featured courses </h2>
+                </div> <!-- section title -->
+            </div>
+        </div> <!-- row -->
+        <div class="row course-slied mt-30">
+            <div class="col-lg-4">
+                <div class="singel-course">
+                    <div class="thum">
+                        <div class="image">
+                            <img src="{% static 'images/course/cu-1.jpg' %}" alt="Course">
+                        </div>
+                        <div class="price">
+                            <span>Free</span>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <ul>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>(20 Reviws)</span>
+                        <a href="courses-singel.html">
+                            <h4>Learn basis javascirpt from start for beginner</h4>
+                        </a>
+                        <div class="course-teacher">
+                            <div class="thum">
+                                <a href="#"><img src="{% static 'images/course/teacher/t-1.jpg' %}" alt="teacher"></a>
+                            </div>
+                            <div class="name">
+                                <a href="#">
+                                    <h6>Mark anthem</h6>
+                                </a>
+                            </div>
+                            <div class="admin">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                    <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- singel course -->
+            </div>
+            <div class="col-lg-4">
+                <div class="singel-course">
+                    <div class="thum">
+                        <div class="image">
+                            <img src="{% static 'images/course/cu-2.jpg' %}" alt="Course">
+                        </div>
+                        <div class="price">
+                            <span>Free</span>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <ul>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>(20 Reviws)</span>
+                        <a href="courses-singel.html">
+                            <h4>Learn basis javascirpt from start for beginner</h4>
+                        </a>
+                        <div class="course-teacher">
+                            <div class="thum">
+                                <a href="#"><img src="{% static 'images/course/teacher/t-2.jpg' %}" alt="teacher"></a>
+                            </div>
+                            <div class="name">
+                                <a href="#">
+                                    <h6>Mark anthem</h6>
+                                </a>
+                            </div>
+                            <div class="admin">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                    <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- singel course -->
+            </div>
+            <div class="col-lg-4">
+                <div class="singel-course">
+                    <div class="thum">
+                        <div class="image">
+                            <img src="{% static 'images/course/cu-3.jpg' %}" alt="Course">
+                        </div>
+                        <div class="price">
+                            <span>Free</span>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <ul>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>(20 Reviws)</span>
+                        <a href="courses-singel.html">
+                            <h4>Learn basis javascirpt from start for beginner</h4>
+                        </a>
+                        <div class="course-teacher">
+                            <div class="thum">
+                                <a href="#"><img src="{% static 'images/course/teacher/t-3.jpg' %}" alt="teacher"></a>
+                            </div>
+                            <div class="name">
+                                <a href="#">
+                                    <h6>Mark anthem</h6>
+                                </a>
+                            </div>
+                            <div class="admin">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                    <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- singel course -->
+            </div>
+            <div class="col-lg-4">
+                <div class="singel-course">
+                    <div class="thum">
+                        <div class="image">
+                            <img src="{% static 'images/course/cu-4.jpg' %}" alt="Course">
+                        </div>
+                        <div class="price">
+                            <span>Free</span>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <ul>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>(20 Reviws)</span>
+                        <a href="courses-singel.html">
+                            <h4>Learn basis javascirpt from start for beginner</h4>
+                        </a>
+                        <div class="course-teacher">
+                            <div class="thum">
+                                <a href="#"><img src="{% static 'images/course/teacher/t-4.jpg' %}" alt="teacher"></a>
+                            </div>
+                            <div class="name">
+                                <a href="#">
+                                    <h6>Mark anthem</h6>
+                                </a>
+                            </div>
+                            <div class="admin">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                    <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- singel course -->
+            </div>
+            <div class="col-lg-4">
+                <div class="singel-course">
+                    <div class="thum">
+                        <div class="image">
+                            <img src="{% static 'images/course/cu-5.jpg' %}" alt="Course">
+                        </div>
+                        <div class="price">
+                            <span>Free</span>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <ul>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>(20 Reviws)</span>
+                        <a href="courses-singel.html">
+                            <h4>Learn basis javascirpt from start for beginner</h4>
+                        </a>
+                        <div class="course-teacher">
+                            <div class="thum">
+                                <a href="#"><img src="{% static 'images/course/teacher/t-5.jpg' %}" alt="teacher"></a>
+                            </div>
+                            <div class="name">
+                                <a href="#">
+                                    <h6>Mark anthem</h6>
+                                </a>
+                            </div>
+                            <div class="admin">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                    <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- singel course -->
+            </div>
+        </div> <!-- course slied -->
+    </div> <!-- container -->
+</section>
+
+
+<!--====== TEACHERS PART START ======-->
+
+<section id="teachers-part" class="pt-70 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="section-title mt-50">
+                    <h5>Featured Teachers</h5>
+                    <h2>Meet Our teachers</h2>
+                </div> <!-- section title -->
+                <div class="teachers-cont">
+                    <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons
+                        equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi
+                        accumsan ipsum velit. Nam nec tellus a odio tincidunt mauris. <br> <br> auci elit cons equat
+                        ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi
+                        accumsan ipsum velit. Nam nec tellus a odio tincidunt mauris</p>
+                    <a href="#" class="main-btn mt-55">Career with us</a>
+                </div> <!-- teachers cont -->
+            </div>
+            <div class="col-lg-6 offset-lg-1">
+                <div class="teachers mt-20">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="singel-teachers mt-30 text-center">
+                                <div class="image">
+                                    <img src="{% static 'images/teachers/t-1.jpg' %}" alt="Teachers">
+                                </div>
+                                <div class="cont">
+                                    <a href="teachers-singel.html">
+                                        <h6>Mark alen</h6>
+                                    </a>
+                                    <span>Vice chencelor</span>
+                                </div>
+                            </div> <!-- singel teachers -->
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="singel-teachers mt-30 text-center">
+                                <div class="image">
+                                    <img src="{% static 'images/teachers/t-2.jpg' %}" alt="Teachers">
+                                </div>
+                                <div class="cont">
+                                    <a href="teachers-singel.html">
+                                        <h6>David card</h6>
+                                    </a>
+                                    <span>Pro chencelor</span>
+                                </div>
+                            </div> <!-- singel teachers -->
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="singel-teachers mt-30 text-center">
+                                <div class="image">
+                                    <img src="{% static 'images/teachers/t-3.jpg' %}" alt="Teachers">
+                                </div>
+                                <div class="cont">
+                                    <a href="teachers-singel.html">
+                                        <h6>Rebeka alig</h6>
+                                    </a>
+                                    <span>Pro chencelor</span>
+                                </div>
+                            </div> <!-- singel teachers -->
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="singel-teachers mt-30 text-center">
+                                <div class="image">
+                                    <img src="{% static 'images/teachers/t-4.jpg' %}" alt="Teachers">
+                                </div>
+                                <div class="cont">
+                                    <a href="teachers-singel.html">
+                                        <h6>Hanna bein</h6>
+                                    </a>
+                                    <span>Aerobics head</span>
+                                </div>
+                            </div> <!-- singel teachers -->
+                        </div>
+                    </div> <!-- row -->
+                </div> <!-- teachers -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+
+<!--====== TEACHERS PART ENDS ======-->
+
+{% include 'lms_main/components/footer.html' %}
+
+<!--====== BACK TO TP PART START ======-->
+
+<a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+<!--====== BACK TO TP PART ENDS ======-->
+
+{% endblock %}
