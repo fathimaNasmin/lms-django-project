@@ -7,6 +7,13 @@
 
 {% block main %}
 <h1>Signup Form</h1>
+<form action="{% url 'signup' %}" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Signup</button>
+</form>
+
+<p class="text-danger">{{form.errors}}</p>
 {% endblock %}
 
 
