@@ -3,20 +3,35 @@ from . import models
 from django import forms
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import UserCreationForm 
+from crispy_bootstrap5.bootstrap5 import FloatingField
 
 class SignUpForm(UserCreationForm):
     """Form Class for SignUp form"""
     def __init__(self, *args, **kwargs):
+
         super(SignUpForm, self).__init__(*args, **kwargs)
+
+        self.fields['first_name'].widget = forms.TextInput(
+            attrs={'placeholder': 'First Name'})
+
+        self.fields['last_name'].widget = forms.TextInput(
+            attrs={'placeholder': 'Last Name'})
+
+        self.fields['email'].widget = forms.EmailInput(
+            attrs={'placeholder': 'Email'})
+
         self.fields['password1'].widget = forms.PasswordInput(
             attrs={'placeholder': 'Password'})
+
         self.fields['password2'].widget = forms.PasswordInput(
             attrs={'placeholder': 'Password confirmation'})
 
-        for fieldname in ['email', 'password1', 'password2']:
+        for fieldname in ['first_name', 'last_name', 'email', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
-            # self.fields[fieldname].label = ""
-            # self.fields[fieldname].widget.attrs['class'] = 'form-control border-0 border-bottom'
+            self.fields[fieldname].label = ""
+            self.fields[fieldname].widget.attrs['class'] = 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1'
+
+        
 
     class Meta:
         model = models.User
