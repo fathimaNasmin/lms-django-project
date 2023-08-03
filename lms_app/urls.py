@@ -22,6 +22,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     path('', include('lms_main.urls')),
+    path('user/', include('user.urls')),
 
 ]
 
