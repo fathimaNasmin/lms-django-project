@@ -37,12 +37,18 @@ class SignUpForm(UserCreationForm):
         model = models.User
         fields = ["first_name", "last_name","email"]
 
-    def clean_first_name(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):
         """Function to validate first_name form field"""
         first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+
         if not first_name.isalpha():
             raise forms.ValidationError("First name must contain only alphabets.")
-        if len(first_name) < 2:
-            raise forms.ValidationError("First name must be at least 2 characters long.")
+        
+        if not last_name.isalpha():
+            raise forms.ValidationError("Last Name must contain only alphabets.")
 
-        return first_name
+        if len(first_name) or len(last_name) <= 2:
+            raise forms.ValidationError("Firstname and Lastname must be at least 2 characters long.")
+
+        return first_name, last_name

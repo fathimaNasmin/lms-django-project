@@ -14,6 +14,12 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="header-opening-time text-lg-right text-center">
+                        <p>Instructor:&nbsp;<a href="">SignUp</a>
+                            <span>/&nbsp;</span><a href="">Login</a></p>
+                    </div>
+                </div>
                 
             </div> <!-- row -->
         </div> <!-- container -->
@@ -35,7 +41,7 @@
                             <a href="#" class="main-btn">Login</a>
                         </div>
                         <div class="button float-left">
-                            <a href="#" class="main-btn">Sign Up</a>
+                            <a href="{% url 'user:signup' %}" class="main-btn">Sign Up</a>
                         </div>
                     </div>
                 </div>
@@ -59,12 +65,8 @@
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="active" href="index-2.html">Home</a>
-                                    <ul class="sub-menu">
-                                        <li><a class="active" href="index-2.html">Home 01</a></li>
-                                        <li><a href="index-3.html">Home 02</a></li>
-                                        <li><a href="index-4.html">Home 03</a></li>
-                                    </ul>
+                                    <a class="active" href="{% url 'lms_main:home' %}">Home</a>
+                                    
                                 </li>
                                 <li class="nav-item">
                                     <a href="about.html">About us</a>

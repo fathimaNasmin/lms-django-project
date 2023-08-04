@@ -12,25 +12,58 @@
 
 {% block main %}
 
-<div>
-    <div id="alert-box" class="w-50 mx-auto mt-5 d-flex justify-content-center"></div>
-    <div class="w-50 mx-auto mt-5 d-flex justify-content-center">
-        
-        
+<div class="w-50 mx-auto">
+    <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
+    <div class="mx-auto mt-4 d-flex justify-content-center">
         <h4>Signup and start learning</h4>
     </div>
-    <div class="w-75 mx-auto mt-5 d-flex justify-content-center">
-        <form id="signup-form-id" action="{% url 'user:signup' %}" method="POST" class="w-50">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <div class="d-flex justify-content-center">
-                <button type="submit" id="signup-button" class="btn btn-warning mt-3">Sign Up</button>
+    <div class="mt-4 mx-auto">
+        <!----display validation errors through ajax-->
+        <div class="w-75 mx-auto"><p class="text-danger" id="alert-error"></p></div>
+
+        <div class="w-75 mx-auto">
+            <form id="signup-form-id" action="{% url 'user:signup' %}" method="POST" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="signup-button" class="btn btn-warning mt-3">Sign Up</button>
+                </div>
+            </form>
+            <div class="my-3 d-flex justify-content-center">
+                <p>By signing up, you agree to our
+                    <a href="">Terms of Use</a> and
+                    <a href="">Privacy Policy.</a>
+                </p>
             </div>
-        </form>
+            <hr style="height: 12px;">
+            <div class="my-2 d-flex justify-content-center">
+                <p>Already have an account? <a href="">Log in</a></p>
+            </div>
+            
+        </div>
         
-        <p class="text-danger">{{form.errors}}</p>
+        
+        {% if form.errors %}
+        <div class="alert alert-error">
+            {{ form.errors }}
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <li><a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a></li>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+            {% endif %}
+        </div>
+        {% endif %}<p class="text-danger">{{form.errors}}</p>
     </div>
 </div>
+
+
 
     <!---=======Ajax cdn=======-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -45,10 +78,15 @@
                                 </div>`
     }
 
+    
+    
+
+        var alertError = document.getElementById('alert-error')
     $(document).on('submit',"#signup-form-id", function(event){
         event.preventDefault();
         
         var signup_form_id =  $("#signup-form-id")
+        
         $.ajax({
             url:"{% url 'user:signup' %}",
             type:  "POST",
@@ -62,13 +100,22 @@
                     handleAlert('success', "Account created Successfully")
                     setTimeout(() => {
                         alertBox.innerHTML = ""
+                        si
                     }, 3000)
+                    signup_form_id.each(function () {
+                        this.reset();
+                    });
                 }
                 else{
-                    handleAlert('danger', 'Failed to create account')
-                    setTimeout(() => {
-                        alertBox.innerHTML = ""
-                    }, 5000)
+                    var form_errors = response['errors']
+            
+                    $.each(form_errors, function (index, value) {
+                        alertError.innerHTML += value[0] + "<br>"
+                    });
+                    alertBox.innerHTML = ""
+                    signup_form_id.each(function () {
+                        this.reset();
+                    });
                 }
             },
             failure:function(error){

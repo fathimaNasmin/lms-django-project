@@ -14,14 +14,19 @@ def signup(request):
         if signup_form.is_valid():
             data['success'] = True
             new_user = signup_form.save()
-
-            student = forms.Student.objects.create(user=new_user, **profile_data)
+            print(new_user.id)
+            user = forms.Student(user=new_user)
+            new_user.save()
+            user.save()
+            # student = forms.Student.objects.create(user=new_user.id, **profile_data)
 
             messages.success(request, 'Account created successfully')
             return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             data['success'] = False
+            data['errors'] = signup_form.errors
             print("Validation Error")
+            print(signup_form.errors.as_json())
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         signup_form = forms.SignUpForm()
