@@ -27,7 +27,7 @@ class Student(models.Model):
     )
 
     def __str__(self):
-        return f"Student {self.user.email}"
+        return f"Student {self.student.email}"
 
 
 class Instructor(models.Model):

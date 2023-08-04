@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from . import forms
 import json
 from django.contrib import messages
+from .models import Student, Instructor, User
 
 def signup(request):
     """View for creating a new account for the student"""
@@ -12,15 +13,13 @@ def signup(request):
         signup_form = forms.SignUpForm(request.POST)
         data = {}
         if signup_form.is_valid():
+            """form validation checking"""
+
             data['success'] = True
             new_user = signup_form.save()
-            print(new_user.id)
-            user = forms.Student(user=new_user)
-            new_user.save()
+            user = Student(student_id=new_user.id)
             user.save()
-            # student = forms.Student.objects.create(user=new_user.id, **profile_data)
-
-            messages.success(request, 'Account created successfully')
+            # messages.success(request, 'Account created successfully')
             return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             data['success'] = False
