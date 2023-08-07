@@ -58,6 +58,9 @@ class SignUpViewTestCase(TestCase):
         self.assertIn('email', response_data['errors']) 
         self.assertIn('password2', response_data['errors'])
 
+        self.assertFalse(User.objects.filter(email='testuserexample.com').exists())
+        self.assertFalse(Student.objects.filter(student_id=response_data['new_user_id']).exists())
+
 
 
         

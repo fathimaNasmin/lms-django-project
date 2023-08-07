@@ -25,6 +25,7 @@ def signup(request):
         else:
             data['success'] = False
             data['errors'] = signup_form.errors
+            data['new_user_id'] = None
             # print("Validation Error")
             # print(signup_form.errors.as_json())
             return HttpResponse(json.dumps(data), content_type='application/json')
