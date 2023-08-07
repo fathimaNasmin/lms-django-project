@@ -20,12 +20,13 @@ def signup(request):
             user = Student(student_id=new_user.id)
             user.save()
             # messages.success(request, 'Account created successfully')
+            data['new_user_id'] = new_user.id
             return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             data['success'] = False
             data['errors'] = signup_form.errors
-            print("Validation Error")
-            print(signup_form.errors.as_json())
+            # print("Validation Error")
+            # print(signup_form.errors.as_json())
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         signup_form = forms.SignUpForm()

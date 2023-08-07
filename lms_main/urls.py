@@ -6,5 +6,5 @@ app_name = 'lms_main'
 
 
 urlpatterns = [
-    path('home/', lms_main_view.home_page, name='home'),
+    path('', lms_main_view.home_page, name='home'),
 ]

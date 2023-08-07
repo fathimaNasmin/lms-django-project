@@ -35,7 +35,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = models.User
-        fields = ["first_name", "last_name","email"]
+        fields = ["first_name", "last_name", "email"]
 
     def clean(self, *args, **kwargs):
         """Function to validate first_name form field"""
