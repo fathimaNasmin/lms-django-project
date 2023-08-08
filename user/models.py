@@ -5,12 +5,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from .managers import CustomUserManager
 
 
 class User(AbstractUser):
-    username = None
+    username = models.CharField(_("Username"), max_length=150)
     email = models.EmailField(_("email address"), unique=True)
 
     USERNAME_FIELD = "email"
@@ -20,6 +22,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+@receiver(pre_save, sender=User)
+def set_username(sender, instance, **kwargs):
+    if not instance.username:
+        instance.username = instance.email
+
+pre_save.connect(set_username, sender=User)
 
 
 class Student(models.Model):
