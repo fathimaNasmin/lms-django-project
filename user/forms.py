@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import check_password
 
 from . import models
 
+
 class SignUpForm(UserCreationForm):
     """Form Class for SignUp form"""
     def __init__(self, *args, **kwargs):
@@ -86,7 +87,7 @@ class LoginForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if email and password:
-            user = authenticate(username=email,password=password)
+            user = authenticate(email=email,password=password)
 
         return super(LoginForm, self).clean(*args, **kwargs)
         

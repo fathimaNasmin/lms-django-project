@@ -3,10 +3,14 @@ from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 
+
+
 from . import forms
 import json
 from django.contrib import messages
 from .models import Student, Instructor, User
+
+from lms_app import settings
 
 def signup(request):
     """View for creating a new account for the student"""
@@ -48,7 +52,8 @@ def login_user(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
+            user = authenticate(request, email=email, password=password)
+            print("valid form")
             print(type(user))
             if user is not None:
                 login(request, user)

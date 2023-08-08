@@ -151,3 +151,9 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
 
 }
+
+AUTHENTICATION_BACKENDS = [
+    # BASE_DIR/ 'user.custom_auth_backend.EmailBackend',
+    'user.custom_auth_backend.EmailBackend'
+    # Other authentication backends
+]
