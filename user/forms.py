@@ -5,9 +5,13 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
-
+from django.contrib.auth import get_user_model
 
 from . import models
+
+
+User = get_user_model()
+
 
 
 class SignUpForm(UserCreationForm):
@@ -39,7 +43,7 @@ class SignUpForm(UserCreationForm):
         
 
     class Meta:
-        model = models.User
+        model = User
         fields = ["first_name", "last_name", "email"]
 
     def clean(self, *args, **kwargs):
@@ -56,67 +60,51 @@ class SignUpForm(UserCreationForm):
         if (len(first_name) or len(last_name)) <= 2:
             raise forms.ValidationError("Firstname and Lastname must be at least 2 characters long.")
 
-# class LoginForm(AuthenticationForm):
-#     # email = forms.CharField(
-#     #     label="",
-#     #     widget=forms.TextInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email Address'})
-#     # )
-#     password = forms.CharField(
-#         label="",
-#         widget=forms.PasswordInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})
-#     )
 
-#     # def clean_email(self):
-#     #     email = self.cleaned_data.get('email')
-#     #     if not User.objects.filter(email=email).exists():
-#     #         raise forms.ValidationError("User doesn't exists")
-#     #     return email
-
-class LoginForm(forms.Form):
-    email = forms.CharField(
-        label="",
-        widget=forms.TextInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email Address'})
+class LoginForm(AuthenticationForm):
+    """Custom Login Form inherit the Authentication form for authenticating the user"""
+    username = forms.EmailField(
+        label='',
+        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email'}),
     )
+
     password = forms.CharField(
         label="",
         widget=forms.PasswordInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})
     )
 
-    def clean(self, *args, **kwargs):
-        email = self.cleaned_data.get('email')
-        password = self.cleaned_data.get('password')
+    class Meta:
+        model = User
+        fields = ["email", "password"]
 
-        if email and password:
-            user = authenticate(email=email,password=password)
+    
+    def clean(self):
+        """form validation using clean() method"""
+        email = self.cleaned_data['username']
+        password = self.cleaned_data['password']
 
-        return super(LoginForm, self).clean(*args, **kwargs)
-        
+        try:
+            user = User.objects.filter(email=email, student__isnull=False).exists()
 
-    # def clean_email(self, *args, **kwargs):
-    #     email = self.cleaned_data.get('email')
-
-    #     user = models.User.objects.get(email=email)
-    #     print(user.first_name)
-
-    #     if not user:
-    #         raise forms.ValidationError("User doesn't exists")
-
-    #     return super(LoginForm, self).clean(*args, **kwargs)
-
-
-    # def clean_password(self, *args, **kwargs):
-    #     email = self.cleaned_data.get('email')
-    #     user_password = self.cleaned_data.get('password')
-
-    #     user = models.User.objects.filter(email=email).first()
-
-    #     if user and not check_password(user_password, user.password):
-    #         raise forms.ValidationError("Entered password is incorrect")
-        
-    #     return super(LoginForm, self).clean(*args, **kwargs)
-
+        except User.DoesNotExist:
+            user = None
+            student = None
             
+        else:
+            if user:
+                user_pass = User.objects.get(email=email)
+                if user_pass.check_password(password):
+                    print("correct password")
+                else:
+                    raise forms.ValidationError("Incorrect email or password")
+            else:
+                print("Student doesn't exists")
+                raise forms.ValidationError("Student doesn't exists")
+        finally:
+            print("done validation in final block")
+        
+        
+        
+        
 
-
-
-       
+    

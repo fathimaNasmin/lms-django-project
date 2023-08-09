@@ -20,7 +20,7 @@
     <div class="mt-4 mx-auto">
         <!----display validation errors through ajax-->
         <div class="w-75 mx-auto">
-            <div class="alert alert-danger" role="alert" id="alert-error"></div>
+            <div class="alert alert-danger" role="alert" id="alert-error">alert message here</div>
         </div>
 
         <div class="w-50 mx-auto">
@@ -64,15 +64,22 @@
 
 <script>
     var my_token = "{{ csrf_token }}";
-    // console.log(my_token)
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    // $('#alert-error').hide(); 
+    $('#alert-error').hide(); 
+
     // Ajax for submitting the login form and handling the response
     $(document).ready(function () {
         $("#login-form-id").submit(function (event) {
             event.preventDefault();
             const formData = $(this).serialize();
             var login_form_id = $("#login_form_id")
+            var alertError = $('#alert-error')
+
+            const hideAlert = () => {
+                $("#alert-error").hide();
+                $(this).each(function () {
+                    this.reset();
+                });
+            }
 
             $.ajax({
                 type: "POST",
@@ -83,25 +90,37 @@
                     var success = response['success']
                     if (success) {
                         window.location.href = "{% url 'user:dashboard' %}";  // Redirect to the dashboard upon successful login
-                    } else { 
-                        var form_errors = response['form']
-                        console.log(form_errors)
-                        // $.each(form_errors, function (index, value) {
-                        //     alertError.innerHTML += value[0] + "<br>".show();
-                        // });
-                        // // $("#alert-error").text("error").show();
-                        // login_form_id.each(function () {
-                        //     this.reset();
-                        // });
-                        
 
+                        // // Convert the response data to a JSON string
+                        // var templateData = JSON.stringify(response);
+                        // console.log(templateData)
+
+                        // // Store the data in localStorage or sessionStorage
+                        // sessionStorage.setItem('templateData', templateData);  // Or sessionStorage
+
+                        // // Create the URL with the data as a query parameter
+                        // var dashboardUrl = "{% url 'user:dashboard' %}";
+
+                        // // Redirect to the dashboard with the data
+                        // window.location.href = dashboardUrl;
+
+                    } else { 
+                        var form_errors = response['form_errors']
+                        console.log(form_errors)
+
+                        $.each(form_errors, function (index, value) {
+                            $("#alert-error").text(value[0]).show();
+                            console.log(value[0])
+                        });
+                        setTimeout(()=>{
+                            hideAlert()
+                        },3000)
                     }
                 },
                 error: function (jqXHR,textStatus, errorThrown) {
                     console.log(textStatus)
                     console.log(errorThrown)
-                    // $("#alert-error").text("error").show();
-                    // console.log("Error:");
+                    
                 }
             });
         });
