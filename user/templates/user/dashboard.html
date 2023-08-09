@@ -1,6 +1,28 @@
 
+{% extends 'user/dashboard_components/dashboard_base.html' %}
+
+{% load static %}
+
+{% block username %}
+{{ user_profile.user_firstname|title }}&nbsp;{{ user_profile.user_lastname|title }}
+{% endblock %}
+
+{% block logout %}
+{% if user_profile.user_is_authenticated %}
+<div class="col-lg-8 col-md-8">
+    <div class="support-button float-right d-none d-md-block">
+
+        <div class="button float-left">
+            <a href="{% url 'user:logout-user' %}" class="main-btn">Logout</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block main %}
 <h1>welcome leatrner{{ user_profile.user_firstname }}</h1>
 <p>{{ user_profile.user_lastname }}</p>
 <p>{{ user_profile.user_email }}</p>
 <p>{{ user_profile.user_is_student }}</p>
-
+{% endblock %}

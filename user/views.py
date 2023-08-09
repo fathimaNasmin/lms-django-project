@@ -56,7 +56,7 @@ def login_user(request):
             
             if user is not None:
                 login(request, user)
-
+                print(user.is_authenticated)
                 # User profile from user obj is stored in the session
                 user_profile = {
                     'user_id': user.id,
@@ -64,6 +64,7 @@ def login_user(request):
                     'user_last_name': user.last_name,
                     'user_email': user.email,
                     'user_is_student': user.student.student_id,
+                    'user_is_authenticated': user.is_authenticated
                 }
                 request.session['user_profile'] = user_profile
 
@@ -90,6 +91,7 @@ def login_user(request):
 @login_required
 def dashboard(request):
     print("you are in dashboard")
+    
     get_user_profile = request.session.get('user_profile')
     # print(get_user_profile)
     

@@ -1,5 +1,6 @@
-<!--====== HEADER PART START ======-->
+{% extends 'lms_main/base.html' %}
 {% load static %}
+{% block navbar %}
 <header id="header-part">
 
     <div class="header-top d-none d-lg-block">
@@ -8,19 +9,20 @@
                 <div class="col-lg-6">
                     <div class="header-contact text-lg-left text-center">
                         <ul>
-                            <li><img src="{% static 'images/all-icon/map.png' %}" alt="icon"><span>127/5 Mark street, New york</span>
+                            <li><img src="{% static 'images/all-icon/map.png' %}" alt="icon"><span>127/5 Mark street,
+                                    New york</span>
                             </li>
-                            <li><img src="{% static 'images/all-icon/email.png' %}" alt="icon"><span>info@yourmail.com</span></li>
+                            <li><img src="{% static 'images/all-icon/email.png' %}"
+                                    alt="icon"><span>info@yourmail.com</span></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="header-opening-time text-lg-right text-center">
-                        <p>Instructor:&nbsp;<a href="">SignUp</a>
-                            <span>/&nbsp;</span><a href="">Login</a></p>
+                        <p>{% block username %}{% endblock %}</p>
                     </div>
                 </div>
-                
+
             </div> <!-- row -->
         </div> <!-- container -->
     </div> <!-- header top -->
@@ -35,17 +37,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-8 col-md-8">
-                    <div class="support-button float-right d-none d-md-block">
-                        
-                        <div class="button float-left">
-                            <a href="{% url 'user:login-user' %}" class="main-btn">Login</a>
-                        </div>
-                        <div class="button float-left">
-                            <a href="{% url 'user:signup' %}" class="main-btn">Sign Up</a>
-                        </div>
-                    </div>
-                </div>
+                {% block logout %}
+                
+                {% endblock %}
             </div> <!-- row -->
         </div> <!-- container -->
     </div> <!-- header logo support -->
@@ -67,7 +61,7 @@
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
                                     <a class="active" href="{% url 'lms_main:home' %}">Home</a>
-                                    
+
                                 </li>
                                 <li class="nav-item">
                                     <a href="about.html">About us</a>
@@ -133,3 +127,5 @@
 </header>
 
 <!--====== HEADER PART ENDS ======-->
+
+{% endblock %}
