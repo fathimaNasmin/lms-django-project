@@ -94,14 +94,16 @@ class LoginForm(AuthenticationForm):
             if user:
                 user_pass = User.objects.get(email=email)
                 if user_pass.check_password(password):
-                    print("correct password")
+                    # print("correct password")
+                    pass
                 else:
                     raise forms.ValidationError("Incorrect email or password")
             else:
-                print("Student doesn't exists")
+                # print("Student doesn't exists")
                 raise forms.ValidationError("Student doesn't exists")
         finally:
-            print("done validation in final block")
+            # print("done validation in final block")
+            pass
         
         
         

@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
-from user.forms import SignUpForm
+from user.forms import SignUpForm, LoginForm
+from user.models import User, Student, Instructor
 from django.core.exceptions import ValidationError
+
 
 
 class SignUpFormTestCase(TestCase):
@@ -203,3 +205,49 @@ class SignUpFormTestCase(TestCase):
 
         form = SignUpForm(data)
         self.assertFalse(form.is_valid())
+
+
+class LoginFormTest(TestCase):
+    """Test class for Login Form"""
+
+    def setUp(self):
+        self.client = Client()
+        self.new_user = User(first_name='user first name',
+            last_name= 'user last name',
+            email='abcde@gmail.com')
+        self.new_user.set_password('jnsjdhjHGShbd128')
+        self.new_user.save()
+        self.new_student = Student(student_id=self.new_user.id)
+        self.new_student.save()
+
+
+    def tests_form_with_valid_data(self):
+        data = {
+            'username':'abcde@gmail.com',
+            'password' : 'jnsjdhjHGShbd128'
+        }
+
+        form = LoginForm(data=data)
+        self.assertTrue(form.is_valid())
+
+
+    def tests_form_with_incorrect_password(self):
+        data = {
+            'username':'abcde@gmail.com',
+            'password' : 'jnsjdhjHd128'
+        }
+
+        form = LoginForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('Incorrect email or password', form.errors['__all__'])
+
+    
+    def test_non_existent_user(self):
+        form_data = {'username': 'nonexistent@example.com', 'password': 'testpassword'}
+        form = LoginForm(data=form_data)
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("Student doesn't exists", form.errors['__all__'])
+
+
+

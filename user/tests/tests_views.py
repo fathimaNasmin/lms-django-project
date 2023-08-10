@@ -65,4 +65,40 @@ class SignUpViewTestCase(TestCase):
 
         
         
-        
+class LoginViewTest(TestCase):
+    """Test Class for Login View"""
+
+    def setUp(self):
+        self.client = Client()
+        self.signup_url = reverse("user:login-user")
+
+    def tests_login_view_page_GET(self):
+        response = self.client.get(self.signup_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user/login.html')
+
+    
+    def test_login_success(self):
+        #Create new user
+        data = {
+            'first_name': 'testuser',
+            'last_name': 'testuser',
+            'email': 'testuser@example.com',
+            'password1': 'testpassword123',
+            'password2': 'testpassword123',
+        }
+        response = self.client.post(reverse('user:signup'), data=data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        data = {
+            'username': 'testuser@example.com',
+            'password': 'testpassword123'
+        }
+        response_login = self.client.post(reverse('user:login-user'), data=data,
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response_login.status_code, 200)
+        self.assertEqual(response_login['content-type'], 'application/json')
+        response_data = response_login.json()
+        self.assertTrue(response_data['success'])
+
+
