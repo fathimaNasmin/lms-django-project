@@ -8,13 +8,10 @@
 {% block main %}
 
 {% block user_content %}
-    <h1>welcome Instructor,{{ user.user_firstname }}</h1>
-    <br>
-    <br>
-    <p>{{ user.user_lastname }}</p>
-    <p>{{ user.user_email }}</p>
-    <br>
-    </p>
+<h1>welcome to your profile{{ user.user_firstname }}</h1>
+<p>{{ user.user_lastname }}</p>
+<p>{{ user.user_email }}</p>
+<p>{{ user.user_is_student }}</p>
 
 {% endblock %}
 

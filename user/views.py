@@ -63,7 +63,8 @@ def login_user(request):
                     'user_firstname': user.first_name,
                     'user_last_name': user.last_name,
                     'user_email': user.email,
-                    'user_is_student': user.student.student_id,
+                    'user_is_student': True,
+                    'student_id': user.student.student_id,
                     'user_is_authenticated': user.is_authenticated
                 }
                 request.session['user_profile'] = user_profile
@@ -91,14 +92,26 @@ def login_user(request):
 @login_required
 def dashboard(request):
     print("you are in dashboard")
+    if request.session.has_key('user_profile'):
+        current_user = request.session.get('user_profile')
+        print(current_user)
+        context = {
+        'user': current_user,
+        }
+        return render(request, 'user/dashboard.html', context)
+    return redirect('lms_main:home')
     
-    get_user_profile = request.session.get('user_profile')
-    # print(get_user_profile)
-    
-    context = {
-        'user_profile': get_user_profile,
-    }
-    return render(request,'user/dashboard.html', context)
+
+@login_required
+def update_student_profile(request):
+    """views function to update the user profile"""
+    if request.session.has_key('user_profile'):
+        current_user = request.session.get('user_profile')
+        print(current_user)
+        context = {
+        'user': current_user,
+        }
+        return render(request, 'user/dashboard.html', context)
 
 
 @login_required
@@ -106,7 +119,8 @@ def logout_user(request):
     logout(request)
     return redirect('lms_main:home')
 
-#Instructor Module Signup and Login
+# ========================================INSTRUCTOR MODULE==============================================
+
 
 def instructor_signup(request):
     """View for creating a new account for the Instructor"""
@@ -154,15 +168,16 @@ def instructor_login(request):
                 login(request, user)
                 print(user.is_authenticated)
                 # User profile from user obj is stored in the session
-                Instructor_profile = {
+                instructor_profile = {
                     'user_id': user.id,
                     'user_firstname': user.first_name,
                     'user_last_name': user.last_name,
                     'user_email': user.email,
-                    'user_is_instructor': user.instructor.instructor_id,
-                    'user_is_authenticated': user.is_authenticated
+                    'user_is_instructor': True,
+                    'instructor_id': user.instructor.instructor_id,
+                    'user_is_authenticated': user.is_authenticated,
                 }
-                request.session['instructor_profile'] = Instructor_profile
+                request.session['instructor_profile'] = instructor_profile
 
                 data = {
                     'success': True,
@@ -186,21 +201,35 @@ def instructor_login(request):
 
 @login_required
 def instructor_dashboard(request):
-    print("you are in instructor dashboard")
-    
-    get_user_profile = request.session.get('instructor_profile')
-    # print(get_user_profile)
-    
-    context = {
-        'user_profile': get_user_profile,
-    }
-    return render(request,'user/instructor/instructor_dashboard.html', context)
+    print("you are in dashboard")
+    if request.session.has_key('instructor_profile'):
+        current_user = request.session.get('instructor_profile')
+        print(current_user)
+        context = {
+        'user': current_user,
+        }
+        return render(request, 'user/instructor/instructor_dashboard.html', context)
+
+
+@login_required
+def update_instructor_profile(request):
+    """views function to update the user profile"""
+    if request.session.has_key('user_profile'):
+        current_user = request.session.get('user_profile')
+        print(current_user)
+        context = {
+        'user': current_user,
+        }
+        return render(request, 'user/instructor/instructor_update_profile.html', context)
 
 
 @login_required
 def instructor_logout(request):
     logout(request)
     return redirect('lms_main:home')
+
+
+
 
     
     
