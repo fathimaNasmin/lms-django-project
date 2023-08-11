@@ -34,7 +34,7 @@ class UserModelTest(TestCase):
         self.assertEqual(student_obj.email, 'abcde@gmail.com')
 
 
-    def tests_create_new_Student(self):
+    def tests_create_new_Instructor(self):
         """tests function to test creation of new instructor user"""
         new_user = User(first_name='user first name',
             last_name= 'user last name',

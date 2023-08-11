@@ -6,7 +6,7 @@
 {% crispy signup_form %}
 
 {% block navbar %}
-    {% include 'lms_main/components/navbar.html' %}
+{% include 'lms_main/components/navbar.html' %}
 {% endblock %}
 
 
@@ -15,14 +15,16 @@
 <div class="w-50 mx-auto">
     <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
     <div class="mx-auto mt-4 d-flex justify-content-center">
-        <h4>Signup and start learning</h4>
+        <h4>Signup and start teaching</h4>
     </div>
     <div class="mt-4 mx-auto">
         <!----display validation errors through ajax-->
-        <div class="w-75 mx-auto"><p class="text-danger" id="alert-error"></p></div>
+        <div class="w-75 mx-auto">
+            <p class="text-danger" id="alert-error"></p>
+        </div>
 
         <div class="w-75 mx-auto">
-            <form id="signup-form-id" action="{% url 'user:signup' %}" method="POST" novalidate>
+            <form id="signup-form-id" action="{% url 'user:instructor-signup' %}" method="POST" novalidate>
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-flex justify-content-center">
@@ -37,57 +39,57 @@
             </div>
             <hr style="height: 12px;">
             <div class="my-2 d-flex justify-content-center">
-                <p>Already have an account? <a href="{% url 'user:login-user' %}">Log in</a></p>
+                <p>Already have an account? <a href="{% url 'user:instructor-login' %}">Log in</a></p>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 
 
-    <!---=======Ajax cdn=======-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<!---=======Ajax cdn=======-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 
 <script type="text/javascript">
     const alertBox = document.getElementById("alert-box")
 
-    const handleAlert= (type, text)=>{
+    const handleAlert = (type, text) => {
         alertBox.innerHTML = `<div class="alert alert-${type}" role="alert">
                                 ${text}
                                 </div>`
     }
 
-    
+
     var alertError = document.getElementById('alert-error')
-    $(document).on('submit',"#signup-form-id", function(event){
+    $(document).on('submit', "#signup-form-id", function (event) {
         event.preventDefault();
-        
-        var signup_form_id =  $("#signup-form-id")
-        
+
+        var signup_form_id = $("#signup-form-id")
+
         $.ajax({
-            url:"{% url 'user:signup' %}",
-            type:  "POST",
-            header: {'X-CSRFToken': '{% csrf_token %}'},
+            url: "{% url 'user:instructor-signup' %}",
+            type: "POST",
+            header: { 'X-CSRFToken': '{% csrf_token %}' },
             data: signup_form_id.serialize(),
             dataType: 'json',
-            success: function(response){
+            success: function (response) {
                 var success = response['success']
-                if (success){
+                if (success) {
                     // alert("User created successfully")
                     handleAlert('success', "Account created Successfully")
                     setTimeout(() => {
                         alertBox.innerHTML = ""
-                
+
                     }, 3000)
                     signup_form_id.each(function () {
                         this.reset();
                     });
                 }
-                else{
+                else {
                     var form_errors = response['errors']
-            
+
                     $.each(form_errors, function (index, value) {
                         alertError.innerHTML += value[0] + "<br>"
                     });
@@ -97,7 +99,7 @@
                     });
                 }
             },
-            failure:function(error){
+            failure: function (error) {
                 alert("Error occured while calling django view")
             }
 

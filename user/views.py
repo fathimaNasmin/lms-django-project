@@ -105,5 +105,102 @@ def dashboard(request):
 def logout_user(request):
     logout(request)
     return redirect('lms_main:home')
+
+#Instructor Module Signup and Login
+
+def instructor_signup(request):
+    """View for creating a new account for the Instructor"""
+
+    if request.method == 'POST' and request.is_ajax():
+        signup_form = forms.SignUpForm(request.POST)
+        data = {}
+        if signup_form.is_valid():
+            """form validation checking"""
+
+            data['success'] = True
+            new_instructor = signup_form.save()
+            user = Instructor(instructor_id=new_instructor.id)
+            user.save()
+            # messages.success(request, 'Account created successfully')
+            data['new_instructor_id'] = new_instructor.id
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data['success'] = False
+            data['errors'] = signup_form.errors
+            data['new_instructor_id'] = None
+            # print("Validation Error")
+            # print(signup_form.errors.as_json())
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        signup_form = forms.SignUpForm()
+
+
+    context = {'form':signup_form}
+    return render(request,'user/instructor/instructor_signup.html',context)
+
+
+
+def instructor_login(request):
+    """View for authenticating Instructor"""
+    
+    if request.method == "POST" and request.is_ajax():
+        form = forms.InstructorLoginForm(request, data=request.POST)
+        data = {}
+        if form.is_valid():
+            email = form.cleaned_data['username']
+            user = User.objects.get(email=email)
+            
+            if user is not None:
+                login(request, user)
+                print(user.is_authenticated)
+                # User profile from user obj is stored in the session
+                Instructor_profile = {
+                    'user_id': user.id,
+                    'user_firstname': user.first_name,
+                    'user_last_name': user.last_name,
+                    'user_email': user.email,
+                    'user_is_instructor': user.instructor.instructor_id,
+                    'user_is_authenticated': user.is_authenticated
+                }
+                request.session['instructor_profile'] = Instructor_profile
+
+                data = {
+                    'success': True,
+                    'instructor_name': user.first_name,
+                }
+                return HttpResponse(json.dumps(data), content_type='application/json')
+
+            else:
+                data1['success'] = False
+                data1['form'] = form.errors
+                return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data1['form_errors'] = form.errors
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        form = forms.InstructorLoginForm()
+    context = {
+        'form': form,
+    }
+    return render(request,'user/instructor/instructor_login.html', context)
+
+@login_required
+def instructor_dashboard(request):
+    print("you are in instructor dashboard")
+    
+    get_user_profile = request.session.get('instructor_profile')
+    # print(get_user_profile)
+    
+    context = {
+        'user_profile': get_user_profile,
+    }
+    return render(request,'user/instructor/instructor_dashboard.html', context)
+
+
+@login_required
+def instructor_logout(request):
+    logout(request)
+    return redirect('lms_main:home')
+
     
     

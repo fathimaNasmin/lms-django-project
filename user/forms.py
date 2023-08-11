@@ -107,6 +107,48 @@ class LoginForm(AuthenticationForm):
         
         
         
-        
+class InstructorLoginForm(AuthenticationForm):
+    """Custom Login Form inherit the Authentication form for authenticating the user"""
+    username = forms.EmailField(
+        label='',
+        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email'}),
+    )
+
+    password = forms.CharField(
+        label="",
+        widget=forms.PasswordInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})
+    )
+
+    class Meta:
+        model = User
+        fields = ["email", "password"]
+
+    
+    def clean(self):
+        """form validation using clean() method"""
+        email = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+
+        try:
+            user = User.objects.filter(email=email, instructor__isnull=False).exists()
+
+        except User.DoesNotExist:
+            user = None
+            student = None
+            
+        else:
+            if user:
+                user_pass = User.objects.get(email=email)
+                if user_pass.check_password(password):
+                    # print("correct password")
+                    pass
+                else:
+                    raise forms.ValidationError("Incorrect email or password")
+            else:
+                # print("Instructor doesn't exists")
+                raise forms.ValidationError("Instructor doesn't exists")
+        finally:
+            print("done validation in final block")
+            pass
 
     

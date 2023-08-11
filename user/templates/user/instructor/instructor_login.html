@@ -1,0 +1,132 @@
+{% extends 'lms_main/base.html' %}
+
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy login_form %}
+
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+
+{% block main %}
+
+<div class="w-50 mx-auto">
+    <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
+    <div class="mx-auto mt-4 d-flex justify-content-center">
+        <h4>Log in to your Edubin Instructor account</h4>
+    </div>
+    <div class="mt-4 mx-auto">
+        <!----display validation errors through ajax-->
+        <div class="w-75 mx-auto">
+            <div class="alert alert-danger" role="alert" id="alert-error">alert message here</div>
+        </div>
+
+        <div class="w-50 mx-auto">
+            <form id="login-form-id" action="{% url 'user:instructor-login' %}" method="POST" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="signup-button" class="btn btn-warning mt-3">Login</button>
+                </div>
+
+            </form>
+            <div class="my-3 d-flex justify-content-center">
+                <p>or
+                    <a href="">Forgot your Password</a>
+                </p>
+            </div>
+            <hr style="height: 12px;">
+            <div class="my-2 d-flex justify-content-center">
+                <p>Don't have an account? <a href="{% url 'user:instructor-signup' %}">Sign Up here</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!---=======Ajax cdn=======-->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+
+<!----cookie js library url-->
+<!-- <script src="
+    https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
+    "></script> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+
+
+
+<script>
+    var my_token = "{{ csrf_token }}";
+    $('#alert-error').hide();
+
+    // Ajax for submitting the login form and handling the response
+    $(document).ready(function () {
+        $("#login-form-id").submit(function (event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            var login_form_id = $("#login_form_id")
+            var alertError = $('#alert-error')
+
+            const hideAlert = () => {
+                $("#alert-error").hide();
+                $(this).each(function () {
+                    this.reset();
+                });
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'user:instructor-login' %}",
+                header: { 'X-CSRFToken': my_token },
+                data: formData,
+                success: function (response, textStatus, jqXHR) {
+                    var success = response['success']
+                    if (success) {
+                        window.location.href = "{% url 'user:instructor-dashboard' %}";  // Redirect to the dashboard upon successful login
+
+                        // // Convert the response data to a JSON string
+                        // var templateData = JSON.stringify(response);
+                        // console.log(templateData)
+
+                        // // Store the data in localStorage or sessionStorage
+                        // sessionStorage.setItem('templateData', templateData);  // Or sessionStorage
+
+                        // // Create the URL with the data as a query parameter
+                        // var dashboardUrl = "{% url 'user:dashboard' %}";
+
+                        // // Redirect to the dashboard with the data
+                        // window.location.href = dashboardUrl;
+
+                    } else {
+                        var form_errors = response['form_errors']
+                        console.log(form_errors)
+
+                        $.each(form_errors, function (index, value) {
+                            $("#alert-error").text(value[0]).show();
+                            console.log(value[0])
+                        });
+                        setTimeout(() => {
+                            hideAlert()
+                        }, 3000)
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus)
+                    console.log(errorThrown)
+
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
+<div>{% include 'lms_main/components/footer.html' %}</div>
