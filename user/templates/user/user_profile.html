@@ -18,6 +18,7 @@
         <h4>Update Profile</h4>
     </div>
     <div class="mt-4 mx-auto">
+        <img src="{{ user.profile_image }}" class="rounded mx-auto d-block w-50" alt="profile Image">
         <!----display validation errors through ajax-->
         <div class="w-75 mx-auto">
             <p class="text-danger" id="alert-error"></p>
@@ -71,7 +72,8 @@
                     // alert("User created successfully")
                     handleAlert('success', "Profile Updated Successfully")
                     setTimeout(() => {
-                        alertBox.innerHTML = ""
+                        alertBox.innerHTML = "";
+                        window.location.href = "{% url 'user:dashboard' %}";
 
                     }, 3000)
                     update_form_id.each(function () {
@@ -83,6 +85,7 @@
                     var p_form_errors = response['p_form_errors']
                     
                     console.log(u_form_errors)
+                    console.log(p_form_errors)
 
                     // Using a for...in loop
                     for (const key in u_form_errors) {

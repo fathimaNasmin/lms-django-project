@@ -9,6 +9,7 @@ from . import forms
 import json
 from django.contrib import messages
 from .models import Student, Instructor, User
+from .custom_auth_backend import EmailBackend
 
 from lms_app import settings
 
@@ -115,7 +116,7 @@ def update_student_profile(request):
         logged_student_instance = Student.objects.get(student_id=logged_user_instance.id)
 
 
-        update_user_info = forms.SignUpForm(request.POST or None, request.POST or None, instance=logged_user_instance)
+        update_user_info = forms.SignUpForm(request.POST or None, instance=logged_user_instance)
 
         update_profile_image = forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=logged_student_instance)
 
@@ -125,12 +126,22 @@ def update_student_profile(request):
         data = {}
 
         if request.method == 'POST' and request.is_ajax():
+            print(request.FILES) 
             if update_user_info.is_valid() and update_profile_image.is_valid():
                 obj= update_user_info.save(commit= False)
-                obj.first_name = update_user_info.cleaned_data.get('first_name')
-                obj.last_name = update_user_info.cleaned_data.get('last_name')
+                
+                obj.first_name = request.POST['first_name']
+                obj.last_name = request.POST['last_name'] 
+
+                # obj1.profile_image = update_profile_image.cleaned_data.get('profile_image')
+                obj1 = update_profile_image.save(commit= False)
+                print(request.FILES)
                 update_user_info.save()
                 update_profile_image.save()
+                
+                # user = EmailBackend.authenticate(request, email=obj.email, password=obj.password)  # Provide the correct password
+                # if user:
+                login(request, logged_user_instance, backend='user.custom_auth_backend.EmailBackend')
 
                 data['success'] = True
 

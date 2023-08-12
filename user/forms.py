@@ -116,12 +116,12 @@ class LoginForm(AuthenticationForm):
 
 class UpdateProfileForm(forms.ModelForm):
     """Form class to update profile"""
-    profile_image = forms.ImageField(label="Profile Image") 
+    profile_image = forms.ImageField(label="") 
 
     class Meta:
         model = models.Student
         fields = ('profile_image',)
-        exclude = ('email',)
+
 
 
 # ======================INSTRUCTOR FORMS=========================
