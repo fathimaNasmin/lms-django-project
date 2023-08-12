@@ -55,7 +55,7 @@ def login_user(request):
             user = User.objects.get(email=email)
             
             if user is not None:
-                login(request, user)
+                login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
                 # User profile from user obj is stored in the session
                 user_profile = {
@@ -65,7 +65,9 @@ def login_user(request):
                     'user_email': user.email,
                     'user_is_student': True,
                     'student_id': user.student.student_id,
-                    'user_is_authenticated': user.is_authenticated
+                    'user_is_authenticated': user.is_authenticated,
+                    'profile_image': user.student.profile_image.url,
+                    
                 }
                 request.session['user_profile'] = user_profile
 
@@ -105,13 +107,56 @@ def dashboard(request):
 @login_required
 def update_student_profile(request):
     """views function to update the user profile"""
+    #return 404 page
+    
     if request.session.has_key('user_profile'):
         current_user = request.session.get('user_profile')
-        print(current_user)
+        logged_user_instance = User.objects.get(id=current_user['user_id'])
+        logged_student_instance = Student.objects.get(student_id=logged_user_instance.id)
+
+
+        update_user_info = forms.SignUpForm(request.POST or None, request.POST or None, instance=logged_user_instance)
+
+        update_profile_image = forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=logged_student_instance)
+
+        # Disable the email field for the signup form
+        update_user_info.fields['email'].widget.attrs['readonly'] = True
+        
+        data = {}
+
+        if request.method == 'POST' and request.is_ajax():
+            if update_user_info.is_valid() and update_profile_image.is_valid():
+                obj= update_user_info.save(commit= False)
+                obj.first_name = update_user_info.cleaned_data.get('first_name')
+                obj.last_name = update_user_info.cleaned_data.get('last_name')
+                update_user_info.save()
+                update_profile_image.save()
+
+                data['success'] = True
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+
+                data['success'] = False
+                data['u_form_errors'] = update_user_info.errors
+                data['p_form_errors'] = update_profile_image.errors
+                print(data['u_form_errors'])
+                print(data['p_form_errors'])
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+        # else:
+        #     data['failure'] = True
+        #     return HttpResponse(json.dumps(data), content_type='application/json')
+    
+
         context = {
         'user': current_user,
+        'u_form': update_user_info,
+        'p_form': update_profile_image
         }
-        return render(request, 'user/dashboard.html', context)
+        return render(request, 'user/user_profile.html', context)
+
+    return '<h1>404 Not Foud</h1>'
 
 
 @login_required
@@ -165,7 +210,7 @@ def instructor_login(request):
             user = User.objects.get(email=email)
             
             if user is not None:
-                login(request, user)
+                login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
                 # User profile from user obj is stored in the session
                 instructor_profile = {

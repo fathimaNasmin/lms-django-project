@@ -15,6 +15,9 @@
 <br><br><br>
 <p>{{ user.user_lastname }}</p>
 <p>{{ user.user_email }}</p><br>
+{% if user.profile_image %}
+<img src="{{ user.profile_image }}" alt="">
+{% endif %}
 
 
 

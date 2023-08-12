@@ -157,8 +157,9 @@ MESSAGE_TAGS = {
 
 AUTHENTICATION_BACKENDS = [
     # BASE_DIR/ 'user.custom_auth_backend.EmailBackend',
-    'user.custom_auth_backend.EmailBackend'
-    # Other authentication backends
+    'user.custom_auth_backend.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend'
+    
 ]
 
 # SESSION_COOKIE_DOMAIN = 'localhost'

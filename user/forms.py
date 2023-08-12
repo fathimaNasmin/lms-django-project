@@ -46,19 +46,27 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ["first_name", "last_name", "email"]
 
-    def clean(self, *args, **kwargs):
-        """Function to validate first_name form field"""
-        first_name = self.cleaned_data.get('first_name')
-        last_name = self.cleaned_data.get('last_name')
+    # def clean(self, *args, **kwargs):
+    #     """Function to validate first_name form field"""
+    #     cleaned_data = super().clean()  # for python 3
+    #     first_name = self.cleaned_data.get('first_name')
+    #     last_name = self.cleaned_data.get('last_name')
+        
+    #     if (len(first_name) or len(last_name)) <= 2:
+    #         raise forms.ValidationError("Firstname and Lastname must be at least 2 characters long.")
 
+    def clean_first_name(self, *args, **kwargs):
+        first_name = self.cleaned_data.get('first_name')
         if not first_name.isalpha():
             raise forms.ValidationError("First name must contain only alphabets.")
-        
+        return first_name
+
+    def clean_last_name(self, *args, **kwargs):
+        last_name = self.cleaned_data.get('last_name')
         if not last_name.isalpha():
             raise forms.ValidationError("Last Name must contain only alphabets.")
+        return last_name
 
-        if (len(first_name) or len(last_name)) <= 2:
-            raise forms.ValidationError("Firstname and Lastname must be at least 2 characters long.")
 
 
 class LoginForm(AuthenticationForm):
@@ -105,8 +113,18 @@ class LoginForm(AuthenticationForm):
             # print("done validation in final block")
             pass
         
-        
-        
+
+class UpdateProfileForm(forms.ModelForm):
+    """Form class to update profile"""
+    profile_image = forms.ImageField(label="Profile Image") 
+
+    class Meta:
+        model = models.Student
+        fields = ('profile_image',)
+        exclude = ('email',)
+
+
+# ======================INSTRUCTOR FORMS=========================
 class InstructorLoginForm(AuthenticationForm):
     """Custom Login Form inherit the Authentication form for authenticating the user"""
     username = forms.EmailField(

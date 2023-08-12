@@ -1,23 +1,118 @@
 {% extends 'lms_main/base.html' %}
 
 {% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy signup_form %}
 
 {% block navbar %}
 {% include 'lms_main/components/navbar.html' %}
 {% endblock %}
 
 
-
 {% block main %}
 
-<h1>welcome to your profile{{ user.user_firstname }}</h1>
-<p>{{ user.user_lastname }}</p>
-<p>{{ user.user_email }}</p>
-<p>{{ user.user_is_student }}</p>
+<div class="w-50 mx-auto">
+    <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
+    <div class="mx-auto mt-4 d-flex justify-content-center">
+        <h4>Update Profile</h4>
+    </div>
+    <div class="mt-4 mx-auto">
+        <!----display validation errors through ajax-->
+        <div class="w-75 mx-auto">
+            <p class="text-danger" id="alert-error"></p>
+        </div>
 
+        <div class="w-75 mx-auto">
+            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {{ u_form|crispy }}
+                {{ p_form|crispy }}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="signup-button" class="btn btn-warning mt-3">Update</button>
+                </div>
+            </form>
 
-<!-- Footer starts here -->
+        </div>
+    </div>
+</div>
+
 {% include 'lms_main/components/footer.html' %}
-<!-- Footer ends here -->
+
+<!---=======Ajax cdn=======-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    const alertBox = document.getElementById("alert-box")
+
+    const handleAlert = (type, text) => {
+        alertBox.innerHTML = `<div class="alert alert-${type}" role="alert">
+                                ${text}
+                                </div>`
+    }
+
+
+    var alertError = document.getElementById('alert-error')
+    $(document).on('submit', "#update-form-id", function (event) {
+        event.preventDefault();
+
+        var update_form_id = $("#update-form-id")
+
+        $.ajax({
+            url: "{% url 'user:update-profile' %}",
+            type: "POST",
+            header: { 'X-CSRFToken': '{% csrf_token %}' },
+            data: update_form_id.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                var success = response['success']
+                if (success) {
+                    // alert("User created successfully")
+                    handleAlert('success', "Profile Updated Successfully")
+                    setTimeout(() => {
+                        alertBox.innerHTML = ""
+
+                    }, 3000)
+                    // update_form_id.each(function () {
+                    //     this.reset();
+                    // });
+                }
+                else {
+                    var u_form_errors = response['u_form_errors']
+                    var p_form_errors = response['p_form_errors']
+                    
+                    console.log(u_form_errors)
+                    // Using a for...in loop
+                    for (const key in u_form_errors) {
+                        if (u_form_errors.hasOwnProperty(key)) {
+                            const array = u_form_errors[key];
+                            console.log(`Key: ${key}, Array Element: ${array[0]}`);
+                            alertError.innerHTML += `${key}: ${array[0]}` + "<br>"
+                        }
+                    }
+                    // var all_form_errors = u_form_errors.concat(p_form_errors)
+                    // console.log(all_form_errors)
+
+                    // $.each(all_form_errors, function (index, value) {
+                    //     alertError.innerHTML += value[0] + "<br>"
+                    // });
+                    alertBox.innerHTML = ""
+                    update_form_id.each(function () {
+                        this.reset();
+                    });
+                }
+            },
+            failure: function (error) {
+                alert("Error occured while calling django view")
+            }
+
+        })
+    })
+
+</script>
 
 {% endblock %}
+
+
+
