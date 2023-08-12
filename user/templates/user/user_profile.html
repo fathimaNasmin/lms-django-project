@@ -74,29 +74,40 @@
                         alertBox.innerHTML = ""
 
                     }, 3000)
-                    // update_form_id.each(function () {
-                    //     this.reset();
-                    // });
+                    update_form_id.each(function () {
+                        this.reset();
+                    });
                 }
                 else {
                     var u_form_errors = response['u_form_errors']
                     var p_form_errors = response['p_form_errors']
                     
                     console.log(u_form_errors)
+
                     // Using a for...in loop
                     for (const key in u_form_errors) {
                         if (u_form_errors.hasOwnProperty(key)) {
-                            const array = u_form_errors[key];
-                            console.log(`Key: ${key}, Array Element: ${array[0]}`);
-                            alertError.innerHTML += `${key}: ${array[0]}` + "<br>"
+                            // display error message under the each field
+                            var form_element = document.getElementById('update-form-id')
+                            console.log(form_element)
+
+                            const field = form_element.querySelector(`[name="${key}"]`);
+                            const errorMessages = u_form_errors[key];
+
+                            const errorElement = document.createElement('div');
+                            for (const errorMessage of errorMessages) {
+                                
+                                errorElement.className = 'error-message';
+                                errorElement.textContent = errorMessage;
+                                errorElement.style.color = 'red';
+                                field.parentNode.insertBefore(errorElement, field.nextSibling);
+                            }
+                            setTimeout(() => {
+                                errorElement.innerHTML = ""
+                            }, 3000);
                         }
                     }
-                    // var all_form_errors = u_form_errors.concat(p_form_errors)
-                    // console.log(all_form_errors)
-
-                    // $.each(all_form_errors, function (index, value) {
-                    //     alertError.innerHTML += value[0] + "<br>"
-                    // });
+                
                     alertBox.innerHTML = ""
                     update_form_id.each(function () {
                         this.reset();
