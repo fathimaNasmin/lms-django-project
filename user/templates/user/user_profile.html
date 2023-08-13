@@ -18,19 +18,19 @@
         <h4>Update Profile</h4>
     </div>
     <div class="mt-4 mx-auto">
-        <img src="{{ user.profile_image }}" class="rounded mx-auto d-block w-50" alt="profile Image">
+        <img src="{{ user.student.profile_image.url }}" class="mx-auto d-block w-50" alt="profile Image" style="border-radius: 60%;">
         <!----display validation errors through ajax-->
         <div class="w-75 mx-auto">
             <p class="text-danger" id="alert-error"></p>
         </div>
 
         <div class="w-75 mx-auto">
-            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST" enctype="multipart/form-data" novalidate>
+            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ u_form|crispy }}
                 {{ p_form|crispy }}
                 <div class="d-flex justify-content-center">
-                    <button type="submit" id="signup-button" class="btn btn-warning mt-3">Update</button>
+                    <button type="submit" id="update-button" class="btn btn-warning mt-3">Update</button>
                 </div>
             </form>
 
@@ -59,26 +59,33 @@
         event.preventDefault();
 
         var update_form_id = $("#update-form-id")
+        var formData = new FormData(update_form_id.get(0));
+        console.log(formData)
 
         $.ajax({
             url: "{% url 'user:update-profile' %}",
             type: "POST",
             header: { 'X-CSRFToken': '{% csrf_token %}' },
-            data: update_form_id.serialize(),
+            data: formData,
             dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: false,
             success: function (response) {
                 var success = response['success']
                 if (success) {
                     // alert("User created successfully")
+                    console.log(response.new_data)
                     handleAlert('success', "Profile Updated Successfully")
                     setTimeout(() => {
                         alertBox.innerHTML = "";
-                        window.location.href = "{% url 'user:dashboard' %}";
+                        
 
                     }, 3000)
                     update_form_id.each(function () {
                         this.reset();
                     });
+                    window.location.href = "{% url 'user:dashboard' %}";
                 }
                 else {
                     var u_form_errors = response['u_form_errors']

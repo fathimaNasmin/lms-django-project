@@ -92,18 +92,6 @@
                     if (success) {
                         window.location.href = "{% url 'user:dashboard' %}";  // Redirect to the dashboard upon successful login
 
-                        // // Convert the response data to a JSON string
-                        // var templateData = JSON.stringify(response);
-                        // console.log(templateData)
-
-                        // // Store the data in localStorage or sessionStorage
-                        // sessionStorage.setItem('templateData', templateData);  // Or sessionStorage
-
-                        // // Create the URL with the data as a query parameter
-                        // var dashboardUrl = "{% url 'user:dashboard' %}";
-
-                        // // Redirect to the dashboard with the data
-                        // window.location.href = dashboardUrl;
 
                     } else { 
                         var form_errors = response['form_errors']

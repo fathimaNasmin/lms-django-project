@@ -13,11 +13,21 @@
 
 <h1>welcome dear Learner{{ user.user_firstname }}</h1>
 <br><br><br>
-<p>{{ user.user_lastname }}</p>
-<p>{{ user.user_email }}</p><br>
-{% if user.profile_image %}
-<img src="{{ user.profile_image }}" alt="">
+{% if user.is_authenticated %}
+<h1>Authenticated</h1>
+<h5>{{ user.first_name }}</h5>
+<h5>{{ user.last_name }}</h5>
+<h5>{{ user.email }}</h5>
+
+    {% if user.student.profile_image %}
+    <img src="{{ user.student.profile_image.url }}" alt="profile image">
+    {% else %}
+    <img src="{% static 'images/teachers/t-4.jpg' %}" alt="">
+    {% endif %}
+{% else %}
+<h1>Not authenticated</h1>
 {% endif %}
+
 
 
 

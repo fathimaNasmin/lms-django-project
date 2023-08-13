@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse, Http404
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm 
+
 
 
 from . import forms
@@ -58,23 +59,10 @@ def login_user(request):
             if user is not None:
                 login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
-                # User profile from user obj is stored in the session
-                user_profile = {
-                    'user_id': user.id,
-                    'user_firstname': user.first_name,
-                    'user_last_name': user.last_name,
-                    'user_email': user.email,
-                    'user_is_student': True,
-                    'student_id': user.student.student_id,
-                    'user_is_authenticated': user.is_authenticated,
-                    'profile_image': user.student.profile_image.url,
-                    
-                }
-                request.session['user_profile'] = user_profile
+                
 
                 data1 = {
                     'success': True,
-                    'student_name': user.first_name,
                 }
                 return HttpResponse(json.dumps(data1), content_type='application/json')
 
@@ -95,30 +83,24 @@ def login_user(request):
 @login_required
 def dashboard(request):
     print("you are in dashboard")
-    if request.session.has_key('user_profile'):
-        current_user = request.session.get('user_profile')
-        print(current_user)
+    user = request.user
+    if user:
         context = {
-        'user': current_user,
-        }
+            'user': user,
+            }
         return render(request, 'user/dashboard.html', context)
-    return redirect('lms_main:home')
+    return Http404
+    
+       
     
 
 @login_required
 def update_student_profile(request):
     """views function to update the user profile"""
-    #return 404 page
-    
-    if request.session.has_key('user_profile'):
-        current_user = request.session.get('user_profile')
-        logged_user_instance = User.objects.get(id=current_user['user_id'])
-        logged_student_instance = Student.objects.get(student_id=logged_user_instance.id)
-
-
-        update_user_info = forms.SignUpForm(request.POST or None, instance=logged_user_instance)
-
-        update_profile_image = forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=logged_student_instance)
+    user = request.user
+    if user:
+        update_user_info = forms.SignUpForm(request.POST or None, instance=user)
+        update_profile_image = forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=user.student)
 
         # Disable the email field for the signup form
         update_user_info.fields['email'].widget.attrs['readonly'] = True
@@ -126,25 +108,25 @@ def update_student_profile(request):
         data = {}
 
         if request.method == 'POST' and request.is_ajax():
-            print(request.FILES) 
             if update_user_info.is_valid() and update_profile_image.is_valid():
                 obj= update_user_info.save(commit= False)
-                
+                obj1 = update_profile_image.save(commit= False)
+
                 obj.first_name = request.POST['first_name']
                 obj.last_name = request.POST['last_name'] 
 
-                # obj1.profile_image = update_profile_image.cleaned_data.get('profile_image')
-                obj1 = update_profile_image.save(commit= False)
-                print(request.FILES)
                 update_user_info.save()
                 update_profile_image.save()
-                
-                # user = EmailBackend.authenticate(request, email=obj.email, password=obj.password)  # Provide the correct password
-                # if user:
-                login(request, logged_user_instance, backend='user.custom_auth_backend.EmailBackend')
 
+                login(request, request.user, backend='user.custom_auth_backend.EmailBackend')
+
+                updated_data = {
+                'user_firstname': user.first_name,
+                'user_email': user.email,
+
+                }
                 data['success'] = True
-
+                data['new_data'] = updated_data
                 return HttpResponse(json.dumps(data), content_type='application/json')
             else:
 
@@ -155,19 +137,16 @@ def update_student_profile(request):
                 print(data['p_form_errors'])
 
                 return HttpResponse(json.dumps(data), content_type='application/json')
-        # else:
-        #     data['failure'] = True
-        #     return HttpResponse(json.dumps(data), content_type='application/json')
-    
+    else:
+        return redirect('lms_main:home')
+    context = {
+    'user': user,
+    'u_form': update_user_info,
+    'p_form': update_profile_image
+    }
+    return render(request, 'user/user_profile.html', context)
 
-        context = {
-        'user': current_user,
-        'u_form': update_user_info,
-        'p_form': update_profile_image
-        }
-        return render(request, 'user/user_profile.html', context)
 
-    return '<h1>404 Not Foud</h1>'
 
 
 @login_required

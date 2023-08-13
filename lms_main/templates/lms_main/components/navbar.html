@@ -15,11 +15,11 @@
                     </div>
                 </div>
                 
-                {% if user.user_is_authenticated %}
+                {% if user.is_authenticated %}
                 <div class="col-lg-6">
                     <div class="header-opening-time text-lg-right text-center">
                 
-                        <p>{{ user.user_firstname}} &nbsp;{{user.user_last_name}}</p>
+                        <p>{{ user.firstname}} &nbsp;{{user.last_name}}</p>
                 
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-lg-8 col-md-8">
                     <div class="support-button float-right d-none d-md-block">
-                        {% if user.user_is_authenticated %}
+                        {% if user.is_authenticated %}
                         <div class="button float-left">
                             <a href="{% url 'user:logout-user' %}" class="main-btn">Logout</a>
                         </div>
@@ -66,8 +66,8 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </div> <!-- header logo support -->
-{% if user.user_is_authenticated %}
-    {% if user.user_is_student %}
+{% if user.is_authenticated %}
+    {% if user.student %}
     <div class="navigation">
         <div class="container">
             <div class="row">
@@ -123,7 +123,7 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </div>
-    {% elif user.user_is_instructor %}
+    {% elif user.instructor %}
         <div class="navigation">
             <div class="container">
                 <div class="row">
