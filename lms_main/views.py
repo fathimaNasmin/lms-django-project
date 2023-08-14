@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-
+from . import models
 
 def home_page(request):
-    if request.session.has_key('user_profile'):
-        current_user = request.session.get('user_profile')
-        print(current_user)
-        return render(request, 'lms_main/home.html',{'user': current_user})
+    categories = models.Category.objects.all()
+    print(categories)
 
-    return render(request, 'lms_main/home.html')
+    context = {
+        'categories': categories,
+    }
+
+    return render(request, 'lms_main/home.html', context)

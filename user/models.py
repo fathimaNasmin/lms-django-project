@@ -39,7 +39,7 @@ class Student(models.Model):
     profile_image = models.ImageField(null=True, blank=True, upload_to="profile_pictures/student/")
 
     def __str__(self):
-        return f"Student {self.student.email}"
+        return f"Student {self.student.first_name}"
 
     
     def save(self, *args, **kwargs):
@@ -63,6 +63,7 @@ class Student(models.Model):
 class Instructor(models.Model):
     instructor = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
     profile_image = models.ImageField(null=True, blank=True, upload_to="profile_pictures/instructor/")
+    about_me = models.TextField(null=True,blank=True)
 
     def __str__(self):
         return f"Instructor {self.instructor.first_name}"
