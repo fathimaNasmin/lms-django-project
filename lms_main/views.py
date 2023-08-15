@@ -51,3 +51,16 @@ def course_lists(request):
         
 
     return render(request, 'lms_main/course_lists.html', context)
+
+
+def single_course(request, id):
+    """view for single course in detail"""
+    single_course = models.Course.objects.get(id=id)
+    print(single_course)
+    context = {
+        'course': single_course,
+    }
+
+    return render(request, 'lms_main/single_course.html', context)
+
+

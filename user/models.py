@@ -64,6 +64,7 @@ class Instructor(models.Model):
     instructor = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
     profile_image = models.ImageField(null=True, blank=True, upload_to="profile_pictures/instructor/")
     about_me = models.TextField(null=True,blank=True)
+    designation = models.CharField(null=True,blank=True,max_length=100)
 
     def __str__(self):
         return f"Instructor {self.instructor.first_name}"

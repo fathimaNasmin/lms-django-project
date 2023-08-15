@@ -3791,7 +3791,7 @@ p.form-message.error {
 
 .old-price {
     text-decoration: line-through;
-    color: #999;
+    color: #999; 
 }
 
 .new-price {
@@ -3800,6 +3800,7 @@ p.form-message.error {
     font-weight: bold;
     
 }
+
 
 
 
