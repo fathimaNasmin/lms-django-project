@@ -1,23 +1,143 @@
-{% extends 'user/dashboard_components/dashboard_base.html' %}
+{% extends 'lms_main/base.html' %}
 
 {% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy signup_form %}
 
-
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
 
 
 {% block main %}
 
-{% block user_content %}
-<h1>welcome to your profile{{ user.user_firstname }}</h1>
-<p>{{ user.user_lastname }}</p>
-<p>{{ user.user_email }}</p>
-<p>{{ user.user_is_student }}</p>
+<div class="w-50 mx-auto">
+    <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
+    <div class="mx-auto mt-4 d-flex justify-content-center">
+        <h4>Update Profile</h4>
+    </div>
+    <div class="mt-4 mx-auto">
+        {% if user.instructor.profile_image %}
+        <img src="{{ user.instructor.profile_image.url }}" class="mx-auto d-block w-25" alt="profile Image"
+            style="border-radius: 60%;">
+        {% else %}
+        <img src="{% static 'images/profile/user.png' %}" class="mx-auto d-block w-25" alt="profile Image"
+            style="border-radius: 60%;">
+        {% endif %}
+        <!----display validation errors through ajax-->
+        <div class="w-75 mx-auto">
+            <p class="text-danger" id="alert-error"></p>
+        </div>
 
-{% endblock %}
+        <div class="w-75 mx-auto">
+            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ u_form|crispy }}
+                {{ i_form|crispy }}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="update-button" class="btn btn-warning my-3">Update</button>
+                </div>
+            </form>
 
+        </div>
+    </div>
+</div>
 
-<!-- Footer starts here -->
 {% include 'lms_main/components/footer.html' %}
-<!-- Footer ends here -->
+
+<!---=======Ajax cdn=======-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    const alertBox = document.getElementById("alert-box")
+
+    const handleAlert = (type, text) => {
+        alertBox.innerHTML = `<div class="alert alert-${type}" role="alert">
+                                ${text}
+                                </div>`
+    }
+
+
+    var alertError = document.getElementById('alert-error')
+    $(document).on('submit', "#update-form-id", function (event) {
+        event.preventDefault();
+
+        var update_form_id = $("#update-form-id")
+        var formData = new FormData(update_form_id.get(0));
+        console.log(formData)
+
+        $.ajax({
+            url: "{% url 'user:instructor-update-profile' %}",
+            type: "POST",
+            header: { 'X-CSRFToken': '{% csrf_token %}' },
+            data: formData,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                var success = response['success']
+                if (success) {
+                    // alert("User created successfully")
+                    console.log(response.new_data)
+                    handleAlert('success', "Profile Updated Successfully")
+                    setTimeout(() => {
+                        alertBox.innerHTML = "";
+
+
+                    }, 3000)
+                    update_form_id.each(function () {
+                        this.reset();
+                    });
+                    window.location.href = "{% url 'user:instructor-dashboard' %}";
+                }
+                else {
+                    var u_form_errors = response['u_form_errors']
+                    var i_form_errors = response['i_form_errors']
+
+                    console.log(u_form_errors)
+                    console.log(i_form_errors)
+
+                    // Using a for...in loop
+                    for (const key in u_form_errors) {
+                        if (u_form_errors.hasOwnProperty(key)) {
+                            // display error message under the each field
+                            var form_element = document.getElementById('update-form-id')
+                            console.log(form_element)
+
+                            const field = form_element.querySelector(`[name="${key}"]`);
+                            const errorMessages = u_form_errors[key];
+
+                            const errorElement = document.createElement('div');
+                            for (const errorMessage of errorMessages) {
+
+                                errorElement.className = 'error-message';
+                                errorElement.textContent = errorMessage;
+                                errorElement.style.color = 'red';
+                                field.parentNode.insertBefore(errorElement, field.nextSibling);
+                            }
+                            setTimeout(() => {
+                                errorElement.innerHTML = ""
+                            }, 3000);
+                        }
+                    }
+
+                    alertBox.innerHTML = ""
+                    update_form_id.each(function () {
+                        this.reset();
+                    });
+                }
+            },
+            failure: function (error) {
+                alert("Error occured while calling django view")
+            }
+
+        })
+    })
+
+</script>
 
 {% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'lms_main/base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy signup_form %}
+
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+
+
+{% block main %}
+<!-- ADD NEW COURSE FORM START HERE -->
+<div class="w-50 mx-auto">
+    <div id="alert-box" class="mx-auto mt-5 d-flex justify-content-center"></div>
+    <div class="mx-auto mt-4 d-flex justify-content-center">
+        <h4>Add new Course</h4>
+    </div>
+    <div class="mt-4 mx-auto">
+        <!----display validation errors through ajax-->
+        <div class="w-75 mx-auto">
+            <p class="text-danger" id="alert-error"></p>
+        </div>
+
+        <div class="w-75 mx-auto">
+            <form id="add-course-form-id" action="{% url 'user:update-profile' %}" method="POST"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ course_form|crispy }}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="add-course-button" class="btn btn-warning my-3">Add Course</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- ADD NEW COURSE FORM ENDS HERE -->
+
+<!-- Footer starts here -->
+{% include 'lms_main/components/footer.html' %}
+<!-- Footer ends here -->
+
+{% endblock %}
