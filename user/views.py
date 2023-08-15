@@ -6,7 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 
-from . import forms
+from . import forms as user_forms
+from lms_main import forms as lms_main_forms
 import json
 from django.contrib import messages
 from .models import Student, Instructor, User
@@ -18,7 +19,7 @@ def signup(request):
     """View for creating a new account for the student"""
 
     if request.method == 'POST' and request.is_ajax():
-        signup_form = forms.SignUpForm(request.POST)
+        signup_form = user_forms.SignUpForm(request.POST)
         data = {}
         if signup_form.is_valid():
             """form validation checking"""
@@ -38,7 +39,7 @@ def signup(request):
             # print(signup_form.errors.as_json())
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
-        signup_form = forms.SignUpForm()
+        signup_form = user_forms.SignUpForm()
 
 
     context = {'form':signup_form}
@@ -50,7 +51,7 @@ def login_user(request):
     """View for authenticating student"""
     
     if request.method == "POST" and request.is_ajax():
-        form = forms.LoginForm(request, data=request.POST)
+        form = user_forms.LoginForm(request, data=request.POST)
         data1 = {}
         if form.is_valid():
             email = form.cleaned_data['username']
@@ -74,7 +75,7 @@ def login_user(request):
             data1['form_errors'] = form.errors
             return HttpResponse(json.dumps(data1), content_type='application/json')
     else:
-        form = forms.LoginForm()
+        form = user_forms.LoginForm()
     context = {
         'form': form,
     }
@@ -99,8 +100,8 @@ def update_student_profile(request):
     """views function to update the user profile"""
     user = request.user
     if user:
-        update_user_info = forms.SignUpForm(request.POST or None, instance=user)
-        update_profile_image = forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=user.student)
+        update_user_info = user_forms.SignUpForm(request.POST or None, instance=user)
+        update_profile_image = user_forms.UpdateProfileForm(request.POST or None, request.FILES or None, instance=user.student)
 
         # Disable the email field for the signup form
         update_user_info.fields['email'].widget.attrs['readonly'] = True
@@ -161,7 +162,7 @@ def instructor_signup(request):
     """View for creating a new account for the Instructor"""
 
     if request.method == 'POST' and request.is_ajax():
-        signup_form = forms.SignUpForm(request.POST)
+        signup_form = user_forms.SignUpForm(request.POST)
         data = {}
         if signup_form.is_valid():
             """form validation checking"""
@@ -181,7 +182,7 @@ def instructor_signup(request):
             # print(signup_form.errors.as_json())
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
-        signup_form = forms.SignUpForm()
+        signup_form = user_forms.SignUpForm()
 
 
     context = {'form':signup_form}
@@ -193,7 +194,7 @@ def instructor_login(request):
     """View for authenticating Instructor"""
     
     if request.method == "POST" and request.is_ajax():
-        form = forms.InstructorLoginForm(request, data=request.POST)
+        form = user_forms.InstructorLoginForm(request, data=request.POST)
         data = {}
         if form.is_valid():
             email = form.cleaned_data['username']
@@ -216,7 +217,7 @@ def instructor_login(request):
             data1['form_errors'] = form.errors
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
-        form = forms.InstructorLoginForm()
+        form = user_forms.InstructorLoginForm()
     context = {
         'form': form,
     }
@@ -239,8 +240,8 @@ def update_instructor_profile(request):
     """views function to update the user profile"""
     user = request.user
     if user:
-        update_user_info = forms.SignUpForm(request.POST or None, instance=user)
-        update_instructor = forms.InstructorUpdateForm(request.POST or None, request.FILES or None, instance=user.instructor)
+        update_user_info = user_forms.SignUpForm(request.POST or None, instance=user)
+        update_instructor = user_forms.InstructorUpdateForm(request.POST or None, request.FILES or None, instance=user.instructor)
 
         # Disable the email field for the signup form
         update_user_info.fields['email'].widget.attrs['readonly'] = True
@@ -285,6 +286,20 @@ def update_instructor_profile(request):
     'i_form': update_instructor
     }
     return render(request, 'user/instructor/instructor_update_profile.html', context)
+
+
+
+@login_required
+def instructor_add_course(request):
+    """views function to add new course by the instructor"""
+    add_course_form = lms_main_forms.AddCourseForm()
+
+    context = {
+        'course_form': add_course_form,
+    }
+    
+    return render(request, 'user/instructor/instructor_add_course.html', context)
+
 
 
 @login_required

@@ -151,10 +151,10 @@
         
         
                                     <li class="nav-item">
-                                        <a href="teachers.html">My Courses</a>
+                                        <a href="teachers.html">Courses</a>
                                         <ul class="sub-menu">
-                                            <li><a href="teachers.html">teachers</a></li>
-                                            <li><a href="teachers-singel.html">teacher Singel</a></li>
+                                            <li><a href="teachers.html">My courses</a></li>
+                                            <li><a href="{% url 'user:instructor-add-course' %}">Add new course</a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -198,29 +198,18 @@
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="active" href="index-2.html">Home</a>
+                                    <a class="active" href="{% url 'lms_main:home' %}">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="courses.html">Categories</a>
                                     <ul class="sub-menu">
-                                        <li><a class="active" href="index-2.html">Home 01</a></li>
-                                        <li><a href="index-3.html">Home 02</a></li>
-                                        <li><a href="index-4.html">Home 03</a></li>
+                                        {% for category in categories %}
+                                        <li><a href="{% url 'lms_main:category-detail' category.id %}">{{ category.name }}</a></li>
+                                        {% endfor %}
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="about.html">About us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="courses.html">Courses</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="courses.html">Courses</a></li>
-                                        <li><a href="courses-singel.html">Course Singel</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="events.html">Events</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="events.html">Events</a></li>
-                                        <li><a href="events-singel.html">Event Singel</a></li>
-                                    </ul>
+                                    <a href="{% url 'lms_main:course-lists' %}">all courses</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="teachers.html">Our teachers</a>

@@ -3784,6 +3784,22 @@ p.form-message.error {
 	padding-bottom: 15px;
 }
 
+.discount-container {
+    text-align: right;
+    display: inline;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.new-price {
+    font-size: 1.2em;
+    color:#900C3F;
+    font-weight: bold;
+    
+}
 
 
 
