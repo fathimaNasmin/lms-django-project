@@ -98,7 +98,12 @@
 
                                 <div class="course-teacher">
                                     <div class="thum">
-                                        <a href="#"><img src="{{ course.author.profile_image.url }}" alt="teacher"></a>
+                                        <a href="#">{% if course.author.profile_image %}
+                                        <img src="{{ course.author.profile_image.url }}" alt="teacher">
+                                        {% else %}
+                                        <img src="{% static 'images/profile/user.png' %}" alt="teacher">
+                                        {% endif %}
+                                    </a>
                                     </div>
                                     <div class="name">
                                         <a href="#">
@@ -160,7 +165,11 @@
 
                                         <div class="course-teacher">
                                             <div class="thum">
-                                                <a href="#"><img src="{{ course.author.profile_image.url }}" alt="teacher"></a>
+                                                <a href="#">{% if course.author.profile_image %}
+                                                <img src="{{ course.author.profile_image.url }}" alt="teacher">
+                                                {% else %}
+                                                <img src="{% static 'images/profile/user.png' %}" alt="teacher">
+                                                {% endif %}</a>
                                             </div>
                                             <div class="name">
                                                 <a href="#">
