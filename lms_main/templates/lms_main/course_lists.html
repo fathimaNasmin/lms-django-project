@@ -51,9 +51,9 @@
                     </ul> <!-- nav -->
 
                     <div class="courses-search float-right">
-                        <form action="#">
-                            <input type="text" placeholder="Search">
-                            <button type="button"><i class="fa fa-search"></i></button>
+                        <form action="{% url 'lms_main:search' %}" method="GET">
+                            <input type="text" placeholder="Search" name="query" id="query">
+                            <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </div> <!-- courses search -->
                 </div> <!-- courses top search -->

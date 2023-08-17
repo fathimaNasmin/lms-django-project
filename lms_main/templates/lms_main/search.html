@@ -1,6 +1,8 @@
 {% extends 'lms_main/base.html' %}
 {% load static %}
 
+{% load course_tags %}
+
 {% block navbar %}
 {% include 'lms_main/components/navbar.html' %}
 {% endblock %}
@@ -9,12 +11,12 @@
 <!--====== PAGE BANNER PART START ======-->
 
 <section id="page-banner" class="pt-105 pb-110 bg_cover" data-overlay="8"
-    style="background-image: url('{% static 'images/page-banner-2.jpg' %}');">
+    style="background-image: url('{% static 'images/page-banner-2.jpg' %}')">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-banner-cont">
-                    <h2>{{ category_obj.name|title}}</h2>
+                    <h2>Search Results</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -45,7 +47,7 @@
                             <a id="courses-list-tab" data-toggle="tab" href="#courses-list" role="tab"
                                 aria-controls="courses-list" aria-selected="false"><i class="fa fa-th-list"></i></a>
                         </li>
-                        <li class="nav-item">Showning 4 0f 24 Results</li>
+                        <li class="nav-item">Showing 4 0f 24 Results</li>
                     </ul> <!-- nav -->
 
                     <div class="courses-search float-right">
@@ -60,80 +62,87 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="courses-grid" role="tabpanel" aria-labelledby="courses-grid-tab">
                 <div class="row">
-                    {% for course in category_courses %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="singel-course mt-30">
-                            <div class="thum">
-                                <div class="image">
-                                    {% if course.featured_image %}
-                                    <img src="{{ course.featured_image.url }}" alt="Course">
-                                    {% endif %}
-                                </div>
-                                {% if course.price == 0 %}
-                                <div class="price">
-                                    <span>Free</span>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="cont">
-                                <ul>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                                <span>(20 Reviws)</span>
-                                <a href="courses-singel.html">
-                                    <h4>{{ course.title }}</h4>
-                                </a>
-                                <div class="course-teacher">
-                                    <div class="thum">
-                                        <a href="#">
-                                            {% if course.author.profile_image %}
-                                            <img src="{{ course.author.profile_image.url }}" alt="teacher">
-                                            {% else %}
-                                            <img src="{% static 'images/profile/user.png' %}" alt="teacher">
+                    {% if search_results %}
+                        {% for result in search_results %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="singel-course mt-30">
+                                <div class="thum">
+                                    <div class="image">
+                                        <img src="{{ result.featured_image.url }}" alt="Course">
+                                    </div>
+                                    <div class="price">
+                                        {% if result.price == 0 %}
+                                        <span>Free</span>
                                         {% endif %}
-                                    </a>
-                                    </div>
-                                    <div class="name">
-                                        <a href="#">
-                                            <h6>{{ course.author.instructor.first_name }}</h6>
-                                        </a>
-                                    </div>
-                                    <div class="admin">
-                                        <ul>
-                                            <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                            <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                        </div> <!-- singel course -->
-                    </div>
-                    {% endfor %}
+                                <div class="cont">
+                                    <ul>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                    </ul>
+                                    <span>(20 Reviws)</span>
+                                    <a href="{% url 'lms_main:single-course' result.id %}">
+                                        <h4>{{ result.title }}</h4>
+                                    </a>
+                        
+                                    {% if result.price != 0 %}
+                                    <div class="discount-container">
+                                        <p class="old-price">&#8377;{{ result.price }}</p>
+                                        <p class="new-price">&#8377;{% discount_calculation result.price result.discount %}
+                                        </p>
+                                        <p>Save {{ result.discount}}%</p>
+                                    </div>
+                                    {% endif %}
+                        
+                                    <div class="course-teacher">
+                                        <div class="thum">
+                                            <a href="#">
+                                                <img src="{{ result.author.profile_image_url }}" alt="profile image" class="w-100">
+                                            </a>
+                                        </div>
+                                        <div class="name">
+                                            <a href="#">
+                                                <h6>{{ result.author.instructor.full_name }} </h6>
+                                            </a>
+                                        </div>
+                                        <div class="admin">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                                <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- singel course -->
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <h2>Search Not found</h2>
+                    
+                    {% endif %}
 
                 </div> <!-- row -->
             </div>
             <div class="tab-pane fade" id="courses-list" role="tabpanel" aria-labelledby="courses-list-tab">
                 <div class="row">
-                    {% for course in category_courses %}
+                    {% for result in search_results %}
                     <div class="col-lg-12">
                         <div class="singel-course mt-30">
                             <div class="row no-gutters">
                                 <div class="col-md-6">
                                     <div class="thum">
                                         <div class="image">
-                                            {% if course.featured_image %}
-                                            <img src="{{ course.featured_image.url }}" alt="Course">
+                                            <img src="{{ result.featured_image.url }}" alt="Course">
+                                        </div>
+                                        <div class="price">
+                                            {% if result.price == 0 %}
+                                            <span>Free</span>
                                             {% endif %}
                                         </div>
-                                        {% if course.price == 0 %}
-                                        <div class="price">
-                                            <span>Free</span>
-                                        </div>
-                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -146,16 +155,27 @@
                                             <li><i class="fa fa-star"></i></li>
                                         </ul>
                                         <span>(20 Reviws)</span>
-                                        <a href="#">
-                                            <h4>{{ course.title }}</h4>
+                                        <a href="{% url 'lms_main:single-course' result.id %}">
+                                            <h4>{{ result.title }}</h4>
                                         </a>
+                                        {% if result.price != 0 %}
+                                        <div class="discount-container">
+                                            <p class="old-price">&#8377;{{ result.price }}</p>
+                                            <p class="new-price">&#8377;{% discount_calculation result.price
+                                                result.discount %}</p>
+                                            <p>Save {{result.discount}}%</p>
+                                        </div>
+                                        {% endif %}
+
                                         <div class="course-teacher">
                                             <div class="thum">
-                                                <a href="#"><img src="images/course/teacher/t-1.jpg" alt="teacher"></a>
+                                                <a href="#">
+                                                    <img src="{{ result.author.profile_image_url }}" alt="profile image" class="w-25">
+                                                </a>
                                             </div>
                                             <div class="name">
                                                 <a href="#">
-                                                    <h6>{{ course.author.instructor.first_name }}</h6>
+                                                    <h6>{{ result.author.instructor.full_name }}</h6>
                                                 </a>
                                             </div>
                                             <div class="admin">
@@ -171,7 +191,7 @@
                         </div> <!-- singel course -->
                     </div>
                     {% endfor %}
-                    
+
                 </div> <!-- row -->
             </div>
         </div> <!-- tab content -->
