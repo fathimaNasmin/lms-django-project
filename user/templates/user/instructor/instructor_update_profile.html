@@ -18,13 +18,7 @@
         <h4>Update Profile</h4>
     </div>
     <div class="mt-4 mx-auto">
-        {% if user.instructor.profile_image %}
-        <img src="{{ user.instructor.profile_image.url }}" class="mx-auto d-block w-25" alt="profile Image"
-            style="border-radius: 60%;">
-        {% else %}
-        <img src="{% static 'images/profile/user.png' %}" class="mx-auto d-block w-25" alt="profile Image"
-            style="border-radius: 60%;">
-        {% endif %}
+    <img src="{{ user.instructor.profile_image_url }}" alt="profile image" class="w-25">
         <!----display validation errors through ajax-->
         <div class="w-75 mx-auto">
             <p class="text-danger" id="alert-error"></p>

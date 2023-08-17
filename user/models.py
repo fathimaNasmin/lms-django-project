@@ -1,6 +1,6 @@
 # TODO: Student fields:first name;last name;email;password
-#TODO: Instructor Model
-#TODO: one-one field to instructor and student by adding additional fields
+# TODO: Instructor Model
+# TODO: one-one field to instructor and student by adding additional fields
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -25,30 +25,36 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+
 @receiver(pre_save, sender=User)
 def set_username(sender, instance, **kwargs):
     if not instance.username:
         instance.username = instance.email
 
+
 pre_save.connect(set_username, sender=User)
 
 
 class Student(models.Model):
-    student = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True,
-    )
-    profile_image = models.ImageField(null=True, blank=True, upload_to="profile_pictures/student/")
+    student = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,
+                                   )
+    profile_image = models.ImageField(
+        null=True, blank=True, upload_to="profile_pictures/student/")
 
     def __str__(self):
         return f"Student {self.student.first_name}"
 
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        
+
         if self.profile_image:
             img = Image.open(self.profile_image.path)
             width, height = img.size
-            
+
             desired_width = 300  # Your desired width
             desired_height = 300  # Your desired height
 
@@ -59,12 +65,28 @@ class Student(models.Model):
                 self.profile_image_height = img.height
                 self.save()
 
+    @property
+    def profile_image_url(self):
+        if self.profile_image and hasattr(self.profile_image, 'url'):
+            return self.profile_image.url
+        else:
+            return "/static/images/profile/user.png"
+
 
 class Instructor(models.Model):
-    instructor = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
-    profile_image = models.ImageField(null=True, blank=True, upload_to="profile_pictures/instructor/")
-    about_me = models.TextField(null=True,blank=True)
-    designation = models.CharField(null=True,blank=True,max_length=100)
+    instructor = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
+    profile_image = models.ImageField(
+        null=True, blank=True, upload_to="profile_pictures/instructor/")
+    about_me = models.TextField(null=True, blank=True)
+    designation = models.CharField(null=True, blank=True, max_length=100)
 
     def __str__(self):
         return f"Instructor {self.instructor.first_name}"
+
+    @property
+    def profile_image_url(self):
+        if self.profile_image and hasattr(self.profile_image, 'url'):
+            return self.profile_image.url
+        else:
+            return "/static/images/profile/user.png"

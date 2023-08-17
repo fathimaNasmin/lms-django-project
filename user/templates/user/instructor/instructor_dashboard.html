@@ -10,7 +10,7 @@
 
 {% block main %}
 
-<h1>welcome dear Teacher {{ user.firstname }}</h1>
+<h1>welcome dear Teacher {{ user.full_name }}</h1>
 <br><br><br>
 {% if user.is_authenticated %}
     <h1>Authenticated</h1>
@@ -19,11 +19,7 @@
     <h5>{{ user.email }}</h5>
     <p>About Me: {{ user.instructor.about_me }}</p>
 
-    {% if user.instructor.profile_image %}
-        <img src="{{ user.instructor.profile_image.url }}" alt="profile image">
-    {% else %}
-        <img src="{% static 'images/profile/user.png' %}" alt="">
-    {% endif %}
+    <img src="{{ user.instructor.profile_image_url }}" alt="profile image" class="w-25 mx-auto">
 
 {% else %}
     <h1>Not authenticated</h1>
