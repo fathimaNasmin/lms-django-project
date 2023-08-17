@@ -1,2 +1,7 @@
 # Untrack all .pyc files 
 *.pyc 
+
+# Untrack all __pycache__ file
+
+__pychache__/
+/__pychache__/
