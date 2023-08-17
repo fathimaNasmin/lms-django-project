@@ -32,6 +32,10 @@ class Category(models.Model):
                 self.icon_height = img.height
                 self.save()
 
+class Level(models.Model):
+    """Level of each course"""
+    level = models.CharField(max_length=30)
+
 
 class Course(models.Model):
     """Model to store courses"""
@@ -52,6 +56,7 @@ class Course(models.Model):
     #========FOREIGN KEY AND RELATIONSHIPS=======#
     author = models.ForeignKey(user_model.Instructor,on_delete=models.CASCADE)
     category = models.ForeignKey(lms_main_model.Category,on_delete=models.CASCADE)
+    level = models.ForeignKey(lms_main_model.Level, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Course {self.title}"
