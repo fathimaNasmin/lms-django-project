@@ -11,7 +11,7 @@ urlpatterns = [
     path('category-detail/<int:id>/',
          lms_main_view.category_detail, name='category-detail'),
     path('course-lists/', lms_main_view.course_lists, name='course-lists'),
-    path('single-course/<int:id>/',
+    path('single-course/<slug:slug>/',
          lms_main_view.single_course, name='single-course'),
 
 ]

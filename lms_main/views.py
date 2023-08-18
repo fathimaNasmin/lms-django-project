@@ -67,9 +67,9 @@ def course_lists(request):
     return render(request, 'lms_main/course_lists.html', context)
 
 
-def single_course(request, id):
+def single_course(request, slug):
     """view for single course in detail"""
-    single_course = models.Course.objects.get(id=id)
+    single_course = models.Course.objects.filter(slug=slug).first()
     # print(single_course)
     context = {
         'course': single_course,

@@ -84,7 +84,7 @@
                                     <li><i class="fa fa-star"></i></li>
                                 </ul>
                                 <span>(20 Reviws)</span>
-                                <a href="{% url 'lms_main:single-course' course.id %}">
+                                <a href="{% url 'lms_main:single-course' course.slug %}">
                                     <h4>{{ course.title }}</h4>
                                 </a>
                                 
@@ -98,11 +98,7 @@
 
                                 <div class="course-teacher">
                                     <div class="thum">
-                                        <a href="#">{% if course.author.profile_image %}
-                                        <img src="{{ course.author.profile_image.url }}" alt="teacher">
-                                        {% else %}
-                                        <img src="{% static 'images/profile/user.png' %}" alt="teacher">
-                                        {% endif %}
+                                        <a href="#"><img src="{{ course.author.profile_image_url }}" alt="Instructor" class="rounded-circle">
                                     </a>
                                     </div>
                                     <div class="name">
@@ -152,7 +148,7 @@
                                             <li><i class="fa fa-star"></i></li>
                                         </ul>
                                         <span>(20 Reviws)</span>
-                                        <a href="{% url 'lms_main:single-course' course.id %}">
+                                        <a href="{% url 'lms_main:single-course' course.slug %}">
                                             <h4>{{ course.title }}</h4>
                                         </a>
                                         {% if course.price != 0 %}
@@ -165,11 +161,9 @@
 
                                         <div class="course-teacher">
                                             <div class="thum">
-                                                <a href="#">{% if course.author.profile_image %}
-                                                <img src="{{ course.author.profile_image.url }}" alt="teacher">
-                                                {% else %}
-                                                <img src="{% static 'images/profile/user.png' %}" alt="teacher">
-                                                {% endif %}</a>
+                                                <a href="#">
+                                                    <img src="{{ course.author.profile_image_url }}" alt="Instructor" class="rounded-circle">
+                                                </a>
                                             </div>
                                             <div class="name">
                                                 <a href="#">
