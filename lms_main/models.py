@@ -1,8 +1,11 @@
+from . import models as lms_main_model
+from user import models as user_model
 from django.db import models
 from PIL import Image
+from django.utils.text import slugify
+from django.db.models.signals import pre_save, post_save
 
-from user import models as user_model
-from . import models as lms_main_model
+from .utils import slugify_course_instance_title
 
 
 class Category(models.Model):
@@ -56,7 +59,8 @@ class Course(models.Model):
     # featured_video = models.CharField(max_length=500)
     price = models.IntegerField(null=True, default=0)
     discount = models.IntegerField(null=True, blank=True)
-    slug = models.SlugField(default='', max_length=400, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True,
+                            blank=True, max_length=300)
     status = models.CharField(choices=STATUS, max_length=100, null=True)
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     author = models.ForeignKey(user_model.Instructor, on_delete=models.CASCADE)
@@ -82,3 +86,25 @@ class Course(models.Model):
                 self.featured_image_width = img.width
                 self.featured_image_height = img.height
                 self.save()
+
+        # if self.slug is None:
+        #     self.slug = slugify(self.title)
+        #     self.save()
+
+
+def course_slug_pre_save(sender, instance, *args, **kwargs):
+    # print('pre_save')
+    if instance.slug is None:
+        slugify_course_instance_title(instance, save=False)
+
+
+pre_save.connect(course_slug_pre_save, sender=Course)
+
+
+def course_slug_post_save(sender, instance, created, *args, **kwargs):
+    # print('post_save')
+    if created:
+        slugify_course_instance_title(instance, save=True)
+
+
+post_save.connect(course_slug_post_save, sender=Course)
