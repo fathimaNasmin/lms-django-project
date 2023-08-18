@@ -72,7 +72,7 @@ def course_lists(request):
 def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
-    # print(single_course)
+    print(single_course)
     context = {
         'course': single_course,
     }

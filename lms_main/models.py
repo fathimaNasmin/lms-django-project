@@ -115,3 +115,16 @@ def course_slug_post_save(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(course_slug_post_save, sender=Course)
+
+
+class Requirement(models.Model):
+    """requirement of each course"""
+    requirement_points = models.CharField(
+        max_length=500, default="no requirements")
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        lms_main_model.Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Requirement {self.requirement_points}"
