@@ -5,3 +5,7 @@
 
 __pychache__/
 /__pychache__/
+
+
+#Untrack .env file
+.env
