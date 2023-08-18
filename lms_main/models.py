@@ -13,6 +13,8 @@ class Category(models.Model):
     name = models.CharField(max_length=80)
     icon = models.ImageField(null=True, blank=True,
                              upload_to='icons/category/')
+    slug = models.SlugField(unique=True, null=True,
+                            blank=True, max_length=300)
 
     def __str__(self):
         return f"Category {self.name}"
@@ -33,6 +35,11 @@ class Category(models.Model):
                 self.icon_width = img.width
                 self.icon_height = img.height
                 self.save()
+
+        # slugify the title of category
+        if self.slug is None:
+            self.slug = slugify(f"category{self.name}{self.id}")
+            self.save()
 
 
 class Level(models.Model):

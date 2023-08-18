@@ -201,10 +201,10 @@
                                     <a class="active" href="{% url 'lms_main:home' %}">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="courses.html">Categories</a>
+                                    <a href="#">Categories</a>
                                     <ul class="sub-menu">
                                         {% for category in categories %}
-                                        <li><a href="{% url 'lms_main:category-detail' category.id %}">{{ category.name }}</a></li>
+                                        <li><a href="{% url 'lms_main:category-detail' category.slug %}">{{ category.name }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>

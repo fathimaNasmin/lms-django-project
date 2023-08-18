@@ -84,7 +84,7 @@
                                     <li><i class="fa fa-star"></i></li>
                                 </ul>
                                 <span>(20 Reviws)</span>
-                                <a href="courses-singel.html">
+                                <a href="{% url 'lms_main:single-course' course.slug %}">
                                     <h4>{{ course.title }}</h4>
                                 </a>
                                 <div class="course-teacher">

@@ -32,9 +32,11 @@ def search(request):
     #                      'query_result': courses})
 
 
-def category_detail(request, id):
+def category_detail(request, slug):
     """displays all the courses under the category"""
-    category_obj = models.Category.objects.get(id=id)
+    print(slug)
+    category_obj = models.Category.objects.filter(slug=slug).first()
+    print(category_obj)
     categories = models.Category.objects.all()
     category_courses = models.Course.objects.filter(
         status='PUBLISH', category_id=category_obj.id).all()
