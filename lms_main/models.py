@@ -141,3 +141,35 @@ class WhatYouWillLearn(models.Model):
 
     def __str__(self):
         return f"What you'll Learn {self.points}"
+
+
+class Lesson(models.Model):
+    """lesson for each course"""
+    name = models.CharField(
+        max_length=200)
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        lms_main_model.Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Lesson - {self.name}"
+
+
+class Video(models.Model):
+    """videos of each courses"""
+    serial_number = models.IntegerField(null=True)
+    title = models.CharField(
+        max_length=100)
+    youtube_id = models.CharField(
+        max_length=200)
+    # time_duration = models.FloatField(null=True)
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        lms_main_model.Course, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        lms_main_model.Lesson, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Video - {self.title} of {self.lesson.name}-{self.course.title}"
