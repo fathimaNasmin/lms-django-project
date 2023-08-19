@@ -128,3 +128,16 @@ class Requirement(models.Model):
 
     def __str__(self):
         return f"Requirement {self.requirement_points}"
+
+
+class WhatYouWillLearn(models.Model):
+    """what you'll learn of each course"""
+    points = models.CharField(
+        max_length=500, default="no points")
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        lms_main_model.Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"What you'll Learn {self.points}"

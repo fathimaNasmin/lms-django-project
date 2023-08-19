@@ -110,6 +110,18 @@
                                         <h6>Course Description</h6>
                                         <p>{{ course.description }}</p>
                                     </div>
+                                    {% if course.whatyouwilllearn_set.all %}
+                                    <div class="singel-description pt-40">
+                                        <h6>What You'll Learn</h6>
+                                        <ul style="list-style-type: square;">
+                                            {% for point in course.whatyouwilllearn_set.all %}
+                                            <li>
+                                                <p>{{ point.points}}</p>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
                                     <div class="singel-description pt-40">
                                         <h6>Requirements</h6>
                                         <ul style="list-style-type: square;">
