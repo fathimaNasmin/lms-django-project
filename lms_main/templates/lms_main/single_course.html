@@ -126,15 +126,13 @@
                             </div>
                             <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
                                 <div class="curriculam-cont">
-                                    <div class="title">
-                                        <h6>Learn basis javascirpt Lecture Started</h6>
-                                    </div>
+                                    
                                     <div class="accordion" id="accordionExample">
                                        {% for video in videos %}
                                         <div class="card">
                                             <div class="card-header" id="headingOne">
-                                                <a href="#" data-toggle="collapse" data-target="#collapseOne"
-                                                    aria-expanded="true" aria-controls="collapseOne">
+                                                <a href="#" data-toggle="collapse" data-target="#{{ video.lesson.name }}"
+                                                    aria-expanded="false" aria-controls="collapseOne">
                                                     <ul>
                                                         <li><i class="fa fa-file-o"></i></li>
                                                         <li><span class="lecture">{{forloop.counter}}.&nbsp;{{ video.lesson.name }}</span></li>
@@ -145,7 +143,7 @@
                                                 </a>
                                             </div>
 
-                                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                                            <div id="{{ video.lesson.name }}" class="collapse" aria-labelledby="headingOne"
                                                 data-parent="#accordionExample">
                                                 <div class="card-body d-flex">
                                                     <ul>
