@@ -72,9 +72,26 @@ def course_lists(request):
 def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
-    print(single_course)
+    # lessons = models.Lesson.objects.filter(course__slug=slug).values()
+
+    # lesson_id = lessons[0]
+    # print(lesson_id)
+    # videos = models.Video.objects.filter(lesson__id=lesson_id)
+    videos = models.Video.objects.filter(course__slug=slug)
+
+    for video in videos:
+        print(video.lesson.name)
+        # print(video.lesson_set.all())
+    # print(video.lesson.id)
+    # print(videos[0].title)
+    # print(single_course.author.instructor.last_name)
+    # print(single_course.level)
+    # print(single_course.lesson_set.name)
+    # print(single_course.lesson_set.title)
     context = {
         'course': single_course,
+        # 'lessons': lessons,
+        'videos': videos,
     }
 
     return render(request, 'lms_main/single_course.html', context)
