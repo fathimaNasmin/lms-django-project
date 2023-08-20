@@ -5,7 +5,7 @@ from PIL import Image
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
 
-from .utils import slugify_course_instance_title
+from .utils import slugify_course_instance_title, calculate_video_duration
 
 
 class Category(models.Model):
@@ -45,7 +45,7 @@ class Category(models.Model):
 class Level(models.Model):
     """Level of each course"""
     name_of_level = models.CharField(
-        max_length=30, null=True, blank=True)
+        max_length=30, null=True, blank=True, default=None)
 
     def __str__(self):
         return f"Level {self.name_of_level}"
@@ -73,6 +73,7 @@ class Course(models.Model):
     author = models.ForeignKey(user_model.Instructor, on_delete=models.CASCADE)
     category = models.ForeignKey(
         lms_main_model.Category, on_delete=models.CASCADE)
+    level = models.ForeignKey(lms_main_model.Level, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Course {self.title}"
@@ -162,8 +163,8 @@ class Video(models.Model):
     title = models.CharField(
         max_length=100)
     youtube_id = models.CharField(
-        max_length=200)
-    # time_duration = models.FloatField(null=True)
+        max_length=200, unique=True)
+    time_duration = models.FloatField(null=True, blank=True)
 
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
@@ -173,3 +174,21 @@ class Video(models.Model):
 
     def __str__(self):
         return f"Video - {self.title} of {self.lesson.name}-{self.course.title}"
+
+    def save(self, *args, **kwargs):
+        # super().save(*args, **kwargs)
+        duration = calculate_video_duration(self.youtube_id)
+
+        if duration:
+            self.time_duration = duration
+
+        super(Video, self).save()
+
+
+# def pre_save(self, *args, **kwargs):
+#     duration = calculate_video_duration(self.youtube_id)
+
+#     if duration:
+#         self.time_duration = duration
+
+#     super().pre_save(*args, **kwargs)
