@@ -1,8 +1,13 @@
+import os
 import requests
-from datetime import timedelta
 import re
-from django.utils.text import slugify
 import random
+from dotenv import load_dotenv
+from datetime import timedelta
+from django.utils.text import slugify
+
+load_dotenv()
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 
 def slugify_course_instance_title(instance, save=False, new_slug=None):
@@ -26,7 +31,7 @@ def slugify_course_instance_title(instance, save=False, new_slug=None):
 def calculate_video_duration(id):
     """calculate the video duration using Google API"""
     video_id = id
-    url = f"https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB_hnKQO4oO0WY7rJ_1eV6ifHBqLcA7d9A&part=contentDetails&id={video_id}"
+    url = f"https://www.googleapis.com/youtube/v3/videos?key={GOOGLE_API_KEY}&part=contentDetails&id={video_id}"
 
     payload = {}
     headers = {}
