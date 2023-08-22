@@ -217,7 +217,7 @@
                                             <div class="singel-reviews">
                                                 <div class="reviews-author">
                                                     <div class="author-thum">
-                                                        <img src="images/review/r-1.jpg" alt="Reviews">
+                                                        <img src="{% static 'images/review/r-1.jpg' %}" alt="Reviews">
                                                     </div>
                                                     <div class="author-name">
                                                         <h6>Bobby Aktar</h6>
@@ -245,7 +245,7 @@
                                             <div class="singel-reviews">
                                                 <div class="reviews-author">
                                                     <div class="author-thum">
-                                                        <img src="images/review/r-2.jpg" alt="Reviews">
+                                                        <img src="{% static 'images/review/r-2.jpg' %}" alt="Reviews">
                                                     </div>
                                                     <div class="author-name">
                                                         <h6>Humayun Ahmed</h6>
@@ -371,7 +371,10 @@
                             {% if course.price == 0 %}
                                 <div class="price-button pt-10">
                                     <span>Free</span><br>
-                                    <a href="#" class="main-btn">Enroll Now</a>
+                                    <form action="{% url 'lms_main:enroll-course' course.slug %}" method="POST" id="enroll-form">
+                                        {% csrf_token %}
+                                        <button class="main-btn mx-auto" type="submit">Enroll Now</button>
+                                    </form>
                                 </div>
                             {% else %}
                                 <div class="price-button pt-10">
@@ -472,7 +475,7 @@
                                     </a>
                                     <div class="course-teacher">
                                         <div class="thum">
-                                            <a href="#"><img src="images/course/teacher/t-2.jpg" alt="teacher"></a>
+                                            <a href="#"><img src="{% static 'images/course/teacher/t-2.jpg' %}" alt="teacher"></a>
                                         </div>
                                         <div class="name">
                                             <a href="#">
@@ -493,7 +496,7 @@
                             <div class="singel-course mt-30">
                                 <div class="thum">
                                     <div class="image">
-                                        <img src="images/course/cu-1.jpg" alt="Course">
+                                        <img src="{% static 'images/course/cu-1.jpg' %}" alt="Course">
                                     </div>
                                     <div class="price">
                                         <span>Free</span>
@@ -513,7 +516,7 @@
                                     </a>
                                     <div class="course-teacher">
                                         <div class="thum">
-                                            <a href="#"><img src="images/course/teacher/t-3.jpg" alt="teacher"></a>
+                                            <a href="#"><img src="{% static 'images/course/teacher/t-3.jpg' %}" alt="teacher"></a>
                                         </div>
                                         <div class="name">
                                             <a href="#">
@@ -548,5 +551,110 @@
 <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
 <!--====== BACK TO TP PART ENDS ======-->
+
+
+<!---=======Ajax cdn=======-->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+
+<!----cookie js library url-->
+<!-- <script src="
+    https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
+    "></script> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+
+<script>
+    $(document).ready(function (){
+        $('#enroll-form').submit(function(event){
+            event.preventDefault();
+            var my_token = '{{ csrf_token }}'
+
+            
+
+            $.ajax({
+                type:"POST",
+                url: $(this).attr('action'),
+                header: { 'X-CSRFToken': my_token },
+                data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+                success:function(response,textStatus, jqXHR){
+                    var success = response['success']
+                    if(success){
+                        console.log("ajax request success");
+                    }
+                    else{
+                        console.log("ajax request failed");
+                        var currentUrl = window.location.href;
+                        var loginUrl = "{% url 'user:login-user' %}" + "?next=" + encodeURIComponent(currentUrl);
+                        console.log(currentUrl);
+                        console.log("Redirecting to login:", loginUrl);
+                        console.log(response,textStatus,jqXHR);
+                        window.location.href = loginUrl;
+                    }
+                
+                },
+                error:function(jqXHR,textStatus,errorThrown){
+                    console.log("Error on ajax:")
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            })
+        })
+    })
+</script>
+
+
+    var my_token = "{{ csrf_token }}";
+    $('#alert-error').hide();
+
+    // Ajax for submitting the login form and handling the response
+    $(document).ready(function () {
+        $("#login-form-id").submit(function (event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            var login_form_id = $("#login_form_id")
+            var alertError = $('#alert-error')
+
+            const hideAlert = () => {
+                $("#alert-error").hide();
+                $(this).each(function () {
+                    this.reset();
+                });
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'user:login-user' %}",
+                header: { 'X-CSRFToken': my_token },
+                data: formData,
+                success: function (response, textStatus, jqXHR) {
+                    var success = response['success']
+                    if (success) {
+                        window.location.href = "{% url 'user:dashboard' %}";  // Redirect to the dashboard upon successful login
+
+
+                    } else {
+                        var form_errors = response['form_errors']
+                        console.log(form_errors)
+
+                        $.each(form_errors, function (index, value) {
+                            $("#alert-error").text(value[0]).show();
+                            console.log(value[0])
+                        });
+                        setTimeout(() => {
+                            hideAlert()
+                        }, 3000)
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus)
+                    console.log(errorThrown)
+
+                }
+            });
+        });
+    });
+</script> -->
 
 {% endblock %}

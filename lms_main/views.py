@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
-
+import json
+from django.shortcuts import render, redirect
 from . import models
+from user import models as user_model
 
 
 def home_page(request):
@@ -84,3 +86,18 @@ def single_course(request, slug):
     }
 
     return render(request, 'lms_main/single_course.html', context)
+
+
+@login_required
+def enroll_course(request, slug):
+    """view to enroll the course for logged in students"""
+    user = request.user
+    print(user)
+    data = {}
+
+    if request.method == 'POST' and request.is_ajax():
+        print(f"{user} enrolled for the course-{slug}")
+        data['success'] = True
+        print(f"json_data{data}")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return redirect('lms_main:single-course', slug)

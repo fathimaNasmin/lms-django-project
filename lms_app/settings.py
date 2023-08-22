@@ -1,3 +1,4 @@
+# from django.core.urlresolvers import reverse_lazy
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 from pathlib import Path
@@ -151,3 +152,4 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 
 ]
+LOGIN_URL = '/user/login/'

@@ -13,5 +13,7 @@ urlpatterns = [
     path('course-lists/', lms_main_view.course_lists, name='course-lists'),
     path('single-course/<slug:slug>/',
          lms_main_view.single_course, name='single-course'),
+    path('single-course/<slug:slug>/enroll-course/',
+         lms_main_view.enroll_course, name='enroll-course'),
 
 ]

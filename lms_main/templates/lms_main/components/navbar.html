@@ -92,10 +92,21 @@
                                 <li class="nav-item">
                                     <a href="{% url 'user:update-profile' %}">Profile</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="#">Categories</a>
+                                    <ul class="sub-menu">
+                                        {% for category in categories %}
+                                        <li><a href="{% url 'lms_main:category-detail' category.slug %}">{{ category.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'lms_main:course-lists' %}">all courses</a>
+                                </li>
                                 
                                 
                                 <li class="nav-item">
-                                    <a href="teachers.html">Our teachers</a>
+                                    <a href="teachers.html">My course</a>
                                     <ul class="sub-menu">
                                         <li><a href="teachers.html">teachers</a></li>
                                         <li><a href="teachers-singel.html">teacher Singel</a></li>
