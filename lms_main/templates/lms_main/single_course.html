@@ -338,14 +338,17 @@
                 </div> <!-- corses singel left -->
 
             </div>
+            
             <div class="col-lg-4">
                 <div class="row">
                     <div class="col-lg-12 col-md-6">
                         <div class="course-features mt-30">
                             <h4>Course Features </h4>
                             <ul>
-                                <li><i class="fa fa-clock-o"></i>Duaration : <span>10 Hours</span></li>
-                                <li><i class="fa fa-clone"></i>Leactures : <span>09</span></li>
+                        
+                                <li><i class="fa fa-clock-o"></i>Duration : <span>{% time_in_hrs_min_sec total_time_duration_course %}</span></li>
+                                <li><i class="fa fa-beer"></i>Level : <span>{{course.level.name_of_level}}</span></li>
+                                <li><i class="fa fa-clone"></i>Lectures : <span>{{ no_of_videos }}</span></li>
                                 <li><i class="fa fa-beer"></i>Quizzes : <span>05</span></li>
                                 <li><i class="fa fa-user-o"></i>Students : <span>100</span></li>
                             </ul>
@@ -421,6 +424,7 @@
                     </div>
                 </div>
             </div>
+            
         </div> <!-- row -->
         <div class="row">
             <div class="col-lg-8">
