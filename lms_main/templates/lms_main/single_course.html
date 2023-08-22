@@ -107,10 +107,27 @@
                             <div class="tab-pane fade show active" id="overview" role="tabpanel"
                                 aria-labelledby="overview-tab">
                                 <div class="overview-description">
+                                    {% if course.description %}
                                     <div class="singel-description pt-40">
                                         <h6>Course Description</h6>
                                         <p>{{ course.description }}</p>
                                     </div>
+                                    {% endif %}
+                                    {% if course.WhatYouWillLearn.all %}
+                                    <div class="singel-description pt-40">
+                                        <h6>What you'll Learn</h6>
+                                        <p>{{ course.WhatYouWillLearn.all }}</p>
+                                        <ul style="list-style-type: square;">
+                                            {% for points in course.whatyouwillearn_set.all %}
+                                            <li>
+                                                <p>{{ points.points }}</p>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if course.requirement_set.all %}
                                     <div class="singel-description pt-40">
                                         <h6>Requirements</h6>
                                         <ul style="list-style-type: square;">
@@ -118,10 +135,8 @@
                                             <li><p>{{ requirement.requirement_points}}</p></li>
                                             {% endfor %}
                                         </ul>
-                                        
-                                
-                                        
                                     </div>
+                                    {% endif %}
                                 </div> <!-- overview description -->
                             </div>
                             <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
