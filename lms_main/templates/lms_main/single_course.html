@@ -141,6 +141,7 @@
                             </div>
                             <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
                                 <div class="curriculam-cont">
+
                                     
                                     <div class="accordion" id="accordionExample">
                                        {% for video in videos %}
@@ -385,17 +386,17 @@
                                 </div>
                             {% else %}
                                 <div class="price-button pt-10">
-                                    
-
-                                    <!-- <span>Price : <b>&#8377;{{ course.price}} </b></span><br>
-                                    <a href="#" class="main-btn">Add to Cart</a> -->
-
+                                   
                                     <span>Price : 
                                         <b>&#8377;{% discount_calculation course.price course.discount %} </b>
-                                        <span class="old-price">&#8377;{{ course.price }}</span>
+                                        <span class="old-price" style="color: grey;font-weight: normal;">&#8377;{{ course.price }}</span>
                                     </span>
                                     <br>
-                                    <a href="#" class="main-btn">Add to Cart</a>
+                                    <form action="{% url 'lms_main:add-to-cart' course.slug %}" method="POST" id="add-to-cart-form">
+                                        {% csrf_token %}
+                                        <button class="main-btn mx-auto" type="submit">Add to Cart</button>
+                                    </form>
+                                    
                                 </div>
                             {% endif %}
                         </div> <!-- course features -->
@@ -608,60 +609,42 @@
                 }
             })
         })
+        $('#add-to-cart-form').submit(function (event) {
+            event.preventDefault();
+            var my_token = '{{ csrf_token }}'
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                header: { 'X-CSRFToken': my_token },
+                data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+                success: function (response, textStatus, jqXHR) {
+                    var success = response['success']
+                    if (success) {
+                        console.log("ajax request success");
+                    }
+                    else {
+                        console.log("ajax request failed");
+                        var currentUrl = window.location.href;
+                        var loginUrl = "{% url 'user:login-user' %}" + "?next=" + encodeURIComponent(currentUrl);
+                        // console.log(currentUrl);
+                        // console.log("Redirecting to login:", loginUrl);
+                        // console.log(response,textStatus,jqXHR);
+                        window.location.href = loginUrl;
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error on ajax:")
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            })
+        })
     })
 </script>
 
 
-    var my_token = "{{ csrf_token }}";
-    $('#alert-error').hide();
-
-    // Ajax for submitting the login form and handling the response
-    $(document).ready(function () {
-        $("#login-form-id").submit(function (event) {
-            event.preventDefault();
-            const formData = $(this).serialize();
-            var login_form_id = $("#login_form_id")
-            var alertError = $('#alert-error')
-
-            const hideAlert = () => {
-                $("#alert-error").hide();
-                $(this).each(function () {
-                    this.reset();
-                });
-            }
-
-            $.ajax({
-                type: "POST",
-                url: "{% url 'user:login-user' %}",
-                header: { 'X-CSRFToken': my_token },
-                data: formData,
-                success: function (response, textStatus, jqXHR) {
-                    var success = response['success']
-                    if (success) {
-                        window.location.href = "{% url 'user:dashboard' %}";  // Redirect to the dashboard upon successful login
-
-
-                    } else {
-                        var form_errors = response['form_errors']
-                        console.log(form_errors)
-
-                        $.each(form_errors, function (index, value) {
-                            $("#alert-error").text(value[0]).show();
-                            console.log(value[0])
-                        });
-                        setTimeout(() => {
-                            hideAlert()
-                        }, 3000)
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus)
-                    console.log(errorThrown)
-
-                }
-            });
-        });
-    });
-</script> -->
+    
 
 {% endblock %}

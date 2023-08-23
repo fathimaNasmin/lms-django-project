@@ -15,5 +15,7 @@ urlpatterns = [
          lms_main_view.single_course, name='single-course'),
     path('single-course/<slug:slug>/enroll-course/',
          lms_main_view.enroll_course, name='enroll-course'),
+    path('single-course/<slug:slug>/add-to-cart/',
+         lms_main_view.add_to_cart, name='add-to-cart'),
 
 ]

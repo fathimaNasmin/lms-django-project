@@ -118,3 +118,30 @@ def enroll_course(request, slug):
             print(f"error:{e}")
         return HttpResponse(json.dumps(data), content_type='application/json')
     return redirect('lms_main:single-course', slug)
+
+
+@login_required(login_url='/user/login/')
+def add_to_cart(request, slug):
+    """view to add the courses to cart to purchase"""
+    user = request.user
+    print(user)
+    course = models.Course.objects.filter(slug=slug).first()
+    print(f"from add to cart page:{course}", sep="\n")
+    data = {}
+
+    if request.method == 'POST' and request.is_ajax():
+
+        # try:
+        #     student_course_enroll = user_model.EnrolledCourses(
+        #         course=course, student=request.user.student
+        #     )
+        #     student_course_enroll.save()
+        #     print(f"{user} enrolled for the course-{slug}")
+        #     data['success'] = True
+        #     print(f"json_data{data}")
+        # except Exception as e:
+        #     print(f"error:{e}")
+        print(f"{user} added the course-{slug}- to cart", sep='\n')
+        data['success'] = True
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return redirect('lms_main:single-course', slug)
