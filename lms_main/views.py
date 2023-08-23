@@ -82,9 +82,12 @@ def single_course(request, slug):
     if user.is_authenticated:
         user_enrolled_course = user_model.EnrolledCourses.objects.filter(
             course=single_course, student=user.student).exists()
-        print(user_enrolled_course)
+        course_exists_in_cart = models.AddToCart.objects.filter(
+            course=single_course, student=user.student).exists()
+        print("enrolled:", user_enrolled_course)
+        print("in cart:", course_exists_in_cart)
         context['user_enrolled_course'] = user_enrolled_course
-
+        context['course_exists_in_cart'] = course_exists_in_cart
     context = {
         'course': single_course,
         'videos': videos,
@@ -131,17 +134,23 @@ def add_to_cart(request, slug):
 
     if request.method == 'POST' and request.is_ajax():
 
-        # try:
-        #     student_course_enroll = user_model.EnrolledCourses(
-        #         course=course, student=request.user.student
-        #     )
-        #     student_course_enroll.save()
-        #     print(f"{user} enrolled for the course-{slug}")
-        #     data['success'] = True
-        #     print(f"json_data{data}")
-        # except Exception as e:
-        #     print(f"error:{e}")
+        try:
+            added_to_cart = models.AddToCart(
+                course=course, student=request.user.student
+            )
+            added_to_cart.save()
+            print(f"{user} enrolled for the course-{slug}")
+            data['success'] = True
+            print(f"json_data{data}")
+        except Exception as e:
+            print(f"error:{e}")
         print(f"{user} added the course-{slug}- to cart", sep='\n')
         data['success'] = True
         return HttpResponse(json.dumps(data), content_type='application/json')
     return redirect('lms_main:single-course', slug)
+
+
+def go_to_cart(request):
+    """Shopping cart shows all the courses added to the user cart"""
+
+    return render(request, 'lms_main/shopping_cart.html')

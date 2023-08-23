@@ -154,7 +154,7 @@ class Lesson(models.Model):
         lms_main_model.Course, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Lesson - {self.name}"
+        return f"Lesson - {self.name} - {self.course.title}"
 
 
 class Video(models.Model):
@@ -173,7 +173,7 @@ class Video(models.Model):
         lms_main_model.Lesson, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Video - {self.title} of {self.lesson.name}-{self.course.title}"
+        return f"Video - {self.course.title}-{self.lesson.name}:-{self.title}"
 
     def save(self, *args, **kwargs):
         # super().save(*args, **kwargs)
@@ -185,10 +185,17 @@ class Video(models.Model):
         super(Video, self).save()
 
 
-# def pre_save(self, *args, **kwargs):
-#     duration = calculate_video_duration(self.youtube_id)
+class AddToCart(models.Model):
+    """model to store the courses added to cart"""
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        user_model.Student, on_delete=models.CASCADE)
 
-#     if duration:
-#         self.time_duration = duration
+    def __str__(self):
+        return f"Cart {self.course.title}"
 
-#     super().pre_save(*args, **kwargs)
+    class Meta:
+        # Ensure that each combination of course and student is unique
+        unique_together = ('course', 'student')
