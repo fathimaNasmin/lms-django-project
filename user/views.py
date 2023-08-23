@@ -60,6 +60,7 @@ def login_user(request):
                 print(user.is_authenticated)
 
                 if 'next' in request.POST:
+                    next_url = request.POST.get('next')
                     data1 = {
                         'success': True,
                         'next': next_url,

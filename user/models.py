@@ -2,15 +2,13 @@
 # TODO: Instructor Model
 # TODO: one-one field to instructor and student by adding additional fields
 
+from .managers import CustomUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from PIL import Image
-
-
-from .managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -90,3 +88,15 @@ class Instructor(models.Model):
             return self.profile_image.url
         else:
             return "/static/images/profile/user.png"
+
+
+class EnrolledCourses(models.Model):
+    """model for enrolled courses by students"""
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Course Enrolled {self.course.title}-{self.student.first_name}"

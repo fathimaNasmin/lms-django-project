@@ -370,11 +370,18 @@
 
                             {% if course.price == 0 %}
                                 <div class="price-button pt-10">
+                                    {% if user.is_authenticated  or user_enrolled_course %}
+                
+                                        <button type="button" class="btn btn-secondary" disabled>Already Enrolled</button>
+                        
+                                    {% else %}
                                     <span>Free</span><br>
                                     <form action="{% url 'lms_main:enroll-course' course.slug %}" method="POST" id="enroll-form">
                                         {% csrf_token %}
                                         <button class="main-btn mx-auto" type="submit">Enroll Now</button>
                                     </form>
+                                    {% endif %}
+                                    
                                 </div>
                             {% else %}
                                 <div class="price-button pt-10">

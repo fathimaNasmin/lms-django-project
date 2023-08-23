@@ -75,8 +75,15 @@ def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
     videos = models.Video.objects.filter(course__slug=slug)
-
     total_time_duration_course = sum([video.time_duration for video in videos])
+    context = {}
+    user = request.user
+
+    if user.is_authenticated:
+        user_enrolled_course = user_model.EnrolledCourses.objects.filter(
+            course=single_course, student=user.student).exists()
+        print(user_enrolled_course)
+        context['user_enrolled_course'] = user_enrolled_course
 
     context = {
         'course': single_course,
@@ -93,11 +100,21 @@ def enroll_course(request, slug):
     """view to enroll the course for logged in students"""
     user = request.user
     print(user)
+    course = models.Course.objects.filter(slug=slug).first()
+    print(f"from enrolled page{course}")
     data = {}
 
     if request.method == 'POST' and request.is_ajax():
-        print(f"{user} enrolled for the course-{slug}")
-        data['success'] = True
-        print(f"json_data{data}")
+
+        try:
+            student_course_enroll = user_model.EnrolledCourses(
+                course=course, student=request.user.student
+            )
+            student_course_enroll.save()
+            print(f"{user} enrolled for the course-{slug}")
+            data['success'] = True
+            print(f"json_data{data}")
+        except Exception as e:
+            print(f"error:{e}")
         return HttpResponse(json.dumps(data), content_type='application/json')
     return redirect('lms_main:single-course', slug)
