@@ -27,7 +27,7 @@
             <form id="login-form-id" action="{% url 'user:login-user' %}" method="POST" novalidate>
                 {% csrf_token %}
                 {% if request.GET.next %}
-                    <input type="text" name="next" value="{{ request.GET.next }}">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
                 {% endif %}
                 {{ form|crispy }}
                 <div class="d-flex justify-content-center">
