@@ -26,6 +26,9 @@
         <div class="w-50 mx-auto">
             <form id="login-form-id" action="{% url 'user:login-user' %}" method="POST" novalidate>
                 {% csrf_token %}
+                {% if request.GET.next %}
+                    <input type="text" name="next" value="{{ request.GET.next }}">
+                {% endif %}
                 {{ form|crispy }}
                 <div class="d-flex justify-content-center">
                     <button type="submit" id="signup-button" class="btn btn-warning mt-3">Login</button>
@@ -89,7 +92,12 @@
                 data: formData,
                 success: function (response, textStatus, jqXHR) {
                     var success = response['success']
-                    if (success) {
+                    var next = response['next']
+                    if (success && next) {
+                        window.location.href = next;  // Redirect to the next page upon successful login
+
+
+                    }else if (success) {
                         window.location.href = "{% url 'user:dashboard' %}";  // Redirect to the dashboard upon successful login
 
 

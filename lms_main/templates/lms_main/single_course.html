@@ -587,9 +587,9 @@
                         console.log("ajax request failed");
                         var currentUrl = window.location.href;
                         var loginUrl = "{% url 'user:login-user' %}" + "?next=" + encodeURIComponent(currentUrl);
-                        console.log(currentUrl);
-                        console.log("Redirecting to login:", loginUrl);
-                        console.log(response,textStatus,jqXHR);
+                        // console.log(currentUrl);
+                        // console.log("Redirecting to login:", loginUrl);
+                        // console.log(response,textStatus,jqXHR);
                         window.location.href = loginUrl;
                     }
                 

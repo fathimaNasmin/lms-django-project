@@ -88,7 +88,7 @@ def single_course(request, slug):
     return render(request, 'lms_main/single_course.html', context)
 
 
-@login_required
+@login_required(login_url='/user/login/')
 def enroll_course(request, slug):
     """view to enroll the course for logged in students"""
     user = request.user

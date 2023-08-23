@@ -58,16 +58,18 @@ def login_user(request):
             if user is not None:
                 login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
-                next_url = request.GET.get('next')
-                print(next_url)
-                if next_url:
-                    # Redirect to the originally requested page after login
-                    return redirect(next_url)
 
-                data1 = {
-                    'success': True,
-                }
-                return HttpResponse(json.dumps(data1), content_type='application/json')
+                if 'next' in request.POST:
+                    data1 = {
+                        'success': True,
+                        'next': next_url,
+                    }
+                    return HttpResponse(json.dumps(data1), content_type='application/json')
+                else:
+                    data1 = {
+                        'success': True,
+                    }
+                    return HttpResponse(json.dumps(data1), content_type='application/json')
 
             else:
                 data1['success'] = False
