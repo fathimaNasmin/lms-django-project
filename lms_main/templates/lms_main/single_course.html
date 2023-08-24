@@ -371,7 +371,7 @@
 
                             {% if course.price == 0 %}
                                 <div class="price-button pt-10">
-                                    {% if user.is_authenticated  or user_enrolled_course %}
+                                    {% if user.is_authenticated  and user_enrolled_course %}
                 
                                         <button type="button" class="btn btn-secondary" disabled>Already Enrolled</button>
                         
@@ -392,10 +392,17 @@
                                         <span class="old-price" style="color: grey;font-weight: normal;">&#8377;{{ course.price }}</span>
                                     </span>
                                     <br>
-                                    <form action="{% url 'lms_main:add-to-cart' course.slug %}" method="POST" id="add-to-cart-form">
-                                        {% csrf_token %}
-                                        <button class="main-btn mx-auto" type="submit">Add to Cart</button>
-                                    </form>
+                                        {% if course_exists_in_cart %}
+                                            <a href="{% url 'lms_main:go-to-cart' %}">
+                                                <button class="main-btn mx-auto">Go to Cart</button>
+                                            </a>
+                                        {% else %}
+                                            <form action="{% url 'lms_main:add-to-cart' course.slug %}" method="POST" id="add-to-cart-form">
+                                                <button class="main-btn mx-auto" id="cart-action-btn" data-course-id="{{ course.slug }}">Add to Cart</button>
+                                            </form>
+                                        {% endif %}
+                                    
+                                    
                                     
                                 </div>
                             {% endif %}
@@ -575,12 +582,63 @@
 
 <script>
     $(document).ready(function (){
+         // Function to get the CSRF token from the cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrfToken = getCookie('csrftoken');
+
+        // $('#cart-action-btn').click(function () {
+        //     const button = $(this);
+        //     const courseId = button.data('course-id');
+        //     console.log(button.text())
+
+        //     if (button.text() === 'Add to Cart') {
+        //         $.ajax({
+        //             url: "{% url 'lms_main:add-to-cart' course.slug %}",
+        //             type: "POST",
+        //             data: { csrfmiddlewaretoken: csrfToken, course_id: courseId },
+        //             success: function (response) {
+        //                 var success = response['success']
+        //                 if (success) {
+        //                     button.text('Go to Cart');
+        //                     button.click(function () {
+        //                         // Replace this with the actual URL of your cart page
+        //                         window.location.href = "{% url 'lms_main:go-to-cart' %}";
+        //                     });
+        //                 }else{
+        //                     console.log("login required")
+        //                 }
+        //             },
+        //             error:function(textStatus){
+        //                 console.log(textStatus)
+        //                 console.log("error on post")
+        //             }
+        //         });
+        //     } else {
+        //         // Perform the "Go to Cart" action
+        //         // Replace this with the actual URL of your cart page
+        //         window.location.href = "{% url 'lms_main:go-to-cart' %}";
+        //     }
+        // });
+
+        // Enroll form on submit
         $('#enroll-form').submit(function(event){
             event.preventDefault();
             var my_token = '{{ csrf_token }}'
-
             
-
             $.ajax({
                 type:"POST",
                 url: $(this).attr('action'),
@@ -609,6 +667,8 @@
                 }
             })
         })
+        // // add to cart form on submit
+        const button = $("#cart-action-btn");
         $('#add-to-cart-form').submit(function (event) {
             event.preventDefault();
             var my_token = '{{ csrf_token }}'
@@ -622,6 +682,12 @@
                     var success = response['success']
                     if (success) {
                         console.log("ajax request success");
+                        button.text('Go to Cart');
+                        button.click(function () {
+                            // Replace this with the actual URL of your cart page
+                            window.location.href = "{% url 'lms_main:go-to-cart' %}";
+                        });
+                        
                     }
                     else {
                         console.log("ajax request failed");
@@ -641,6 +707,15 @@
                 }
             })
         })
+        
+            // $('#add-to-cart-btn').click(function(event){
+            //     event.preventDefault();
+            //     if($('#add-to-cart-btn').text() === 'Go to Cart'){
+            //         window.location.href = "{% url 'lms_main:go-to-cart' %}"
+            //     }
+                
+                
+            // })
     })
 </script>
 

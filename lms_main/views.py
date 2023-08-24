@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 import json
 from django.shortcuts import render, redirect
+from django.db import IntegrityError
 from . import models
 from user import models as user_model
 
@@ -78,23 +79,24 @@ def single_course(request, slug):
     total_time_duration_course = sum([video.time_duration for video in videos])
     context = {}
     user = request.user
-
-    if user.is_authenticated:
-        user_enrolled_course = user_model.EnrolledCourses.objects.filter(
-            course=single_course, student=user.student).exists()
-        course_exists_in_cart = models.AddToCart.objects.filter(
-            course=single_course, student=user.student).exists()
-        print("enrolled:", user_enrolled_course)
-        print("in cart:", course_exists_in_cart)
-        context['user_enrolled_course'] = user_enrolled_course
-        context['course_exists_in_cart'] = course_exists_in_cart
+    print(user.is_authenticated)
     context = {
         'course': single_course,
         'videos': videos,
         'total_time_duration_course': total_time_duration_course,
         'no_of_videos': videos.count(),
     }
+    if user.is_authenticated:
+        user_enrolled_course = user_model.EnrolledCourses.objects.filter(
+            course=single_course, student=user.student).exists()
+        course_exists_in_cart = models.AddToCart.objects.filter(
+            course=single_course, student=user.student).exists()
+        print("user_enrolled_course:", user_enrolled_course)
+        print("course_exists_in_cart:", course_exists_in_cart)
+        context['user_enrolled_course'] = user_enrolled_course
+        context['course_exists_in_cart'] = course_exists_in_cart
 
+    print(context)
     return render(request, 'lms_main/single_course.html', context)
 
 
@@ -131,22 +133,30 @@ def add_to_cart(request, slug):
     course = models.Course.objects.filter(slug=slug).first()
     print(f"from add to cart page:{course}", sep="\n")
     data = {}
+    course_exists_in_cart = models.AddToCart.objects.filter(
+        course=course, student=user.student).exists()
+# ifuser is authenticated
+    if not course_exists_in_cart:
+        if request.method == 'POST' and request.is_ajax():
+            try:
+                added_to_cart = models.AddToCart(
+                    course=course, student=request.user.student
+                )
+                added_to_cart.save()
+                print(f"{user} enrolled for the course-{slug}")
+                data['success'] = True
+                print(f"json_data{data}")
+            except IntegrityError as e:
+                print(e)
+                data['success'] = False
+            except Exception as e:
+                print(f"error:{e}")
+                data['success'] = False
 
-    if request.method == 'POST' and request.is_ajax():
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            return redirect('lms_main:single-course', slug)
 
-        try:
-            added_to_cart = models.AddToCart(
-                course=course, student=request.user.student
-            )
-            added_to_cart.save()
-            print(f"{user} enrolled for the course-{slug}")
-            data['success'] = True
-            print(f"json_data{data}")
-        except Exception as e:
-            print(f"error:{e}")
-        print(f"{user} added the course-{slug}- to cart", sep='\n')
-        data['success'] = True
-        return HttpResponse(json.dumps(data), content_type='application/json')
     return redirect('lms_main:single-course', slug)
 
 
