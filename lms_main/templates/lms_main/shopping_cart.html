@@ -34,9 +34,15 @@
 <!--====== COURSES PART START ======-->
 
 <section id="courses-part" class="pt-120 pb-120 gray-bg">
-    <div class="container border border-dark">
+    <div class="container">
+        {% if items_in_cart %}
+        <h3>{{ items_in_cart|length }}&nbsp; Item{{ items_in_cart|pluralize }}</h3>
+        {% endif %}
         <div class="row">
-            
+            {% if not items_in_cart %}
+                <h2>Cart is empty</h2>
+                <img src="{% static 'images/cart/empty-cart.png' %}" alt="Empty-cart-image" width="700" height="600">
+            {% else %}
                 <div class="col-lg-8">
                     {% for item in items_in_cart %}
                     <div class="col">
@@ -129,6 +135,7 @@
                         
                     </div>
                 </div>
+            {% endif %}
                 
                     
                     
@@ -188,9 +195,10 @@
                     course_id: courseId
                 },
                 success: function (response) {
-                    alert("Post saved for later!");
+                    console.log("Post saved for later!");
+                    setInterval('location.reload()', 2000);   
                     
-                },
+                }
                 error: function (error) {
                     alert("Error saving post for later");
                 }

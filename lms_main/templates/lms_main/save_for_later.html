@@ -10,8 +10,23 @@
 {% block main %}
 <!--====== PAGE BANNER PART START ======-->
 
-<section>
-    <h3>Save for Later</h3>
+<section id="page-banner" class="pt-105 pb-110 bg_cover" data-overlay="8"
+    style="background-image: url('{% static 'images/page-banner-2.jpg' %}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-banner-cont">
+                    <h2>Save For Later</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Courses</li>
+                        </ol>
+                    </nav>
+                </div> <!-- page banner cont -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
 </section>
 
 <!--====== PAGE BANNER PART ENDS ======-->
@@ -19,106 +34,192 @@
 <!--====== COURSES PART START ======-->
 
 <section id="courses-part" class="pt-120 pb-120 gray-bg">
-    <div class="container border border-dark">
+    <div class="container">
+
+        <div class="d-flex flex-column bd-highlight mb-3">
+            {% if user_saved_courses %}
+                <div class="p-2 bd-highlight"><h3>{{ user_saved_courses|length }}&nbsp; Item {{ user_saved_courses|pluralize }}</h3></div>
+            {% else %}
+            <div class="p-2 bd-highlight justify-content-center"><h3>YOUR SAVED LIST IS EMPTY</h3></div>
+            <div class="p-2 bd-highlight"><img src="{% static 'images/cart/wishlist.jpg' %}" alt="" width="700" height="600" class="mx-auto"></div>
+            {% endif %}
+        </div>
+        
         <div class="row">
 
-            <div class="col-lg-8">
-                {% for item in items_in_cart %}
-                <div class="col">
-                    <div class="singel-course mt-30">
-                        <div class="row no-gutters">
-                            <div class="col-md-4 d-flex justify-content-center">
-                                <div class="thum ">
-                                    <div class="image">
-                                        <img src="{{ item.course.featured_image.url }}" alt="Course">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="shop-grid" role="tabpanel" aria-labelledby="shop-grid-tab">
+                    <div class="row justify-content-center">
+                        {% for course in user_saved_courses %}
+                        <div class="col-md-6 col-sm-8">
+                            <div class="singel-publication mt-30">
+                                <div class="image">
+                                    <img src="{{ course.course.featured_image.url }}" alt="Publication">
+                                    <div class="add-cart">
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
+                                        </ul>
                                     </div>
-
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <div class="shopping-cont">
-
-                                            <a href="#">
-                                                <h4>{{ item.course.title }}</h4>
-                                            </a>
-
-                                        </div>
+                                <div class="cont">
+                                    <div class="name">
+                                        <a href="shop-singel.html">
+                                            <h6>{{ course.course.title }}</h6>
+                                        </a>
+                                        <span>$50.00</span>
                                     </div>
-                                    <div class="col-3 d-flex justify-content-end">
-                                        <div class="row">
-                                            <div class="shopping-cont">
-                                                {% if item.course.discount == 0 %}
-                                                <span>
-                                                    <b>&#8377;{{ item.course.price }} </b>
-
-                                                </span>
-                                                {% else %}
-                                                <span>
-                                                    <b>&#8377;{% discount_calculation item.course.price
-                                                        item.course.discount %} </b>
-                                                    <span class="old-price"
-                                                        style="color: grey;font-weight: normal;">&#8377;{{
-                                                        item.course.price }}</span>
-                                                </span>
-                                                {% endif %}
-
-
-
-
+                                    <div class="button text-right">
+                                        <a href="{% url 'lms_main:save-for-later-to-cart' %}" class="main-btn" id="btn-add-to-cart" data-course-id="{{ course.course.id }}">Add to Cart</a>
+                                    </div>
+                                </div>
+                            </div> <!-- singel publication -->
+                        </div>
+                        {% endfor %}
+                        
+                    </div> <!-- row -->
+                </div>
+                <div class="tab-pane fade" id="shop-list" role="tabpanel" aria-labelledby="shop-list-tab">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="singel-publication mt-30">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="image">
+                                            <img src="images/publication/p-1.jpg" alt="Publication">
+                                            <div class="add-cart">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
+                                                </ul>
                                             </div>
                                         </div>
-
                                     </div>
-
-                                </div>
-
-                                <div class="row d-flex align-items-end">
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <div class="shopping-cont">
-                                            <a href="{% url 'lms_main:save-for-later' %}" class="text-secondary"><i
-                                                    class="fa fa-heart"></i>&nbsp;&nbsp;Save For later</a>
+                                    <div class="col-sm-6">
+                                        <div class="cont">
+                                            <div class="name">
+                                                <a href="shop-singel.html">
+                                                    <h6>Set for life </h6>
+                                                </a>
+                                                <span>$50.00</span>
+                                            </div>
+                                            <div class="description pt-10">
+                                                <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                                    when an unknown printer took a galley.</p>
+                                            </div>
+                                            <div class="button">
+                                                <a href="#" class="main-btn">Buy Now</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <div class="shopping-cont">
-
-                                            <a href="#" class="text-secondary"><i
-                                                    class="fa-solid fa-trash"></i>&nbsp;&nbsp;Remove</a>
-
+                                </div> <!-- row -->
+                            </div> <!-- singel publication -->
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="singel-publication mt-30">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="image">
+                                            <img src="images/publication/p-2.jpg" alt="Publication">
+                                            <div class="add-cart">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-
-                                </div>
-                            </div>
-                        </div> <!--  row  -->
-                    </div> <!-- singel course -->
+                                    <div class="col-sm-6">
+                                        <div class="cont">
+                                            <div class="name">
+                                                <a href="shop-singel.html">
+                                                    <h6>Set for life </h6>
+                                                </a>
+                                                <span>$50.00</span>
+                                            </div>
+                                            <div class="description pt-10">
+                                                <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                                    when an unknown printer took a galley.</p>
+                                            </div>
+                                            <div class="button">
+                                                <a href="#" class="main-btn">Buy Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- row -->
+                            </div> <!-- singel publication -->
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="singel-publication mt-30">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="image">
+                                            <img src="images/publication/p-3.jpg" alt="Publication">
+                                            <div class="add-cart">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="cont">
+                                            <div class="name">
+                                                <a href="shop-singel.html">
+                                                    <h6>Set for life </h6>
+                                                </a>
+                                                <span>$50.00</span>
+                                            </div>
+                                            <div class="description pt-10">
+                                                <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                                    when an unknown printer took a galley.</p>
+                                            </div>
+                                            <div class="button">
+                                                <a href="#" class="main-btn">Buy Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- row -->
+                            </div> <!-- singel publication -->
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="singel-publication mt-30">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="image">
+                                            <img src="images/publication/p-4.jpg" alt="Publication">
+                                            <div class="add-cart">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="cont">
+                                            <div class="name">
+                                                <a href="shop-singel.html">
+                                                    <h6>Set for life </h6>
+                                                </a>
+                                                <span>$50.00</span>
+                                            </div>
+                                            <div class="description pt-10">
+                                                <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                                    when an unknown printer took a galley.</p>
+                                            </div>
+                                            <div class="button">
+                                                <a href="#" class="main-btn">Buy Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- row -->
+                            </div> <!-- singel publication -->
+                        </div>
+                    </div> <!-- row -->
                 </div>
-                {% endfor %}
-            </div>
-            <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-12 col-md-6">
-                        <div class="course-features mt-30">
-                            <h4>Subtotal </h4>
-                            <ul>
-                                <li style="border-bottom: 0;"><i class="fa-solid fa-tag"></i>Total Price : <span>{{
-                                        total_price }}</span></li>
-                                <li style="border-bottom: 1px solid #d2d2d2;"><i
-                                        class="fa-solid fa-percent"></i>Discounts : <span>-{{ total_discount }}</span>
-                                </li>
-
-                            </ul>
-                            <div class="price-button pt-10">
-                                <span>Amount To Pay : <b>&#8377;{{amount_to_pay}}</b></span>
-                                <a href="#" class="main-btn mt-5">Checkout</a>
-                            </div>
-                        </div> <!-- course features -->
-                    </div>
-
-                </div>
-            </div>
+            </div> <!-- tab content -->
 
 
 
@@ -140,5 +241,50 @@
 <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
 <!--====== BACK TO TP PART ENDS ======-->
+<script>    
+    $(document).ready(function () {
+            // get csrf token from cookies
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+            $("#btn-add-to-cart").click(function(event){
+                event.preventDefault();
+                console.log("clicked");
+                var courseId = $(this).data("course-id");
+                console.log(courseId)
+
+                // Send the POST request using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'lms_main:save-for-later-to-cart' %}", // Replace with your server endpoint
+                    headers: { 'X-CSRFToken': csrftoken },
+                    data: {
+                        course_id: courseId,
+                    },
+                    success: function (response) {
+                        console.log("Post saved for later!");
+                        setInterval('location.reload()', 2000);
+
+                    },
+                    error: function (error) {
+                        alert("Error saving post for later");
+                    }
+                });
+            })
+        })
+</script>
 
 {% endblock %}

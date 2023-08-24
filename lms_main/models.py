@@ -211,7 +211,7 @@ class SaveForLater(models.Model):
         user_model.Student, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.student.email}- {self.course.title}"
+        return f"{self.course.title}"
 
     class Meta:
         # Ensure that each combination of course and student is unique

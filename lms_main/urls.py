@@ -21,5 +21,7 @@ urlpatterns = [
          lms_main_view.go_to_cart, name='go-to-cart'),
     path('save-for-later/',
          lms_main_view.save_for_later, name='save-for-later'),
+    path('save-for-later-to-cart/',
+         lms_main_view.save_for_later_to_cart, name='save-for-later-to-cart'),
 
 ]

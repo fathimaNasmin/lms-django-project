@@ -179,7 +179,7 @@ def go_to_cart(request):
     total_price = sum(price)
     discount = sum(discount)
     total_discount = total_price - discount
-    amount_to_pay = total_price - discount
+    amount_to_pay = total_price - total_discount
     context = {
         'items_in_cart': user_cart_items,
         'total_price': total_price,
@@ -193,7 +193,10 @@ def go_to_cart(request):
 @login_required
 def save_for_later(request):
     user = request.user
-    context = {}
+    user_saved = models.SaveForLater.objects.filter(student=user.student)
+    context = {
+        'user_saved_courses': user_saved
+    }
     data = {}
 
     if request.method == 'POST' and request.is_ajax():
@@ -214,4 +217,46 @@ def save_for_later(request):
             print("Exit from error handling")
         print(data)
         return HttpResponse(json.dumps(data), content_type='application/json')
+    print(f"context:{context}")
     return render(request, 'lms_main/save_for_later.html', context)
+
+
+@login_required(login_url='/user/login/')
+def save_for_later_to_cart(request):
+    """view to add the courses from 'save for later' page to cart """
+    user = request.user
+    course_id = request.POST['course_id']
+    print(course_id)
+    course = models.Course.objects.filter(id=course_id).first()
+    print(course)
+    print(f"save-for-later-to-cart:{course}", sep="\n")
+    data = {}
+
+    course_exists_in_cart = models.AddToCart.objects.filter(
+        course=course, student=user.student).exists()
+    print("course exists", course_exists_in_cart)
+
+    if not course_exists_in_cart:
+        if request.method == 'POST' and request.is_ajax():
+            try:
+                remove_from_save_for_later = models.SaveForLater.objects.filter(
+                    course=course, student=user.student).delete()
+
+                add_to_cart = models.AddToCart(
+                    course=course, student=user.student
+                )
+                add_to_cart.save()
+                # print(f"{user} enrolled for the course-{slug}")
+                data['success'] = True
+                # print(f"json_data{data}")
+            except IntegrityError as e:
+                print(e)
+                data['success'] = False
+            except Exception as e:
+                print(f"error:{e}")
+                data['success'] = False
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            return redirect('lms_main:save-for-later')
+
+    return redirect('lms_main:save-for-later')
