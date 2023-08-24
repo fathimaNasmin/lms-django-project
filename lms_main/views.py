@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from . import models
 from user import models as user_model
+from django.db.models import Sum
+from lms_main.templatetags import course_tags
 
 
 def home_page(request):
@@ -96,7 +98,7 @@ def single_course(request, slug):
         context['user_enrolled_course'] = user_enrolled_course
         context['course_exists_in_cart'] = course_exists_in_cart
 
-    print(context)
+    # print(context)
     return render(request, 'lms_main/single_course.html', context)
 
 
@@ -104,9 +106,9 @@ def single_course(request, slug):
 def enroll_course(request, slug):
     """view to enroll the course for logged in students"""
     user = request.user
-    print(user)
+    # print(user)
     course = models.Course.objects.filter(slug=slug).first()
-    print(f"from enrolled page{course}")
+    # print(f"from enrolled page{course}")
     data = {}
 
     if request.method == 'POST' and request.is_ajax():
@@ -116,9 +118,9 @@ def enroll_course(request, slug):
                 course=course, student=request.user.student
             )
             student_course_enroll.save()
-            print(f"{user} enrolled for the course-{slug}")
+            # print(f"{user} enrolled for the course-{slug}")
             data['success'] = True
-            print(f"json_data{data}")
+            # print(f"json_data{data}")
         except Exception as e:
             print(f"error:{e}")
         return HttpResponse(json.dumps(data), content_type='application/json')
@@ -129,7 +131,7 @@ def enroll_course(request, slug):
 def add_to_cart(request, slug):
     """view to add the courses to cart to purchase"""
     user = request.user
-    print(user)
+    # print(user)
     course = models.Course.objects.filter(slug=slug).first()
     print(f"from add to cart page:{course}", sep="\n")
     data = {}
@@ -143,9 +145,9 @@ def add_to_cart(request, slug):
                     course=course, student=request.user.student
                 )
                 added_to_cart.save()
-                print(f"{user} enrolled for the course-{slug}")
+                # print(f"{user} enrolled for the course-{slug}")
                 data['success'] = True
-                print(f"json_data{data}")
+                # print(f"json_data{data}")
             except IntegrityError as e:
                 print(e)
                 data['success'] = False
@@ -160,7 +162,29 @@ def add_to_cart(request, slug):
     return redirect('lms_main:single-course', slug)
 
 
+@login_required
 def go_to_cart(request):
     """Shopping cart shows all the courses added to the user cart"""
-
-    return render(request, 'lms_main/shopping_cart.html')
+    price = []
+    discount = []
+    user = request.user
+    user_cart_items = models.AddToCart.objects.filter(student=user.student)
+    # total_price = sum([item.course.price for item in user_cart_items])
+    # discount_price =
+    # print(total_price)
+    for item in user_cart_items:
+        price.append(item.course.price)
+        discount.append(course_tags.discount_calculation(
+            item.course.price, item.course.discount))
+    total_price = sum(price)
+    discount = sum(discount)
+    total_discount = total_price - discount
+    amount_to_pay = total_price - discount
+    context = {
+        'items_in_cart': user_cart_items,
+        'total_price': total_price,
+        'total_discount': total_discount,
+        'amount_to_pay': amount_to_pay,
+    }
+    print(context)
+    return render(request, 'lms_main/shopping_cart.html', context)

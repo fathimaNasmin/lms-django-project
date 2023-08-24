@@ -1208,6 +1208,12 @@ p {
     background-color: #ffc600;
     text-align: center;
 }
+.singel-course .shopping-cont {
+    padding-top: 2px;
+    padding-bottom:10px;
+    padding-left: 15px;
+    padding-right: 10px;
+}
 .singel-course .cont{
     padding-top: 28px;
     padding-bottom: 34px;
@@ -2840,6 +2846,7 @@ p {
     line-height: 45px;
     border-bottom: 1px solid #d2d2d2;
 }
+
 .course-features ul li:last-child{
     border-bottom: 0;
 }
