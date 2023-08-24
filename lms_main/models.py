@@ -199,3 +199,20 @@ class AddToCart(models.Model):
     class Meta:
         # Ensure that each combination of course and student is unique
         unique_together = ('course', 'student')
+
+
+class SaveForLater(models.Model):
+    """model for save for later feature"""
+    saved_at = models.DateTimeField(auto_now_add=True)
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        user_model.Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.student.email}- {self.course.title}"
+
+    class Meta:
+        # Ensure that each combination of course and student is unique
+        unique_together = ('course', 'student')

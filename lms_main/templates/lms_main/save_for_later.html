@@ -1,0 +1,144 @@
+{% extends 'lms_main/base.html' %}
+{% load static %}
+
+{% load course_tags %}
+
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+{% block main %}
+<!--====== PAGE BANNER PART START ======-->
+
+<section>
+    <h3>Save for Later</h3>
+</section>
+
+<!--====== PAGE BANNER PART ENDS ======-->
+
+<!--====== COURSES PART START ======-->
+
+<section id="courses-part" class="pt-120 pb-120 gray-bg">
+    <div class="container border border-dark">
+        <div class="row">
+
+            <div class="col-lg-8">
+                {% for item in items_in_cart %}
+                <div class="col">
+                    <div class="singel-course mt-30">
+                        <div class="row no-gutters">
+                            <div class="col-md-4 d-flex justify-content-center">
+                                <div class="thum ">
+                                    <div class="image">
+                                        <img src="{{ item.course.featured_image.url }}" alt="Course">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="shopping-cont">
+
+                                            <a href="#">
+                                                <h4>{{ item.course.title }}</h4>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-3 d-flex justify-content-end">
+                                        <div class="row">
+                                            <div class="shopping-cont">
+                                                {% if item.course.discount == 0 %}
+                                                <span>
+                                                    <b>&#8377;{{ item.course.price }} </b>
+
+                                                </span>
+                                                {% else %}
+                                                <span>
+                                                    <b>&#8377;{% discount_calculation item.course.price
+                                                        item.course.discount %} </b>
+                                                    <span class="old-price"
+                                                        style="color: grey;font-weight: normal;">&#8377;{{
+                                                        item.course.price }}</span>
+                                                </span>
+                                                {% endif %}
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row d-flex align-items-end">
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <div class="shopping-cont">
+                                            <a href="{% url 'lms_main:save-for-later' %}" class="text-secondary"><i
+                                                    class="fa fa-heart"></i>&nbsp;&nbsp;Save For later</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <div class="shopping-cont">
+
+                                            <a href="#" class="text-secondary"><i
+                                                    class="fa-solid fa-trash"></i>&nbsp;&nbsp;Remove</a>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> <!--  row  -->
+                    </div> <!-- singel course -->
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-lg-12 col-md-6">
+                        <div class="course-features mt-30">
+                            <h4>Subtotal </h4>
+                            <ul>
+                                <li style="border-bottom: 0;"><i class="fa-solid fa-tag"></i>Total Price : <span>{{
+                                        total_price }}</span></li>
+                                <li style="border-bottom: 1px solid #d2d2d2;"><i
+                                        class="fa-solid fa-percent"></i>Discounts : <span>-{{ total_discount }}</span>
+                                </li>
+
+                            </ul>
+                            <div class="price-button pt-10">
+                                <span>Amount To Pay : <b>&#8377;{{amount_to_pay}}</b></span>
+                                <a href="#" class="main-btn mt-5">Checkout</a>
+                            </div>
+                        </div> <!-- course features -->
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div> <!-- row -->
+    </div>
+    </div> <!-- row -->
+
+    </div> <!-- container -->
+</section>
+
+<!--====== COURSES PART ENDS ======-->
+
+{% include 'lms_main/components/footer.html' %}
+
+<!--====== BACK TO TP PART START ======-->
+
+<a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+<!--====== BACK TO TP PART ENDS ======-->
+
+{% endblock %}

@@ -186,5 +186,32 @@ def go_to_cart(request):
         'total_discount': total_discount,
         'amount_to_pay': amount_to_pay,
     }
-    print(context)
+    # print(context)
     return render(request, 'lms_main/shopping_cart.html', context)
+
+
+@login_required
+def save_for_later(request):
+    user = request.user
+    context = {}
+    data = {}
+
+    if request.method == 'POST' and request.is_ajax():
+        course = models.Course.objects.get(id=request.POST['course_id'])
+        try:
+            add_to_save_for_later = models.SaveForLater(
+                course=course, student=user.student)
+            remove_from_cart = models.AddToCart.objects.filter(
+                course=course, student=user.student)
+        except Exception as e:
+            print(f"Error in try block:{e}")
+            data['success'] = False
+        else:
+            add_to_save_for_later.save()
+            remove_from_cart.delete()
+        finally:
+            data['success'] = True
+            print("Exit from error handling")
+        print(data)
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return render(request, 'lms_main/save_for_later.html', context)
