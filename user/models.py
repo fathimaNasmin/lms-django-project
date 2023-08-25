@@ -99,4 +99,4 @@ class EnrolledCourses(models.Model):
         Student, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Course Enrolled {self.course.title}-{self.student.first_name}"
+        return f"Course Enrolled {self.course.title}-{self.student}"

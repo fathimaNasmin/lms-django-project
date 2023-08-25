@@ -9,7 +9,7 @@ from . import forms as user_forms
 from lms_main import forms as lms_main_forms
 import json
 from django.contrib import messages
-from .models import Student, Instructor, User
+from .models import Student, Instructor, User, EnrolledCourses
 from .custom_auth_backend import EmailBackend
 
 from lms_app import settings
@@ -97,6 +97,23 @@ def dashboard(request):
         }
         return render(request, 'user/dashboard.html', context)
     return Http404
+
+# View:lists all the enrolled courses by the logged in student
+
+
+@login_required
+def my_course(request):
+    user = request.user
+    my_courses = EnrolledCourses.objects.filter(student=user.student)
+
+    context = {
+        'my_courses': my_courses,
+    }
+    print(context)
+
+    for course in my_courses:
+        print(course)
+    return render(request, 'user/my_course.html', context)
 
 
 @login_required
