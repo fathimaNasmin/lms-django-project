@@ -18,10 +18,12 @@ urlpatterns = [
     path('single-course/<slug:slug>/add-to-cart/',
          lms_main_view.add_to_cart, name='add-to-cart'),
     path('shopping-cart/',
-         lms_main_view.go_to_cart, name='go-to-cart'),
+         lms_main_view.go_to_cart, name='shopping-cart'),
     path('save-for-later/',
          lms_main_view.save_for_later, name='save-for-later'),
     path('save-for-later-to-cart/',
          lms_main_view.save_for_later_to_cart, name='save-for-later-to-cart'),
+    path('remove-from-cart/',
+         lms_main_view.remove_from_cart, name='remove-from-cart'),
 
 ]

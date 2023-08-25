@@ -393,7 +393,7 @@
                                     </span>
                                     <br>
                                         {% if course_exists_in_cart %}
-                                            <a href="{% url 'lms_main:go-to-cart' %}">
+                                            <a href="{% url 'lms_main:shopping-cart' %}">
                                                 <button class="main-btn mx-auto">Go to Cart</button>
                                             </a>
                                         {% else %}
@@ -616,7 +616,7 @@
         //                     button.text('Go to Cart');
         //                     button.click(function () {
         //                         // Replace this with the actual URL of your cart page
-        //                         window.location.href = "{% url 'lms_main:go-to-cart' %}";
+        //                         window.location.href = "{% url 'lms_main:shopping-cart' %}";
         //                     });
         //                 }else{
         //                     console.log("login required")
@@ -630,7 +630,7 @@
         //     } else {
         //         // Perform the "Go to Cart" action
         //         // Replace this with the actual URL of your cart page
-        //         window.location.href = "{% url 'lms_main:go-to-cart' %}";
+        //         window.location.href = "{% url 'lms_main:shopping-cart' %}";
         //     }
         // });
 
@@ -685,7 +685,7 @@
                         button.text('Go to Cart');
                         button.click(function () {
                             // Replace this with the actual URL of your cart page
-                            window.location.href = "{% url 'lms_main:go-to-cart' %}";
+                            window.location.href = "{% url 'lms_main:shopping-cart' %}";
                         });
                         
                     }

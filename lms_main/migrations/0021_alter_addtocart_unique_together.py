@@ -7,12 +7,12 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('user', '0010_enrolledcourses'),
-        ('lms_main', '0020_addtocart'),
+        ('lms_main', '0020_Cart'),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='addtocart',
+            name='Cart',
             unique_together={('course', 'student')},
         ),
     ]

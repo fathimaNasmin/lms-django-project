@@ -91,7 +91,7 @@ def single_course(request, slug):
     if user.is_authenticated:
         user_enrolled_course = user_model.EnrolledCourses.objects.filter(
             course=single_course, student=user.student).exists()
-        course_exists_in_cart = models.AddToCart.objects.filter(
+        course_exists_in_cart = models.Cart.objects.filter(
             course=single_course, student=user.student).exists()
         print("user_enrolled_course:", user_enrolled_course)
         print("course_exists_in_cart:", course_exists_in_cart)
@@ -135,13 +135,13 @@ def add_to_cart(request, slug):
     course = models.Course.objects.filter(slug=slug).first()
     print(f"from add to cart page:{course}", sep="\n")
     data = {}
-    course_exists_in_cart = models.AddToCart.objects.filter(
+    course_exists_in_cart = models.Cart.objects.filter(
         course=course, student=user.student).exists()
 # ifuser is authenticated
     if not course_exists_in_cart:
         if request.method == 'POST' and request.is_ajax():
             try:
-                added_to_cart = models.AddToCart(
+                added_to_cart = models.Cart(
                     course=course, student=request.user.student
                 )
                 added_to_cart.save()
@@ -168,7 +168,7 @@ def go_to_cart(request):
     price = []
     discount = []
     user = request.user
-    user_cart_items = models.AddToCart.objects.filter(student=user.student)
+    user_cart_items = models.Cart.objects.filter(student=user.student)
     # total_price = sum([item.course.price for item in user_cart_items])
     # discount_price =
     # print(total_price)
@@ -189,9 +189,12 @@ def go_to_cart(request):
     # print(context)
     return render(request, 'lms_main/shopping_cart.html', context)
 
+# View for to add course to 'save forlater'
+
 
 @login_required
 def save_for_later(request):
+    """View for to add course to 'save forlater'"""
     user = request.user
     user_saved = models.SaveForLater.objects.filter(student=user.student)
     context = {
@@ -204,7 +207,7 @@ def save_for_later(request):
         try:
             add_to_save_for_later = models.SaveForLater(
                 course=course, student=user.student)
-            remove_from_cart = models.AddToCart.objects.filter(
+            remove_from_cart = models.Cart.objects.filter(
                 course=course, student=user.student)
         except Exception as e:
             print(f"Error in try block:{e}")
@@ -221,18 +224,18 @@ def save_for_later(request):
     return render(request, 'lms_main/save_for_later.html', context)
 
 
+# view to add the courses from 'save for later' page to cart
+
+
 @login_required(login_url='/user/login/')
 def save_for_later_to_cart(request):
     """view to add the courses from 'save for later' page to cart """
     user = request.user
     course_id = request.POST['course_id']
-    print(course_id)
     course = models.Course.objects.filter(id=course_id).first()
-    print(course)
-    print(f"save-for-later-to-cart:{course}", sep="\n")
     data = {}
 
-    course_exists_in_cart = models.AddToCart.objects.filter(
+    course_exists_in_cart = models.Cart.objects.filter(
         course=course, student=user.student).exists()
     print("course exists", course_exists_in_cart)
 
@@ -242,13 +245,13 @@ def save_for_later_to_cart(request):
                 remove_from_save_for_later = models.SaveForLater.objects.filter(
                     course=course, student=user.student).delete()
 
-                add_to_cart = models.AddToCart(
+                add_to_cart = models.Cart(
                     course=course, student=user.student
                 )
                 add_to_cart.save()
-                # print(f"{user} enrolled for the course-{slug}")
+
                 data['success'] = True
-                # print(f"json_data{data}")
+
             except IntegrityError as e:
                 print(e)
                 data['success'] = False
@@ -260,3 +263,35 @@ def save_for_later_to_cart(request):
             return redirect('lms_main:save-for-later')
 
     return redirect('lms_main:save-for-later')
+
+
+# View function to remove course from shopping cart
+@login_required(login_url='/user/login/')
+def remove_from_cart(request):
+    """View function to remove course from shopping cart"""
+    user = request.user
+    course_id = request.POST['course_id']
+    print(course_id)
+    course = models.Course.objects.filter(id=course_id).first()
+    print(course)
+    print(f"Item to remove:{course}", sep="\n")
+    data = {}
+
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            remove_course_from_cart = models.Cart.objects.filter(
+                course=course, student=user.student).delete()
+
+            data['success'] = True
+
+        except IntegrityError as e:
+            print(e)
+            data['success'] = False
+        except Exception as e:
+            print(f"error:{e}")
+            data['success'] = False
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return redirect('lms_main:shopping-cart')
+
+    return redirect('lms_main:shopping-cart')

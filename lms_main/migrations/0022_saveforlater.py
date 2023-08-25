@@ -8,17 +8,20 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('user', '0010_enrolledcourses'),
-        ('lms_main', '0021_alter_addtocart_unique_together'),
+        ('lms_main', '0021_alter_Cart_unique_together'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='SaveForLater',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('saved_at', models.DateTimeField(auto_now_add=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lms_main.course')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.student')),
+                ('course', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='lms_main.course')),
+                ('student', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='user.student')),
             ],
             options={
                 'unique_together': {('course', 'student')},

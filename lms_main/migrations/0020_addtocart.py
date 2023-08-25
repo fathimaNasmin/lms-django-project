@@ -13,11 +13,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AddToCart',
+            name='Cart',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lms_main.course')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.student')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('course', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='lms_main.course')),
+                ('student', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='user.student')),
             ],
         ),
     ]

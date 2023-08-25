@@ -185,7 +185,7 @@ class Video(models.Model):
         super(Video, self).save()
 
 
-class AddToCart(models.Model):
+class Cart(models.Model):
     """model to store the courses added to cart"""
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
