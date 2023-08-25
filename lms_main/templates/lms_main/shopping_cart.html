@@ -128,7 +128,7 @@
                                 </ul>
                                 <div class="price-button pt-10">
                                     <span>Amount To Pay : <b>&#8377;{{amount_to_pay}}</b></span>
-                                    <a href="#" class="main-btn mt-5">Checkout</a>
+                                    <a href="{% url 'lms_main:checkout' %}" class="main-btn mt-5" id="checkout-tag">Checkout</a>
                                 </div>
                             </div> <!-- course features -->
                         </div>
@@ -179,7 +179,24 @@
         }
         const csrftoken = getCookie('csrftoken');
         var heart_save = document.getElementById('heart-save')
+    
         
+        $("#checkout-tag").click(function(event){
+            $.ajax({
+                type:"POST",
+                url:"{% url 'lms_main:checkout' %}",
+                headers: { 'X-CSRFToken': csrftoken },
+                success:function(response){
+                    alert("success")
+                    // window.location.href = "{% url 'lms_main:checkout' %}"
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+
+            })
+        })
+
         $("#save-for-later").click(function(event) {
             event.preventDefault();
             console.log("clicked")

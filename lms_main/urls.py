@@ -19,6 +19,8 @@ urlpatterns = [
          lms_main_view.add_to_cart, name='add-to-cart'),
     path('shopping-cart/',
          lms_main_view.go_to_cart, name='shopping-cart'),
+    path('checkout/',
+         lms_main_view.checkout, name='checkout'),
     path('save-for-later/',
          lms_main_view.save_for_later, name='save-for-later'),
     path('save-for-later-to-cart/',

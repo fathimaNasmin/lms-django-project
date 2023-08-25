@@ -180,13 +180,14 @@ def go_to_cart(request):
     discount = sum(discount)
     total_discount = total_price - discount
     amount_to_pay = total_price - total_discount
+    request.session['total_amount'] = amount_to_pay
     context = {
         'items_in_cart': user_cart_items,
         'total_price': total_price,
         'total_discount': total_discount,
         'amount_to_pay': amount_to_pay,
     }
-    # print(context)
+    # print(request.session['total_amount'])
     return render(request, 'lms_main/shopping_cart.html', context)
 
 # View for to add course to 'save forlater'
@@ -295,3 +296,40 @@ def remove_from_cart(request):
         return redirect('lms_main:shopping-cart')
 
     return redirect('lms_main:shopping-cart')
+
+
+# View function for the payment for course in the shopping cart
+
+
+@login_required(login_url='/user/login/')
+def checkout(request):
+    """View function for the payment for course in the shopping cart"""
+    price = []
+    discount = []
+    user = request.user
+    user_cart_items = models.Cart.objects.filter(student=user.student)
+
+    for item in user_cart_items:
+        price.append(item.course.price)
+        discount.append(course_tags.discount_calculation(
+            item.course.price, item.course.discount))
+
+    total_price = sum(price)
+    discount = sum(discount)
+
+    total_discount = total_price - discount
+    amount_to_pay = total_price - total_discount
+    context = {
+        'items_in_cart': user_cart_items,
+        'total_price': total_price,
+        'total_discount': total_discount,
+        'amount_to_pay': amount_to_pay,
+    }
+
+    if request.method == 'POST' and request.is_ajax():
+        # Get the value from the POST data
+        # total_amount = request.POST.get('amount_to_pay')
+        # data["total_amount"] = total_amount
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    print(context)
+    return render(request, 'lms_main/checkout.html', context)
