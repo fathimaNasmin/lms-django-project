@@ -64,8 +64,8 @@ class Course(models.Model):
     featured_image = models.ImageField(
         upload_to='course/featured_images/', null=True)
     # featured_video = models.CharField(max_length=500)
-    price = models.DecimalField(
-        null=True, default=0, decimal_places=2, max_digits=6)
+    price = models.IntegerField(
+        null=True, default=0)
     discount = models.IntegerField(null=True, blank=True)
     slug = models.SlugField(unique=True, null=True,
                             blank=True, max_length=300)
@@ -231,20 +231,24 @@ class Order(models.Model):
         user_model.Student, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Order {self.student.user.first_name}"
+        return f"Order {self.student}"
 
 # OrderItems model to store items in the order
 
 
 class OrderItems(models.Model):
     """model for storing items in the order"""
-    invoice_no = models.CharField(max_length=200, default=0)
-    course_purchase_price = models.IntegerField(null=True, default=0)
+    invoice_no = models.CharField(max_length=200, default=0, unique=True)
+    item_price = models.IntegerField(null=True, default=0)
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    user_courses = models.ForeignKey(
-        user_model.EnrolledCourses, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE)
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Order {self.student.user.first_name}"
+        return f"Order {self.order}"
+
+    class Meta:
+        # Ensure that each combination of course and student is unique
+        unique_together = ('course', 'order')

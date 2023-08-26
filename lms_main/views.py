@@ -2,12 +2,14 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 import json
+import math
+import random
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from . import models
 from user import models as user_model
 from django.db.models import Sum
-from lms_main.templatetags import course_tags
+from lms_main.templatetags import course_tags, invoice
 
 from django.urls import reverse
 from django.conf import settings
@@ -318,19 +320,20 @@ def remove_from_cart(request):
 # View function for the payment for course in the shopping cart
 
 
-@login_required(login_url='/user/login/')
+@login_required
 @csrf_exempt
 def checkout(request):
     """View function for the payment for course in the shopping cart"""
     user = request.user
     data = {}
+    amount = request.session['amount_to_pay']
 
     host = request.get_host()
     paypal_dict = {
         "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": "111",
-        "item_name": "order-id-here",
-        "invoice": "invoice-id-here",
+        "amount": amount,
+        "item_name": f"Order-Id-{random.randint(1,100000)}",
+        "invoice": f"INV-{random.randint(1,100000)}",
         "notify_url": request.build_absolute_uri(reverse('lms_main:paypal-ipn')),
         "return": request.build_absolute_uri(reverse('lms_main:payment-success')),
         "cancel_return": request.build_absolute_uri(reverse('lms_main:payment-failure')),
@@ -356,15 +359,34 @@ def checkout(request):
     return render(request, 'lms_main/checkout.html', context)
 
 
+@login_required
 def payment_success_view(request):
+    if request.session['current_user_items']:
+        # create orderhere
+        # order = models.Order.objects.create(
+        #     student=user.student,
+        #     total_price=request.session['amount_to_pay'])
 
-    context = {
+        # create order items
+        # for item in request.session['current_user_items']:
+        #     item_price = 0
+        #     item_price = math.floor(item['price'] -
+        #                             item['price'] * item['discount'] / 100)
+        #     # print(item_price)
 
-    }
+        #     order_items = models.OrderItems.objects.create(
+        #         invoice_no=invoice.generate_invoice_number(),
+        #         course=item['title'],
+        #         item_price=item_price,
+        #         order=order,
+        #     )
+        print("success payment")
+    context = {}
 
     return render(request, 'lms_main/payment/payment_success.html', context)
 
 
+@login_required
 def payment_failure_view(request):
 
     context = {
