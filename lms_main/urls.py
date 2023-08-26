@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views as lms_main_view
 
 
@@ -27,5 +27,11 @@ urlpatterns = [
          lms_main_view.save_for_later_to_cart, name='save-for-later-to-cart'),
     path('remove-from-cart/',
          lms_main_view.remove_from_cart, name='remove-from-cart'),
+    # paypal urls
+    path('paypal/', include("paypal.standard.ipn.urls")),
+    path('payment-success/',
+         lms_main_view.payment_success_view, name='payment-success'),
+    path('payment-failure/',
+         lms_main_view.payment_failure_view, name='payment-failure'),
 
 ]

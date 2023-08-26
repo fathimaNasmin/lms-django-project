@@ -64,7 +64,8 @@ class Course(models.Model):
     featured_image = models.ImageField(
         upload_to='course/featured_images/', null=True)
     # featured_video = models.CharField(max_length=500)
-    price = models.IntegerField(null=True, default=0)
+    price = models.DecimalField(
+        null=True, default=0, decimal_places=2, max_digits=6)
     discount = models.IntegerField(null=True, blank=True)
     slug = models.SlugField(unique=True, null=True,
                             blank=True, max_length=300)

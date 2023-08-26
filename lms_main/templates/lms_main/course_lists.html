@@ -90,8 +90,8 @@
                                 
                                 {% if course.price != 0 %}
                                 <div class="discount-container">
-                                    <p class="old-price">&#8377;{{ course.price }}</p>
-                                    <p class="new-price">&#8377;{% discount_calculation course.price course.discount %}</p>
+                                    <p class="old-price">&#36;{{ course.price }}</p>
+                                    <p class="new-price">&#36;{% discount_calculation course.price course.discount %}</p>
                                     <p>Save {{course.discount}}%</p>
                                 </div>
                                 {% endif %}
@@ -153,8 +153,8 @@
                                         </a>
                                         {% if course.price != 0 %}
                                         <div class="discount-container">
-                                            <p class="old-price">&#8377;{{ course.price }}</p>
-                                            <p class="new-price">&#8377;{% discount_calculation course.price course.discount %}</p>
+                                            <p class="old-price">&#36;{{ course.price }}</p>
+                                            <p class="new-price">&#36;{% discount_calculation course.price course.discount %}</p>
                                             <p>Save {{course.discount}}%</p>
                                         </div>
                                         {% endif %}

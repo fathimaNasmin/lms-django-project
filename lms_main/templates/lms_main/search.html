@@ -91,8 +91,8 @@
                         
                                     {% if result.price != 0 %}
                                     <div class="discount-container">
-                                        <p class="old-price">&#8377;{{ result.price }}</p>
-                                        <p class="new-price">&#8377;{% discount_calculation result.price result.discount %}
+                                        <p class="old-price">&#36;{{ result.price }}</p>
+                                        <p class="new-price">&#36;{% discount_calculation result.price result.discount %}
                                         </p>
                                         <p>Save {{ result.discount}}%</p>
                                     </div>
@@ -160,8 +160,8 @@
                                         </a>
                                         {% if result.price != 0 %}
                                         <div class="discount-container">
-                                            <p class="old-price">&#8377;{{ result.price }}</p>
-                                            <p class="new-price">&#8377;{% discount_calculation result.price
+                                            <p class="old-price">&#36;{{ result.price }}</p>
+                                            <p class="new-price">&#36;{% discount_calculation result.price
                                                 result.discount %}</p>
                                             <p>Save {{result.discount}}%</p>
                                         </div>

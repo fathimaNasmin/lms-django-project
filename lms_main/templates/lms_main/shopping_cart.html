@@ -72,13 +72,13 @@
                                                 <div class="shopping-cont">
                                                     {% if item.discount == 0 %}
                                                         <span>
-                                                            <b>&#8377;{{ item.price }} </b>
+                                                            <b>&#36;{{ item.price }} </b>
                                     
                                                         </span>
                                                     {% else %}
                                                         <span>
-                                                            <b>&#8377;{% discount_calculation item.price item.discount %} </b>
-                                                            <span class="old-price" style="color: grey;font-weight: normal;">&#8377;{{ item.price }}</span>
+                                                            <b>&#36;{% discount_calculation item.price item.discount %} </b>
+                                                            <span class="old-price" style="color: grey;font-weight: normal;">&#36;{{ item.price }}</span>
                                                         </span>
                                                     {% endif %}
                                                     
@@ -127,7 +127,7 @@
                                     
                                 </ul>
                                 <div class="price-button pt-10">
-                                    <span>Amount To Pay : <b>&#8377;{{amount_to_pay}}</b></span>
+                                    <span>Amount To Pay : <b>&#36;{{amount_to_pay}}</b></span>
                                     <a href="{% url 'lms_main:checkout' %}" class="main-btn mt-5" id="checkout-tag">Checkout</a>
                                 </div>
                             </div> <!-- course features -->

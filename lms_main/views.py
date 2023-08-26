@@ -1,3 +1,4 @@
+from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 import json
@@ -7,6 +8,10 @@ from . import models
 from user import models as user_model
 from django.db.models import Sum
 from lms_main.templatetags import course_tags
+
+from django.urls import reverse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home_page(request):
@@ -199,7 +204,7 @@ def shopping_cart(request):
         'total_discount': request.session['discount_price'],
         'amount_to_pay': request.session['amount_to_pay'],
     }
-    print(context)
+    # print(context)
     return render(request, 'lms_main/shopping_cart.html', context)
 
 # View for to add course to 'save forlater'
@@ -284,9 +289,9 @@ def remove_from_cart(request):
     """View function to remove course from shopping cart"""
     user = request.user
     course_id = request.POST['course_id']
-    print(course_id)
+    # print(course_id)
     course = models.Course.objects.filter(id=course_id).first()
-    print(course)
+    # print(course)
     print(f"Item to remove:{course}", sep="\n")
     data = {}
 
@@ -314,16 +319,32 @@ def remove_from_cart(request):
 
 
 @login_required(login_url='/user/login/')
+@csrf_exempt
 def checkout(request):
     """View function for the payment for course in the shopping cart"""
     user = request.user
     data = {}
-    print(request.session['current_user_items'])
+
+    host = request.get_host()
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": "111",
+        "item_name": "order-id-here",
+        "invoice": "invoice-id-here",
+        "notify_url": request.build_absolute_uri(reverse('lms_main:paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('lms_main:payment-success')),
+        "cancel_return": request.build_absolute_uri(reverse('lms_main:payment-failure')),
+
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
     context = {
         'items_in_cart': request.session['current_user_items'],
         'total_price': request.session['original_price'],
         'total_discount': request.session['discount_price'],
         'amount_to_pay': request.session['amount_to_pay'],
+        'form': form,
     }
 
     if request.method == 'POST' and request.is_ajax():
@@ -331,5 +352,23 @@ def checkout(request):
         # total_amount = request.POST.get('amount_to_pay')
         # data["total_amount"] = total_amount
         return HttpResponse(json.dumps(data), content_type='application/json')
-    print(context)
+    # print(context)
     return render(request, 'lms_main/checkout.html', context)
+
+
+def payment_success_view(request):
+
+    context = {
+
+    }
+
+    return render(request, 'lms_main/payment/payment_success.html', context)
+
+
+def payment_failure_view(request):
+
+    context = {
+
+    }
+
+    return render(request, 'lms_main/payment/payment_failure.html', context)

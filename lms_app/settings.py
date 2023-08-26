@@ -155,3 +155,7 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 LOGIN_URL = '/user/login/'
+
+PAYPAL_TEST = True
+# PAYPAL_RECEIVER_EMAIL = 'bizfathimanasmin@gmail.com'
+PAYPAL_RECEIVER_EMAIL = os.getenv('PAYPAL_BUSINESS_SANDBOX')
