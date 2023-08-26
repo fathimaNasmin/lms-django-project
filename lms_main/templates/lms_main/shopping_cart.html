@@ -51,7 +51,7 @@
                                 <div class="col-md-4 d-flex justify-content-center">
                                     <div class="thum ">
                                         <div class="image">
-                                            <img src="{{ item.course.featured_image.url }}" alt="Course">
+                                            <img src="{{ item.featured_image_url }}" alt="Course">
                                         </div>
                     
                                     </div>
@@ -62,7 +62,7 @@
                                             <div class="shopping-cont">
                                             
                                                 <a href="#">
-                                                    <h4>{{ item.course.title }}</h4>
+                                                    <h4>{{ item.title }}</h4>
                                                 </a>
                                             
                                             </div>
@@ -70,15 +70,15 @@
                                         <div class="col-3 d-flex justify-content-end">
                                             <div class="row">
                                                 <div class="shopping-cont">
-                                                    {% if item.course.discount == 0 %}
+                                                    {% if item.discount == 0 %}
                                                         <span>
-                                                            <b>&#8377;{{ item.course.price }} </b>
+                                                            <b>&#8377;{{ item.price }} </b>
                                     
                                                         </span>
                                                     {% else %}
                                                         <span>
-                                                            <b>&#8377;{% discount_calculation item.course.price item.course.discount %} </b>
-                                                            <span class="old-price" style="color: grey;font-weight: normal;">&#8377;{{ item.course.price }}</span>
+                                                            <b>&#8377;{% discount_calculation item.price item.discount %} </b>
+                                                            <span class="old-price" style="color: grey;font-weight: normal;">&#8377;{{ item.price }}</span>
                                                         </span>
                                                     {% endif %}
                                                     

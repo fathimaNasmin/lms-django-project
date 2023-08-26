@@ -163,31 +163,43 @@ def add_to_cart(request, slug):
 
 
 @login_required
-def go_to_cart(request):
+def shopping_cart(request):
     """Shopping cart shows all the courses added to the user cart"""
-    price = []
-    discount = []
+    t_price = 0
+    t_discount = 0
+
+    current_user_items_list = []
+
     user = request.user
     user_cart_items = models.Cart.objects.filter(student=user.student)
-    # total_price = sum([item.course.price for item in user_cart_items])
-    # discount_price =
-    # print(total_price)
+
     for item in user_cart_items:
-        price.append(item.course.price)
-        discount.append(course_tags.discount_calculation(
-            item.course.price, item.course.discount))
-    total_price = sum(price)
-    discount = sum(discount)
-    total_discount = total_price - discount
-    amount_to_pay = total_price - total_discount
-    request.session['total_amount'] = amount_to_pay
+        current_user_items_dict = {}
+        current_user_items_dict['title'] = item.course.title
+        current_user_items_dict['featured_image_url'] = item.course.featured_image.url
+        current_user_items_dict['price'] = item.course.price
+        current_user_items_dict['discount'] = item.course.discount
+
+        current_user_items_list.append(current_user_items_dict)
+        # calculate the total amount after discount
+        t_price += item.course.price
+        t_discount += course_tags.discount_calculation(
+            item.course.price, item.course.discount)
+
+    # create session to store current logged in user cart items
+    request.session['current_user_items'] = current_user_items_list
+    request.session['original_price'] = t_price
+    request.session['discount_price'] = t_price - t_discount
+    request.session['amount_to_pay'] = request.session['original_price'] - \
+        request.session['discount_price']
+
     context = {
-        'items_in_cart': user_cart_items,
-        'total_price': total_price,
-        'total_discount': total_discount,
-        'amount_to_pay': amount_to_pay,
+        'items_in_cart': request.session['current_user_items'],
+        'total_price': request.session['original_price'],
+        'total_discount': request.session['discount_price'],
+        'amount_to_pay': request.session['amount_to_pay'],
     }
-    # print(request.session['total_amount'])
+    print(context)
     return render(request, 'lms_main/shopping_cart.html', context)
 
 # View for to add course to 'save forlater'
@@ -304,26 +316,14 @@ def remove_from_cart(request):
 @login_required(login_url='/user/login/')
 def checkout(request):
     """View function for the payment for course in the shopping cart"""
-    price = []
-    discount = []
     user = request.user
-    user_cart_items = models.Cart.objects.filter(student=user.student)
-
-    for item in user_cart_items:
-        price.append(item.course.price)
-        discount.append(course_tags.discount_calculation(
-            item.course.price, item.course.discount))
-
-    total_price = sum(price)
-    discount = sum(discount)
-
-    total_discount = total_price - discount
-    amount_to_pay = total_price - total_discount
+    data = {}
+    print(request.session['current_user_items'])
     context = {
-        'items_in_cart': user_cart_items,
-        'total_price': total_price,
-        'total_discount': total_discount,
-        'amount_to_pay': amount_to_pay,
+        'items_in_cart': request.session['current_user_items'],
+        'total_price': request.session['original_price'],
+        'total_discount': request.session['discount_price'],
+        'amount_to_pay': request.session['amount_to_pay'],
     }
 
     if request.method == 'POST' and request.is_ajax():

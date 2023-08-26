@@ -18,7 +18,7 @@ urlpatterns = [
     path('single-course/<slug:slug>/add-to-cart/',
          lms_main_view.add_to_cart, name='add-to-cart'),
     path('shopping-cart/',
-         lms_main_view.go_to_cart, name='shopping-cart'),
+         lms_main_view.shopping_cart, name='shopping-cart'),
     path('checkout/',
          lms_main_view.checkout, name='checkout'),
     path('save-for-later/',
