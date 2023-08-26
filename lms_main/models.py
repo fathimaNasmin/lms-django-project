@@ -216,3 +216,34 @@ class SaveForLater(models.Model):
     class Meta:
         # Ensure that each combination of course and student is unique
         unique_together = ('course', 'student')
+
+# Order model to store details of order
+
+
+class Order(models.Model):
+    """model to store details of order"""
+    total_price = models.IntegerField(null=True, default=0)
+    paid_status = models.BooleanField(default=False)
+    order_date = models.DateTimeField(auto_now_add=True)
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    student = models.ForeignKey(
+        user_model.Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Order {self.student.user.first_name}"
+
+# OrderItems model to store items in the order
+
+
+class OrderItems(models.Model):
+    """model for storing items in the order"""
+    invoice_no = models.CharField(max_length=200, default=0)
+    course_purchase_price = models.IntegerField(null=True, default=0)
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    user_courses = models.ForeignKey(
+        user_model.EnrolledCourses, on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Order {self.student.user.first_name}"
