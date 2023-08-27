@@ -362,6 +362,7 @@ def checkout(request):
 @login_required
 def payment_success_view(request):
     user = request.user
+    context = {}
     if request.session['current_user_items']:
         # create order
         order = models.Order.objects.create(
@@ -402,9 +403,8 @@ def payment_success_view(request):
                 print(order)
                 print(user_enroll_course)
                 print("success payment")
-    context = {
-
-    }
+                context['order'] = order
+                context['order_items'] = order_items
 
     return render(request, 'lms_main/payment/payment_success.html', context)
 
