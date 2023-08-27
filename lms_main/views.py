@@ -431,3 +431,15 @@ def payment_failure_view(request):
     }
 
     return render(request, 'lms_main/payment/payment_failure.html', context)
+
+
+# @login_required
+# def order_receipt_view(request, order_no):
+#     print(order_no)
+#     pdf_doc = models.Order.objects.filter(
+#         student=request.user.student, order_no=order_no)
+#     print(pdf_doc)
+#     response = HttpResponse(pdf_doc.pdf_receipt,
+#                             content_type='application/pdf')
+#     response['Content-Disposition'] = 'inline; filename=f"receipt.pdf"'
+#     return response

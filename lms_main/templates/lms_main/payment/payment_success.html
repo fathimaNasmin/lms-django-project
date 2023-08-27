@@ -102,7 +102,7 @@
                                 </section>
                                 <section>
                                     <button class="btn btn-warning"><a class="text-light" href="{% url 'lms_main:home' %}">Home</a></button>
-                                    <button class="btn btn-success"><a href=""></a>Print receipt</button>
+                                    <button class="btn btn-success"><a href="" id="receipt"></a>Print receipt</button>
                                 </section>
                             </div>
                         </div>
@@ -126,6 +126,12 @@
 
 <!--====== BACK TO TP PART ENDS ======-->
 
-
+<!-- <script>
+    document.getElementById('receipt').addEventListener('click', function () {
+        const orderId ="{{ order.order_no }}";  // Replace with the actual PDF document ID
+        const url = "{% url 'lms_main:order-receipt' order.order_no %}"
+        window.open(url, '_blank');
+    });
+</script> -->
 
 {% endblock %}
