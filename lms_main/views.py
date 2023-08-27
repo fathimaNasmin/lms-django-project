@@ -386,6 +386,7 @@ def payment_success_view(request):
                     item_price=item_price,
                     order=order,
                 )
+                # generate the recipt of order and save to db
                 # AddtoEnrolled Course model
                 user_enroll_course = user_model.EnrolledCourses.objects.create(
                     course=order_items.course,
