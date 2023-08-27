@@ -10,6 +10,8 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.files import File
+import time
+from random import *
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -98,3 +100,9 @@ def receipt_render_to_pdf(template_src, context_dict={}):
     pdf_file_object = File(result, name=pdf_name)
     return pdf_file_object
     # return None
+
+
+def generate_order_number():
+    timestamp = time.strftime("%Y%m%d%H%M%S")
+    invoice_number = f"{timestamp}#{randint(1, 99999)}"
+    return invoice_number

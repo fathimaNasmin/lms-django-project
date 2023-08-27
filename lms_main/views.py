@@ -9,8 +9,8 @@ from django.db import IntegrityError
 from . import models
 from user import models as user_model
 from django.db.models import Sum
-from lms_main.templatetags import course_tags, invoice
-from .utils import receipt_render_to_pdf
+from lms_main.templatetags import course_tags
+from .utils import receipt_render_to_pdf, generate_order_number
 
 from django.urls import reverse
 from django.conf import settings
@@ -98,7 +98,7 @@ def single_course(request, slug):
     }
     if user.is_authenticated:
         user_enrolled_course = user_model.EnrolledCourses.objects.filter(
-            course=single_course, student=user.student)
+            course=single_course, student=user.student).exists()
         course_exists_in_cart = models.Cart.objects.filter(
             course=single_course, student=user.student)
         print("user_enrolled_course:", user_enrolled_course)
@@ -183,7 +183,9 @@ def shopping_cart(request):
 
     for item in user_cart_items:
         current_user_items_dict = {}
+        current_user_items_dict['id'] = item.course.id
         current_user_items_dict['title'] = item.course.title
+        current_user_items_dict['slug'] = item.course.slug
         current_user_items_dict['featured_image_url'] = item.course.featured_image.url
         current_user_items_dict['price'] = item.course.price
         current_user_items_dict['discount'] = item.course.discount
@@ -373,7 +375,7 @@ def payment_success_view(request):
                 student=user.student,
                 total_price=request.session['amount_to_pay'],
                 paid_status=True,
-                order_no=invoice.generate_order_number())
+                order_no=generate_order_number())
             for item in request.session['current_user_items']:
 
                 course = models.Course.objects.filter(
@@ -411,12 +413,13 @@ def payment_success_view(request):
             order.save()
         except Exception as e:
             print("Error on payment success view:", e)
+            redirect('lms_main:payment-failure')
         else:
 
             print("success payment")
             context['order'] = order
             context['order_items'] = order_items
-
+            print(context)
     return render(request, 'lms_main/payment/payment_success.html', context)
 
 

@@ -248,10 +248,12 @@ class OrderItems(models.Model):
         Course, on_delete=models.CASCADE)
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        user_model.Student, on_delete=models.CASCADE, default=2)
 
     def __str__(self):
         return f"Order Item by {self.order.student}-{self.course} in the {self.order}"
 
     class Meta:
         # Ensure that each combination of course and student is unique
-        unique_together = ('course', 'order')
+        unique_together = ('course', 'order', 'student')

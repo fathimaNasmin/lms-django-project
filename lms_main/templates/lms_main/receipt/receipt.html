@@ -44,16 +44,16 @@
                 </div>
                 <div class="row my-4">
                     <hr>
-                    <p><strong>Sold To:</strong>{{ order.student.full_name }}</p>
+                    <p><strong>Sold To:</strong>{{ order.student.student.full_name }}</p>
                     
                 </div>
                 <div class="row my-4 mx-4">
-                    <table class="table">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">Item</th>
-                                <th scope="col">Ordered</th>
-                                <th scope="col">Amount</th>
+                                <th scope="col" class="text-start">Item</th>
+                                <th scope="col" class="text-end">Ordered</th>
+                                <th scope="col" class="text-end">Amount</th>
         
                             </tr>
                         </thead>
@@ -61,16 +61,16 @@
                             {% for item in order_items %}
                             <tr>
                                 
-                                <td>{{ item.course.title }}</td>
-                                <td>{{ item.order.order_date }}</td>
-                                <td>{{ item.item_price }}</td>
+                                <td class="w-50 text-start">{{ item.course.title }}</td>
+                                <td class="text-end">{{ item.order.order_date }}</td>
+                                <td class="text-end">{{ item.item_price }}</td>
                             </tr>
                             {% endfor %}
                             <tr>
                             
                                 <td></td>
-                                <td><strong>Total Paid</strong></td>
-                                <td><strong>{{ order.total_price }}</strong></td>
+                                <td class="text-end"><strong>Total Paid</strong></td>
+                                <td class="text-end"><strong>{{ order.total_price }}</strong></td>
                             </tr>
                             
                         </tbody>

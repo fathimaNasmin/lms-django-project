@@ -66,7 +66,7 @@
                                             {% for item in order_items %}
                                             <tr class="woocommerce-table__line-item order_item">
                                                 <td class="woocommerce-table__product-name product-name">
-                                                    <a href="#">{{ item.course.title }}</a>
+                                                    <p>{{ item.course.title }}</p>
                                                     
                                                 </td>
                 
@@ -95,9 +95,9 @@
                                 <section class="woocommerce-customer-details">
                                     <h2 class="woocommerce-column__title">Billing address</h2>
                                     <address>
-                                        {{ order.student.full_name }}
+                                        {{ order.student.student.full_name }}
                                         <p class="woocommerce-customer-details--phone">90909090</p>
-                                        <p class="woocommerce-customer-details--email">{{ order.student.email }}</p>
+                                        <p class="woocommerce-customer-details--email">{{ order.student.student.email }}</p>
                                     </address>
                                 </section>
                                 <section>
