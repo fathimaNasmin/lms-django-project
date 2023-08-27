@@ -361,27 +361,50 @@ def checkout(request):
 
 @login_required
 def payment_success_view(request):
+    user = request.user
     if request.session['current_user_items']:
-        # create orderhere
-        # order = models.Order.objects.create(
-        #     student=user.student,
-        #     total_price=request.session['amount_to_pay'])
+        # create order
+        order = models.Order.objects.create(
+            student=user.student,
+            total_price=request.session['amount_to_pay'],
+            paid_status=True,
+            order_no=invoice.generate_order_number())
 
         # create order items
-        # for item in request.session['current_user_items']:
-        #     item_price = 0
-        #     item_price = math.floor(item['price'] -
-        #                             item['price'] * item['discount'] / 100)
-        #     # print(item_price)
+        for item in request.session['current_user_items']:
+            try:
+                course = models.Course.objects.filter(
+                    title=item['title']).first()
+                item_price = 0
+                item_price = math.floor(item['price'] -
+                                        item['price'] * item['discount'] / 100)
+                # print(item_price)
 
-        #     order_items = models.OrderItems.objects.create(
-        #         invoice_no=invoice.generate_invoice_number(),
-        #         course=item['title'],
-        #         item_price=item_price,
-        #         order=order,
-        #     )
-        print("success payment")
-    context = {}
+                order_items = models.OrderItems.objects.create(
+                    course=course,
+                    item_price=item_price,
+                    order=order,
+                )
+                # AddtoEnrolled Course model
+                user_enroll_course = user_model.EnrolledCourses.objects.create(
+                    course=order_items.course,
+                    student=order.student
+                )
+                # Delete Order Items from the Cart model
+                delete_from_cart = models.Cart.objects.filter(
+                    course=order_items.course,
+                    student=order.student
+                ).delete()
+            except Exception as e:
+                print("Error on payment success:", e)
+            else:
+                print(order_items)
+                print(order)
+                print(user_enroll_course)
+                print("success payment")
+    context = {
+
+    }
 
     return render(request, 'lms_main/payment/payment_success.html', context)
 

@@ -100,3 +100,7 @@ class EnrolledCourses(models.Model):
 
     def __str__(self):
         return f"Course Enrolled {self.course.title}-{self.student}"
+
+    class Meta:
+        # Ensure that each combination of course and student is unique
+        unique_together = ('course', 'student')
