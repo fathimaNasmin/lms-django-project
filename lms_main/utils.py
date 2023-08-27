@@ -5,6 +5,11 @@ import random
 from dotenv import load_dotenv
 from datetime import timedelta
 from django.utils.text import slugify
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.core.files import File
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -70,3 +75,26 @@ def calculate_video_duration(id):
     except requests.RequestException as e:
         print(f"Error while fetching video duration: {e}")
         return 0
+# function to generate Receipt using xhtml2pdf
+
+
+def receipt_render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    # pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    # if not pdf.err:
+    #     return HttpResponse(result.getvalue(), content_type='application/pdf')
+    # return None
+    pisa.CreatePDF(BytesIO(html.encode("UTF-8")),
+                   dest=result, encoding='UTF-8')
+
+    # Create a File object from the PDF content
+    order_no = context_dict['order']
+    print(order_no)
+    print(context_dict)
+    pdf_name = f'{order_no}.pdf'
+    result.seek(0)
+    pdf_file_object = File(result, name=pdf_name)
+    return pdf_file_object
+    # return None

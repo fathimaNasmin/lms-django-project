@@ -397,9 +397,15 @@
                                                 <button class="main-btn mx-auto">Go to Cart</button>
                                             </a>
                                         {% else %}
-                                            <form action="{% url 'lms_main:add-to-cart' course.slug %}" method="POST" id="add-to-cart-form">
-                                                <button class="main-btn mx-auto" id="cart-action-btn" data-course-id="{{ course.slug }}">Add to Cart</button>
-                                            </form>
+                                            {% if course.slug in user_enrolled_course.course.slug %}
+                                                <h3>Already enrolled</h3>
+                                            {% else %}
+                                                <form action="{% url 'lms_main:add-to-cart' course.slug %}" method="POST" id="add-to-cart-form">
+                                                    <button class="main-btn mx-auto" id="cart-action-btn" data-course-id="{{ course.slug }}">Add to Cart</button>
+                                                </form>
+                                            {% endif %}
+                                            
+                                            
                                         {% endif %}
                                     
                                     

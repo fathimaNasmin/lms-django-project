@@ -10,6 +10,7 @@ from . import models
 from user import models as user_model
 from django.db.models import Sum
 from lms_main.templatetags import course_tags, invoice
+from .utils import receipt_render_to_pdf
 
 from django.urls import reverse
 from django.conf import settings
@@ -97,9 +98,9 @@ def single_course(request, slug):
     }
     if user.is_authenticated:
         user_enrolled_course = user_model.EnrolledCourses.objects.filter(
-            course=single_course, student=user.student).exists()
+            course=single_course, student=user.student)
         course_exists_in_cart = models.Cart.objects.filter(
-            course=single_course, student=user.student).exists()
+            course=single_course, student=user.student)
         print("user_enrolled_course:", user_enrolled_course)
         print("course_exists_in_cart:", course_exists_in_cart)
         context['user_enrolled_course'] = user_enrolled_course
@@ -364,16 +365,17 @@ def payment_success_view(request):
     user = request.user
     context = {}
     if request.session['current_user_items']:
-        # create order
-        order = models.Order.objects.create(
-            student=user.student,
-            total_price=request.session['amount_to_pay'],
-            paid_status=True,
-            order_no=invoice.generate_order_number())
 
         # create order items
-        for item in request.session['current_user_items']:
-            try:
+        try:
+            # create order
+            order = models.Order.objects.create(
+                student=user.student,
+                total_price=request.session['amount_to_pay'],
+                paid_status=True,
+                order_no=invoice.generate_order_number())
+            for item in request.session['current_user_items']:
+
                 course = models.Course.objects.filter(
                     title=item['title']).first()
                 item_price = 0
@@ -385,6 +387,7 @@ def payment_success_view(request):
                     course=course,
                     item_price=item_price,
                     order=order,
+
                 )
                 # generate the recipt of order and save to db
                 # AddtoEnrolled Course model
@@ -397,15 +400,22 @@ def payment_success_view(request):
                     course=order_items.course,
                     student=order.student
                 ).delete()
-            except Exception as e:
-                print("Error on payment success:", e)
-            else:
-                print(order_items)
-                print(order)
-                print(user_enroll_course)
-                print("success payment")
-                context['order'] = order
-                context['order_items'] = order_items
+            # generate receipt in pdf
+            order_items = models.OrderItems.objects.filter(
+                order__id=order.id)
+            data = {'order': order, 'order_items': order_items}
+            pdf_receipt = receipt_render_to_pdf(
+                'lms_main/receipt/receipt.html', data)
+            # saving receipt to order model
+            order.pdf_receipt = pdf_receipt
+            order.save()
+        except Exception as e:
+            print("Error on payment success view:", e)
+        else:
+
+            print("success payment")
+            context['order'] = order
+            context['order_items'] = order_items
 
     return render(request, 'lms_main/payment/payment_success.html', context)
 

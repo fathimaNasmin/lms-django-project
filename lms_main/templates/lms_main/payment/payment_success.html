@@ -95,14 +95,14 @@
                                 <section class="woocommerce-customer-details">
                                     <h2 class="woocommerce-column__title">Billing address</h2>
                                     <address>
-                                        Mohamed Anas<br>12 Maraicoir street<br>chennai 600001<br>Tamil Nadu, India
+                                        {{ order.student.full_name }}
                                         <p class="woocommerce-customer-details--phone">90909090</p>
-                                        <p class="woocommerce-customer-details--email">anas@gmail.com</p>
+                                        <p class="woocommerce-customer-details--email">{{ order.student.email }}</p>
                                     </address>
                                 </section>
                                 <section>
-                                    <button>return to Home</button>
-                                    <button>Print receipt</button>
+                                    <button class="btn btn-warning"><a class="text-light" href="{% url 'lms_main:home' %}">Home</a></button>
+                                    <button class="btn btn-success"><a href=""></a>Print receipt</button>
                                 </section>
                             </div>
                         </div>

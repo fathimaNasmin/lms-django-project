@@ -227,6 +227,8 @@ class Order(models.Model):
     total_price = models.IntegerField(null=True, default=0)
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
+    pdf_receipt = models.FileField(
+        upload_to='receipts/', null=True, blank=True)
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     student = models.ForeignKey(
         user_model.Student, on_delete=models.CASCADE)
