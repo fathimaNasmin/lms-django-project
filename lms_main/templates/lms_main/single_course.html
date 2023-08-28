@@ -176,10 +176,9 @@
                                                         {% else %}
                                                             <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
                                                             <li class="d-inline list-inline-item">
-                                                                <a id="hoverLink" class="text-decoration-none text-secondary">{{video.title}}</a>
-
+                                                                <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Enroll this course" class="text-decoration-none text-secondary">{{video.title}}</a>
                                                             </li>
-                                                            <li><div id="messageBox" style="display: none;color: red;">Buy the course to get access</div></li>
+                                                            
                                                         {% endif %}
                                                         
                                                     </ul>
@@ -604,17 +603,6 @@
 
 
 <script>
-    // display message on hover over the video link for students who're not enrolled
-    const hoverLink = document.getElementById("hoverLink");
-        const messageBox = document.getElementById("messageBox");
-
-        hoverLink.addEventListener("mouseover", () => {
-            messageBox.style.display = "block";
-        });
-
-        hoverLink.addEventListener("mouseout", () => {
-            messageBox.style.display = "none";
-        });
 
         // Jquery 
     $(document).ready(function (){
@@ -636,40 +624,7 @@
 
         const csrfToken = getCookie('csrftoken');
 
-        // $('#cart-action-btn').click(function () {
-        //     const button = $(this);
-        //     const courseId = button.data('course-id');
-        //     console.log(button.text())
-
-        //     if (button.text() === 'Add to Cart') {
-        //         $.ajax({
-        //             url: "{% url 'lms_main:add-to-cart' course.slug %}",
-        //             type: "POST",
-        //             data: { csrfmiddlewaretoken: csrfToken, course_id: courseId },
-        //             success: function (response) {
-        //                 var success = response['success']
-        //                 if (success) {
-        //                     button.text('Go to Cart');
-        //                     button.click(function () {
-        //                         // Replace this with the actual URL of your cart page
-        //                         window.location.href = "{% url 'lms_main:shopping-cart' %}";
-        //                     });
-        //                 }else{
-        //                     console.log("login required")
-        //                 }
-        //             },
-        //             error:function(textStatus){
-        //                 console.log(textStatus)
-        //                 console.log("error on post")
-        //             }
-        //         });
-        //     } else {
-        //         // Perform the "Go to Cart" action
-        //         // Replace this with the actual URL of your cart page
-        //         window.location.href = "{% url 'lms_main:shopping-cart' %}";
-        //     }
-        // });
-
+    
         // Enroll form on submit
         $('#enroll-form').submit(function(event){
             event.preventDefault();
