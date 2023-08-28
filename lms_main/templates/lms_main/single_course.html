@@ -139,50 +139,63 @@
                                     {% endif %}
                                 </div> <!-- overview description -->
                             </div>
+                            
+                            <!-- Curriculam tab -->
                             <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
                                 <div class="curriculam-cont">
-
-                                    
                                     <div class="accordion" id="accordionExample">
-                                       {% for video in videos %}
+                                        {% for video in videos %}
                                         <div class="card">
                                             <div class="card-header" id="headingOne">
-                                                <a href="#" data-toggle="collapse" data-target="#{{ video.lesson.name }}"
-                                                    aria-expanded="false" aria-controls="collapseOne">
+                                                <a href="#" class="accordion-button collapsed" data-toggle="collapse" data-target="#id{{video.lesson.id}}" aria-expanded="true"
+                                                    aria-controls="collapseOne">
                                                     <ul>
-                                                        <li><i class="fa fa-file-o"></i></li>
-                                                        <li><span class="lecture">{{forloop.counter}}.&nbsp;{{ video.lesson.name }}</span></li>
-                                                        <li><span class="head"></span></li>
-                                                        <li><span class="time d-none d-md-block"> <span>
-                                                                    </span></span></li>
+                                                        <li></li>
+                                                        <li><span class="lecture">{{forloop.counter}}.&nbsp;</span></li>
+                                                        <li>
+                                                            
+                                                                <span class="head">{{video.lesson.name}}</span>
+                                                            
+                                                        </li>
+                                                        <li><span class="time d-none d-md-block"><i class="fa fa-clock-o"></i> <span>
+                                                                    {% time_in_hrs_min_sec video.time_duration %}</span></span></li>
                                                     </ul>
                                                 </a>
                                             </div>
-
-                                            <div id="{{ video.lesson.name }}" class="collapse" aria-labelledby="headingOne"
+                            
+                                            <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne"
                                                 data-parent="#accordionExample">
-                                                <div class="card-body d-flex">
+                                                <div class="card-body">
                                                     <ul>
-                                                        <li class="me-4">
-                                                            <span class="lecture">{{ video.title }}</span>
-                                                        </li>
-                                                        <li>
-                                                            <span class="time d-inline">
-                                                                <i class="fa fa-clock-o"></i>
-                                                                <span>{% time_in_hrs_min_sec video.time_duration %}</span>
-                                                            </span>
-                                                        </li>
+                                                        {% if user_enrolled_course %}
+                                                            <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                                            <li class="d-inline list-inline-item">
+                                                                <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}" class="text-decoration-none text-secondary"
+                                                                    data-fancybox>{{video.title}}</a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                                            <li class="d-inline list-inline-item">
+                                                                <a id="hoverLink" class="text-decoration-none text-secondary">{{video.title}}</a>
+
+                                                            </li>
+                                                            <li><div id="messageBox" style="display: none;color: red;">Buy the course to get access</div></li>
+                                                        {% endif %}
+                                                        
                                                     </ul>
-                                                    
+                                                    <p></p>
                                                 </div>
                                             </div>
                                         </div>
                                         {% endfor %}
-
-                                    
+                            
+                                       
                                     </div>
                                 </div> <!-- curriculam cont -->
                             </div>
+
+
+                            <!-- Instructor tab  -->
                             <div class="tab-pane fade" id="instructor" role="tabpanel" aria-labelledby="instructor-tab">
                                 <div class="instructor-cont">
                                     <div class="instructor-author">
@@ -366,7 +379,7 @@
                                 <li><i class="fa fa-beer"></i>Level : <span>{{course.level.name_of_level}}</span></li>
                                 <li><i class="fa fa-clone"></i>Lectures : <span>{{ no_of_videos }}</span></li>
                                 <li><i class="fa fa-beer"></i>Quizzes : <span>05</span></li>
-                                <li><i class="fa fa-user-o"></i>Students : <span>100</span></li>
+                                <li><i class="fa fa-user-o"></i>Students : <span>{{no_of_students_enrolled}}</span></li>
                             </ul>
 
                             {% if course.price == 0 %}
@@ -591,6 +604,19 @@
 
 
 <script>
+    // display message on hover over the video link for students who're not enrolled
+    const hoverLink = document.getElementById("hoverLink");
+        const messageBox = document.getElementById("messageBox");
+
+        hoverLink.addEventListener("mouseover", () => {
+            messageBox.style.display = "block";
+        });
+
+        hoverLink.addEventListener("mouseout", () => {
+            messageBox.style.display = "none";
+        });
+
+        // Jquery 
     $(document).ready(function (){
          // Function to get the CSRF token from the cookie
         function getCookie(name) {

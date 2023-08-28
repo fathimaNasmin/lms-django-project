@@ -86,23 +86,30 @@ def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
     videos = models.Video.objects.filter(course__slug=slug)
+    no_of_students_enrolled = user_model.EnrolledCourses.objects.filter(
+        course__slug=slug).all().count()
+
     total_time_duration_course = sum([video.time_duration for video in videos])
     context = {}
     user = request.user
-    print(user.is_authenticated)
+    # print(user.is_authenticated)
+
+    # for video in videos:
+    #     print("video id", video.lesson.id)
     context = {
         'course': single_course,
         'videos': videos,
         'total_time_duration_course': total_time_duration_course,
         'no_of_videos': videos.count(),
+        'no_of_students_enrolled': no_of_students_enrolled,
     }
     if user.is_authenticated:
         user_enrolled_course = user_model.EnrolledCourses.objects.filter(
             course=single_course, student=user.student).exists()
         course_exists_in_cart = models.Cart.objects.filter(
             course=single_course, student=user.student)
-        print("user_enrolled_course:", user_enrolled_course)
-        print("course_exists_in_cart:", course_exists_in_cart)
+        # print("user_enrolled_course:", user_enrolled_course)
+        # print("course_exists_in_cart:", course_exists_in_cart)
         context['user_enrolled_course'] = user_enrolled_course
         context['course_exists_in_cart'] = course_exists_in_cart
 
