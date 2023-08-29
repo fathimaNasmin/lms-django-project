@@ -43,17 +43,17 @@
                     <ul class="nav nav-justified" id="myTab" role="tablist">
                         <!-- course tab -->
                         <li class="nav-item">
-                            <a class="active" id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses"
+                            <a class="active text-decoration-none" id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses"
                                 aria-selected="false">Courses</a>
                         </li>
                         <!-- dashboard tab -->
                         <li class="nav-item">
-                            <a id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab"
+                            <a class="text-decoration-none" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab"
                                 aria-controls="dashboard" aria-selected="true">Dashboard</a>
                         </li>
                         <!-- review tab -->
                         <li class="nav-item">
-                            <a id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
+                            <a class="text-decoration-none" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
                                 aria-selected="false">Reviews</a>
                         </li>
                     </ul> <!-- nav -->
@@ -64,13 +64,36 @@
                                 <!-- add a '+' button to open up model and add course -->
                                 <div class="row">
                                     <div class="col d-flex justify-content-end">
-                                        <button class="btn btn-light"><i class="fa-solid fa-plus fa-xl"></i></button>
+                                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus fa-xl"></i></button>
                                     </div>
                                 </div>
+
+                                <!-- model: add course starts-->
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Course</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ...
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Add Course</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- model:add course ends -->
+
+
                                 {% for course in instructor.course_set.all %}
                                 <div class="row">
                                     <!-- single course cell-->
-                                    <div class="col-lg">
+                                    <div class="col">
                                         
                                         <div class="col">
                                             <div class="singel-course mt-30">
@@ -88,7 +111,7 @@
                                                             <div class="col-8">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#">
+                                                                    <a href="#" class="text-decoration-none">
                                                                         <h4>{{ course.title }}</h4>
                                                                     </a>
                                     
@@ -122,17 +145,17 @@
                                                         </div>
                                     
                                                         <div class="row d-flex align-items-end">
-                                                            <div class="col-6 d-flex justify-content-end">
+                                                            <div class="col-5 d-flex justify-content-end">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#" class="text-secondary" id="save-for-later" data-course-id=""><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
+                                                                    <a href="#" class="text-secondary text-decoration-none" id="save-for-later" data-course-id=""><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
                                     
                                                                 </div>
                                                             </div>
-                                                            <div class="col-6 d-flex justify-content-end">
+                                                            <div class="col-5 d-flex justify-content-end">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#" class="text-secondary" id="remove" data-course-id=""><i
+                                                                    <a href="#" class="text-secondary text-decoration-none" id="remove" data-course-id=""><i
                                                                             class="fa-solid fa-trash"></i>&nbsp;&nbsp;Delete</a>
                                     
                                                                 </div>
