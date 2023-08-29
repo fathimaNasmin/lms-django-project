@@ -37,12 +37,12 @@ urlpatterns = [
     #          lms_main_view.order_receipt_view, name='order-receipt'),
 
     # ==============INSTRUCTOR URLS=====================
-    path('instructor-signup/', lms_main_view.instructor_signup,
+    path('instructor/instructor-signup/', lms_main_view.instructor_signup,
          name='instructor-signup'),
-    path('instructor-login/', lms_main_view.instructor_login, name='instructor-login'),
-    path('instructor-logout/', lms_main_view.instructor_logout,
+    path('instructor/instructor-login/', lms_main_view.instructor_login, name='instructor-login'),
+    path('instructor/instructor-logout/', lms_main_view.instructor_logout,
          name='instructor-logout'),
-    path('instructor-dashboard/', lms_main_view.instructor_dashboard,
+    path('instructor/instructor-dashboard/', lms_main_view.instructor_dashboard,
          name='instructor-dashboard'),
     
     

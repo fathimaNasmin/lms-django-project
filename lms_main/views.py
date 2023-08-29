@@ -1,5 +1,6 @@
 from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.http import HttpResponse, JsonResponse
 import json
 import math
@@ -543,8 +544,8 @@ def instructor_dashboard(request):
             'instructor': instructor,
             'course_form': add_course_form,
         }
-        return render(request, 'user/instructor/instructor_dashboard.html', context)
-    return Http404
+    return render(request, 'user/instructor/instructor_dashboard.html', context)
+    
 
 
 @login_required

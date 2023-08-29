@@ -24,7 +24,7 @@
         </div>
 
         <div class="w-50 mx-auto">
-            <form id="login-form-id" action="{% url 'user:instructor-login' %}" method="POST" novalidate>
+            <form id="login-form-id" action="{% url 'lms_main:instructor-login' %}" method="POST" novalidate>
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-flex justify-content-center">
@@ -39,7 +39,7 @@
             </div>
             <hr style="height: 12px;">
             <div class="my-2 d-flex justify-content-center">
-                <p>Don't have an account? <a href="{% url 'user:instructor-signup' %}">Sign Up here</a></p>
+                <p>Don't have an account? <a href="{% url 'lms_main:instructor-signup' %}">Sign Up here</a></p>
             </div>
 
         </div>
@@ -83,7 +83,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "{% url 'user:instructor-login' %}",
+                url: "{% url 'lms_main:instructor-login' %}",
                 header: { 'X-CSRFToken': my_token },
                 data: formData,
                 success: function (response, textStatus, jqXHR) {
