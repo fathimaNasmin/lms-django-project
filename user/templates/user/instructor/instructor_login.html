@@ -89,7 +89,7 @@
                 success: function (response, textStatus, jqXHR) {
                     var success = response['success']
                     if (success) {
-                        window.location.href = "{% url 'user:instructor-dashboard' %}";  // Redirect to the dashboard upon successful login
+                        window.location.href = "{% url 'lms_main:instructor-dashboard' %}";  // Redirect to the dashboard upon successful login
 
                         // // Convert the response data to a JSON string
                         // var templateData = JSON.stringify(response);

@@ -86,7 +86,7 @@
                     update_form_id.each(function () {
                         this.reset();
                     });
-                    window.location.href = "{% url 'user:instructor-dashboard' %}";
+                    window.location.href = "{% url 'lms_main:instructor-dashboard' %}";
                 }
                 else {
                     var u_form_errors = response['u_form_errors']

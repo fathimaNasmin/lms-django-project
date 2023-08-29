@@ -80,6 +80,7 @@ i,
 span,
 a{
     display: inline-block;
+    text-decoration: none !important;
 }
 
 h1,
@@ -3809,7 +3810,9 @@ p.form-message.error {
 }
 
 
-
+a{
+    text-decoration: none;
+}
 
 
 
