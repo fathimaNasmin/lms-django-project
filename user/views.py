@@ -223,7 +223,6 @@ def instructor_login(request):
             if user is not None:
                 login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
-
                 data = {
                     'success': True,
                 }
@@ -248,9 +247,15 @@ def instructor_login(request):
 def instructor_dashboard(request):
     print("you are in dashboard")
     user = request.user
+    instructor = Instructor.objects.filter(instructor_id=user.id).first()
+    print(instructor)
+    print(instructor.instructor.first_name)
+    print(instructor.profile_image_url)
+    print(instructor.about_me)
+
     if user:
         context = {
-            'user': user,
+            'instructor': instructor,
         }
         return render(request, 'user/instructor/instructor_dashboard.html', context)
     return Http404
