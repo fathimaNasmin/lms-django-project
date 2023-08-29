@@ -62,6 +62,11 @@
                         <div class="tab-pane fade show active" id="courses" role="tabpanel" aria-labelledby="courses-tab">
                             <div class="courses-cont pt-20">
                                 <!-- add a '+' button to open up model and add course -->
+                                <div class="row">
+                                    <div class="col d-flex justify-content-end">
+                                        <button class="btn btn-light"><i class="fa-solid fa-plus fa-xl"></i></button>
+                                    </div>
+                                </div>
                                 {% for course in instructor.course_set.all %}
                                 <div class="row">
                                     <!-- single course cell-->
@@ -88,6 +93,29 @@
                                                                     </a>
                                     
                                                                 </div>
+                                                            </div>
+                                                            <!-- draft & publish section -->
+                                                            <div class="col-3 d-flex justify-content-end">
+                                                                <div class="row">
+                                                                    <div class="shopping-cont">
+                                                                        {% if course.status == 'DRAFT' %}
+                                                                        <span>
+                                                                            <b class="text-danger">Draft </b>
+                                                            
+                                                                        </span>
+                                                                        {% else %}
+                                                                        <span>
+                                                                            <b class="text-success">Published</b>
+                                                                            
+                                                                        </span>
+                                                                        {% endif %}
+                                                            
+                                                            
+                                                            
+                                                            
+                                                                    </div>
+                                                                </div>
+                                                            
                                                             </div>
                                                             
                                     

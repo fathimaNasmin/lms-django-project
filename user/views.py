@@ -253,6 +253,10 @@ def instructor_dashboard(request):
     # print(instructor.profile_image_url)
     # print(instructor.about_me)
     print(instructor.course_set.all())
+
+    for course in instructor.course_set.all():
+        print(course.status)
+
     if user:
         context = {
             'instructor': instructor,
