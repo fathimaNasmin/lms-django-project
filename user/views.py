@@ -248,11 +248,11 @@ def instructor_dashboard(request):
     print("you are in dashboard")
     user = request.user
     instructor = Instructor.objects.filter(instructor_id=user.id).first()
-    print(instructor)
-    print(instructor.instructor.first_name)
-    print(instructor.profile_image_url)
-    print(instructor.about_me)
-
+    # print(instructor)
+    # print(instructor.instructor.first_name)
+    # print(instructor.profile_image_url)
+    # print(instructor.about_me)
+    print(instructor.course_set.all())
     if user:
         context = {
             'instructor': instructor,
