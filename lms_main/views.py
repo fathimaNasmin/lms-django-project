@@ -535,15 +535,11 @@ def instructor_dashboard(request):
     user = request.user
     instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
     print(instructor.course_set.all())
-
-    for course in instructor.course_set.all():
-        print(course.status)
-
-    if user:
-        context = {
-            'instructor': instructor,
-            'course_form': add_course_form,
-        }
+    
+    context = {
+        'instructor': instructor,
+        'course_form': add_course_form,
+    }
     return render(request, 'user/instructor/instructor_dashboard.html', context)
     
 

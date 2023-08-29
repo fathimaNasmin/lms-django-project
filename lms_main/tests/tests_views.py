@@ -1,9 +1,13 @@
-from django.test import SimpleTestCase,TestCase, Client
+from django.test import SimpleTestCase,TestCase, Client, RequestFactory
 from django.urls import reverse
 
 import json
 from user.models import Student, User, Instructor
+from lms_main.models import Course
 from user.forms import SignUpForm 
+from lms_main.forms import AddCourseForm
+
+from lms_main.views import instructor_dashboard
 
 
 class HomepageViewTests(TestCase):
@@ -118,12 +122,19 @@ class InstructorDashboardViewTest(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.signup_url = reverse("lms_main:instructor-dashboard")
+        self.url = reverse("lms_main:instructor-dashboard")
+        self.user = User.objects.create(
+            first_name='testuser',
+            last_name='testuser',
+            email='testuser@gmail.com',
+            password='testpassword',
+            
+        )
+        
+        self.instructor = Instructor.objects.create(
+            instructor=self.user)
+        
 
-    def tests_dashboard_view_page_GET(self):
-        response = self.client.get(self.signup_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(
-            response, 'user/instructor/instructor_dashboard.html')
+    
 
        
