@@ -77,20 +77,50 @@
                                 <!-- model: add course starts-->
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                                         <div class="modal-content mx-5 my-5">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Add Course</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <!-- Add course form -->
                                                 <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data">
                                                     {% csrf_token %}
+                                                    {{ requirement_formset.management_form }}
+                                                    <!-- course form -->
                                                     {{ course_form|crispy }}
+                                                    <br>
+                                                    <!-- requirement inline form -->
+                                                    <div class="bg-info px-2 pt-2 pb-2">
+                                                        <h6>Requirements</h6>
+                                                    </div>
+                                                    <br>
+                                                    {% for form in requirement_formset %}
+                                                        <div class="row">
+                                                            {{ form|crispy }}
+                                                        </div>
+                                                        
+                                                    {% endfor %}
+                                                    <!-- requirement inline form ends -->
+
+                                                    <!-- what you will learn form -->
+                                                        <div class="bg-info px-2 pt-2 pb-2">
+                                                            <h6>What You will Learn</h6>
+                                                        </div>
+                                                        <br>
+                                                        {% for form in what_you_will_learn_formset %}
+                                                        <div class="row">
+                                                            {{ form|crispy }}
+                                                        </div>
+                                                        
+                                                        {% endfor %}
+                                                    <!-- what you will learn form ends -->
                                                     <div class="d-flex justify-content-center">
                                                         <button type="submit" id="add-course-button" class="btn btn-warning my-3">Add Course</button>
                                                     </div>
                                                 </form>
+                                                <!-- end course form -->
                                             </div>
                                             
                                         </div>

@@ -2,24 +2,27 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.http import HttpResponse, JsonResponse
-import json
-import math
-import random
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
-from . import models
-from user import models as user_model
 from django.db.models import Sum
-from lms_main.templatetags import course_tags
-from .utils import receipt_render_to_pdf, generate_order_number
-from . import forms as lms_main_forms
-
 from django.urls import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
+import json
+import math
+import random
+
+# import:Models
+from . import models
+from user import models as user_model
+
+from lms_main.templatetags import course_tags
+from .utils import receipt_render_to_pdf, generate_order_number
+
 #import forms
 from user import forms as user_forms
+from . import forms as lms_main_forms
 
 
 def home_page(request):
@@ -532,13 +535,23 @@ def instructor_logout(request):
 def instructor_dashboard(request):
     print("you are in dashboard")
     add_course_form = lms_main_forms.AddCourseForm()
+    requirement_form = lms_main_forms.RequirementForm()
+    whatyouwilllearn_form = lms_main_forms.WhatYouWillLearnForm()
     user = request.user
     instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
     print(instructor.course_set.all())
     
+    # Inline Form set
+    requirement_formset = lms_main_forms.RequirementFormSet()
+    what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet()
+    
     context = {
         'instructor': instructor,
         'course_form': add_course_form,
+        'requirement_form': requirement_form,
+        'whatyouwilllearn_form': whatyouwilllearn_form,
+        'requirement_formset': requirement_formset,
+        'what_you_will_learn_formset': what_you_will_learn_formset,
     }
     return render(request, 'user/instructor/instructor_dashboard.html', context)
     

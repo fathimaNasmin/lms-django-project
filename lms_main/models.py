@@ -122,7 +122,7 @@ post_save.connect(course_slug_post_save, sender=Course)
 class Requirement(models.Model):
     """requirement of each course"""
     requirement_points = models.CharField(
-        max_length=500, default="no requirements")
+        max_length=500, default="")
 
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
