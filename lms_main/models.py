@@ -62,10 +62,10 @@ class Course(models.Model):
     description = models.TextField()
     created_at = models.DateField(auto_now_add=True)
     featured_image = models.ImageField(
-        upload_to='course/featured_images/', null=True)
+        upload_to='course/featured_images/', null=True, blank=True)
     # featured_video = models.CharField(max_length=500)
     price = models.IntegerField(
-        null=True, default=0)
+        null=True, default=0, blank=True)
     discount = models.IntegerField(null=True, blank=True)
     slug = models.SlugField(unique=True, null=True,
                             blank=True, max_length=300)
@@ -78,6 +78,13 @@ class Course(models.Model):
 
     def __str__(self):
         return f"Course {self.title}"
+    
+    @property
+    def featured_image_url(self):
+        if self.featured_image and hasattr(self.featured_image, 'url'):
+            return self.featured_image.url
+        else:
+            return "/static/images/no_image/No-image-found.jpg"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -84,27 +84,29 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                
                                                 <!-- Add course form -->
-                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data">
-                                                    {% csrf_token %}
-                                                    {{ requirement_formset.management_form }}
-                                                    <!-- course form -->
-                                                    {{ course_form|crispy }}
-                                                    <br>
-                                                    <!-- requirement inline form -->
-                                                    <div class="bg-info px-2 pt-2 pb-2">
-                                                        <h6>Requirements</h6>
-                                                    </div>
-                                                    <br>
-                                                    {% for form in requirement_formset %}
+                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data" novalidate>
+                                                    <div class="mx-auto w-75">
+                                                        {% csrf_token %}
+                                                        {{ requirement_formset.management_form }}
+                                                        <!-- course form -->
+                                                        {{ course_form|crispy }}
+                                                        <br>
+                                                        <!-- requirement inline form -->
+                                                        <div class="bg-info px-2 pt-2 pb-2">
+                                                            <h6>Requirements</h6>
+                                                        </div>
+                                                        <br>
+                                                        {% for form in requirement_formset %}
                                                         <div class="row">
                                                             {{ form|crispy }}
                                                         </div>
                                                         
-                                                    {% endfor %}
-                                                    <!-- requirement inline form ends -->
-
-                                                    <!-- what you will learn form -->
+                                                        {% endfor %}
+                                                        <!-- requirement inline form ends -->
+                                                        
+                                                        <!-- what you will learn form -->
                                                         <div class="bg-info px-2 pt-2 pb-2">
                                                             <h6>What You will Learn</h6>
                                                         </div>
@@ -115,10 +117,17 @@
                                                         </div>
                                                         
                                                         {% endfor %}
-                                                    <!-- what you will learn form ends -->
-                                                    <div class="d-flex justify-content-center">
-                                                        <button type="submit" id="add-course-button" class="btn btn-warning my-3">Add Course</button>
+
+                                                        <!----display validation errors through ajax-->
+                                                        <div class="mx-auto">
+                                                            <p class="text-danger" id="alert-error"></p>
+                                                        </div>
+                                                        <!-- what you will learn form ends -->
+                                                        <div class="d-flex justify-content-center">
+                                                            <button type="submit" id="add-course-button" class="btn btn-warning my-3">Add Course</button>
+                                                        </div>
                                                     </div>
+                                                   
                                                 </form>
                                                 <!-- end course form -->
                                             </div>
@@ -129,7 +138,7 @@
                                 <!-- model:add course ends -->
 
 
-                                {% for course in instructor.course_set.all %}
+                                {% for course in instructor.course_set.all reversed %}
                                 <div class="row">
                                     <!-- single course cell-->
                                     <div class="col">
@@ -140,7 +149,7 @@
                                                     <div class="col-md-4 d-flex justify-content-center">
                                                         <div class="thum ">
                                                             <div class="image">
-                                                                <img src="{{ course.featured_image.url }}" alt="Course">
+                                                                <img src="{{ course.featured_image_url }}" alt="Course">
                                                             </div>
                                     
                                                         </div>
@@ -394,5 +403,64 @@
 <!-- Footer starts here -->
 {% include 'lms_main/components/footer.html' %}
 <!-- Footer ends here -->
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        // var alertError = document.getElementById('alert-error')
+        var alertError = $('#alert-error');
+        console.log(alertError);
+        // alertError.hide(); 
 
+        $('#add-course-form-id').on('submit', function(event){
+            event.preventDefault();
+
+            $.ajax({
+                url: "{% url 'lms_main:instructor-dashboard' %}",
+                type: "POST",
+                header: { 'X-CSRFToken': '{% csrf_token %}' },
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    var success = response['success']
+                    if (success) {
+                        // alert("User created successfully")
+                        alert("course added")
+                    }
+                    else {
+                        var course_form_errors = response['course_form_errors']
+                        var requirement_form_errors = response['requirement_form_errors']
+
+                        // console.log("course_form_errors: ",course_form_errors)
+                        // console.log("requirement_form_errors: ", requirement_form_errors)
+                        
+                        // console.log(typeof(Object.entries(course_form_errors)))
+
+                        $.each(course_form_errors, function (index, value) {
+                            // alertError.text += index + ":" + value[0] + "<br>"
+                            alertError.append(index + ":" + value[0] + "<br>")
+                            console.log(index, value[0])
+                        });
+
+                        // $.each(form_errors, function (index, value) {
+                        //     alertError.innerHTML += value[0] + "<br>"
+                        // });
+                        // alertBox.innerHTML = ""
+                        // signup_form_id.each(function () {
+                        //     this.reset();
+                        // });
+                    }
+                },
+                failure: function (error) {
+                    alert("Error occured while calling django view")
+                }
+        })
+    })
+
+    });
+
+    
+
+
+</script>
 {% endblock %}

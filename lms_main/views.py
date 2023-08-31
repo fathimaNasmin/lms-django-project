@@ -534,22 +534,59 @@ def instructor_logout(request):
 @login_required
 def instructor_dashboard(request):
     print("you are in dashboard")
-    add_course_form = lms_main_forms.AddCourseForm()
-    requirement_form = lms_main_forms.RequirementForm()
-    whatyouwilllearn_form = lms_main_forms.WhatYouWillLearnForm()
     user = request.user
-    instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
-    print(instructor.course_set.all())
+    data = {}
     
+    # Instantiate forms
+    add_course_form = lms_main_forms.AddCourseForm()
     # Inline Form set
     requirement_formset = lms_main_forms.RequirementFormSet()
     what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet()
     
+    instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
+    # print(instructor.course_set.all())
+    
+    
+    # Posting the form       
+    if request.method == "POST" and request.is_ajax():
+        add_course_form = lms_main_forms.AddCourseForm(request.POST, request.FILES)
+        requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
+        what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet(request.POST)
+        
+        if add_course_form.is_valid() and requirement_formset.is_valid():
+            # form validating & saving the form data to db
+            data['success'] = True
+            course_instance = add_course_form.save(commit=False)
+            course_price = add_course_form.cleaned_data['price']
+            if not course_price:
+                course_instance.price = 0
+            course_instance.author = user.instructor
+            course_instance.save()
+            
+            req_instance = requirement_formset.save(commit=False)
+            req_instance.course = course_instance
+            req_instance.save()
+            
+            what_you_will_learn_instance = what_you_will_learn_formset.save(commit=False)
+            what_you_will_learn_instance.course = course_instance
+            what_you_will_learn_formset.save()
+            
+            
+            print("successfully saved")
+            
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            print(add_course_form.errors)
+            print(requirement_formset.errors)
+            data['course_form_errors'] = add_course_form.errors
+            data['requirement_form_errors'] = requirement_formset.errors
+            
+            data['success'] = False
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    
     context = {
         'instructor': instructor,
         'course_form': add_course_form,
-        'requirement_form': requirement_form,
-        'whatyouwilllearn_form': whatyouwilllearn_form,
         'requirement_formset': requirement_formset,
         'what_you_will_learn_formset': what_you_will_learn_formset,
     }
