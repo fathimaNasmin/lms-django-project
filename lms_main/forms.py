@@ -77,7 +77,7 @@ class WhatYouWillLearnForm(forms.ModelForm):
 
 
 RequirementFormSet = inlineformset_factory(
-    parent_model=Course, model=Requirement, form=RequirementForm, formset=CustomInlineFormSet, extra=0, can_delete=True, can_delete_extra=True)
+    parent_model=Course, model=Requirement, form=RequirementForm, formset=CustomInlineFormSet, extra=3, can_delete=True, can_delete_extra=True)
 
 WhatYouWillLearnFormSet = inlineformset_factory(
     parent_model=Course, model=WhatYouWillLearn, form=WhatYouWillLearnForm, formset=CustomInlineFormSet, extra=3, can_delete=True, can_delete_extra=True)

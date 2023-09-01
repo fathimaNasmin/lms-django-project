@@ -86,40 +86,28 @@
                                             <div class="modal-body">
                                                 
                                                 <!-- Add course form -->
-                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data" enctype="multipart/form-data" novalidate>
+                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data" novalidate>
                                                     <div class="mx-auto w-75">
                                                         {% csrf_token %}
-                                                        
-                                                        
+
                                                         <!-- course form -->
                                                         {{ course_form|crispy }}
+
                                                         <br>
+
                                                         <!-- requirement inline form -->
                                                         <div class="bg-info px-2 pt-2 pb-2">
-                                                            
                                                             <h6>Requirements</h6>
                                                         </div>
                                                         <br>
-                                                        <!-- {% for form in requirement_formset %}
-                                                        <div class="row">
+                                                        {{ requirement_formset.management_form }}
+                                                        {% for form in requirement_formset %}
+                                                        <div class="d-inline-flex w-100">
                                                             {{ form|crispy }}
-                                                        </div> -->
-                                                        
-                                                        <!-- {% endfor %} -->
-                                                        <div id="requirement-list">
-                                                            {{ requirement_formset.management_form }}
-                                                            <!-- add more fields for requirement -->
-                                                            <div class="d-inline-flex w-100" id="empty-form">
-                                                                {{ requirement_formset.empty_form|crispy }}
-                                                            </div>
-                                                            <!-- requirement inline form ends -->
                                                         </div>
                                                         
-                                                        <div>
-                                                            <button type="button" id="add-more-btn">Add</button>
-                                                        </div>
-                                                        
-                                                        
+                                                        {% endfor %}
+
                                                         
                                                         <!-- what you will learn form -->
                                                         <div class="bg-info px-2 pt-2 pb-2">
@@ -423,27 +411,6 @@
 
 
 <script>
-    
-    const addMoreBtn = document.getElementById('add-more-btn');
-    addMoreBtn.addEventListener('click', add_more_fields);
-
-    const totalRequirmentForms = document.getElementById('id_requirement_set-TOTAL_FORMS')
-    console.log(totalRequirmentForms.length)
-
-    function add_more_fields(event){
-        if(event){
-            event.preventDefault();
-
-        }
-        console.log("button clicked")
-        const requirementListDiv = document.getElementById('requirement-list')
-        const emptyFormEl = document.getElementById('empty-form').cloneNode(true)
-        requirementListDiv.append(emptyFormEl)
-        console.log(emptyFormEl)
-    }
-
-
-
 
     $(document).ready(function(){
         // var alertError = document.getElementById('alert-error')
@@ -471,30 +438,23 @@
                     var success = response['success']
                     if (success) {
                         // alert("User created successfully")
-                        alert("course added")
+                        // alert("course added")
+                         $('#exampleModal').modal('hide');
+
+                        // Refresh the current page
+                        location.reload();
                     }
                     else {
+                        alert("error adding")
                         var course_form_errors = response['course_form_errors']
                         var requirement_form_errors = response['requirement_form_errors']
 
-                        // console.log("course_form_errors: ",course_form_errors)
-                        // console.log("requirement_form_errors: ", requirement_form_errors)
-                        
-                        // console.log(typeof(Object.entries(course_form_errors)))
 
                         $.each(course_form_errors, function (index, value) {
                             // alertError.text += index + ":" + value[0] + "<br>"
                             alertError.append(index + ":" + value[0] + "<br>")
                             console.log(index, value[0])
                         });
-
-                        // $.each(form_errors, function (index, value) {
-                        //     alertError.innerHTML += value[0] + "<br>"
-                        // });
-                        // alertBox.innerHTML = ""
-                        // signup_form_id.each(function () {
-                        //     this.reset();
-                        // });
                     }
                 },
                 failure: function (error) {
