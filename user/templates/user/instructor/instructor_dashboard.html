@@ -128,7 +128,7 @@
                                                         </div>
                                                         <!-- what you will learn form ends -->
                                                         <div class="d-flex justify-content-center">
-                                                            <button type="submit" id="add-course-button" class="btn btn-warning my-3">Add Course</button>
+                                                            <button type="submit" id="add-course-button" name="course-submit-btn" class="btn btn-warning my-3">Add Course</button>
                                                         </div>
                                                     </div>
                                                    
@@ -200,7 +200,7 @@
                                                             <div class="col-5 d-flex justify-content-end">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#" class="text-secondary text-decoration-none" id="save-for-later" data-course-id=""><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
+                                                                    <a href="#" class="text-secondary text-decoration-none" id="" data-course-id="" data-toggle="modal" data-target="#edit-course"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
                                     
                                                                 </div>
                                                             </div>
@@ -214,6 +214,62 @@
                                                             </div>
                                     
                                                         </div>
+
+                                                        <!-- model: edit course & add lesson-videos to the course starts-->
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="edit-course" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                                                <div class="modal-content mx-5 my-5">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Course</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                        
+                                                                        <!-- Add lesson form -->
+                                                                        <form id="edit-course-form-id" action="" method="POST" enctype="multipart/form-data" novalidate>
+                                                                            <div class="mx-auto w-75">
+                                                                                {% csrf_token %}
+                                                        
+                                                                                <!-- course form -->
+                                                                                {{ lesson_form|crispy }}
+                                                        
+                                                                                <br>
+                                                        
+                                                                                <!-- Video inline form -->
+                                                                                <div class="bg-info px-2 pt-2 pb-2">
+                                                                                    <h6>Videos</h6>
+                                                                                </div>
+                                                                                <br>
+                                                                                {{ video_formset.management_form }}
+                                                                                {% for form in video_formset %}
+                                                                                <div class="d-inline-flex w-100">
+                                                                                    {{ form|crispy }}
+                                                                                </div>
+                                                        
+                                                                                {% endfor %}
+                                                        
+                
+                                                        
+                                                                                <!----display validation errors through ajax-->
+                                                                                <div class="mx-auto">
+                                                                                    <p class="text-danger" id="alert-error"></p>
+                                                                                </div>
+                                                                                <!-- what you will learn form ends -->
+                                                                                <div class="d-flex justify-content-center">
+                                                                                    <button type="submit" name="lesson-submit-btn" id="add-course-button" class="btn btn-warning my-3">Add
+                                                                                        Lesson & Video</button>
+                                                                                </div>
+                                                                            </div>
+                                                        
+                                                                        </form>
+                                                                        <!-- end course form -->
+                                                                    </div>
+                                                        
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- model:add course ends -->
                                                     </div>
                                                 </div> <!--  row  -->
                                             </div> <!-- singel course -->
@@ -418,6 +474,8 @@
         console.log(alertError);
         // alertError.hide(); 
 
+        
+
         $('#add-course-form-id').on('submit', function(event){
             event.preventDefault();
 
@@ -462,6 +520,58 @@
                 }
         })
     })
+
+    // Ajax:edit/add lesson and video to the course
+    $('#edit-course-form-id').on('submit', function (event) {
+            event.preventDefault();
+
+            var edit_course_form_id = $("#edit-course-form-id")
+            var formData = new FormData(edit_course_form_id.get(0));
+            console.log(formData)
+
+            $.ajax({
+                url: "{% url 'lms_main:instructor-edit-course' %}",
+                type: "POST",
+                header: { 'X-CSRFToken': '{% csrf_token %}' },
+                data: formData,
+                dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    var success = response['success']
+                    if (success) {
+                        alert("lesson added to the course")
+                        // clear all field of the modal
+                        /* Message box:You want to add more lessons:
+                        YES->display modal with clear field;
+                        NO->close the modal 
+                        return to dashboard
+
+                        */
+                        // $('#exampleModal').modal('hide');
+
+                        // Refresh the current page
+                        // location.reload();
+                    }
+                    else {
+                        alert("error on adding")
+                        var course_form_errors = response['course_form_errors']
+                        var requirement_form_errors = response['requirement_form_errors']
+
+
+                        // $.each(course_form_errors, function (index, value) {
+                        //     // alertError.text += index + ":" + value[0] + "<br>"
+                        //     alertError.append(index + ":" + value[0] + "<br>")
+                        //     console.log(index, value[0])
+                        // });
+                    }
+                },
+                failure: function (error) {
+                    alert("Error occured while calling django view")
+                }
+            })
+
 
     });
 

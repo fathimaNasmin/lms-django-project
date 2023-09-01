@@ -3,7 +3,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-from .models import Course,Category,Requirement,WhatYouWillLearn
+from .models import Course,Category,Requirement,WhatYouWillLearn,Lesson,Video
 
 
 # Custom form validation by inheritinf BaseInlineFormSet
@@ -81,5 +81,42 @@ RequirementFormSet = inlineformset_factory(
 
 WhatYouWillLearnFormSet = inlineformset_factory(
     parent_model=Course, model=WhatYouWillLearn, form=WhatYouWillLearnForm, formset=CustomInlineFormSet, extra=3, can_delete=True, can_delete_extra=True)
+
+
+# Django model form to create new course
+class AddLessonForm(forms.ModelForm):
+    """Form to create/add lesson to a course"""
+    class Meta:
+        model = Lesson
+        fields = "__all__"
+        exclude = ('course',)
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if len(title) < 8:
+            raise ValidationError("Name of Lesson should have atleast 8 characters")
+        return name
+
+
+# Form to add lesson to the course
+class VideoLearnForm(forms.ModelForm):
+    """form to add extra field for video"""
+    serial_number = forms.IntegerField(label="",
+                             widget=forms.TextInput(attrs={'placeholder': 'Serial Number',
+                                                           'class': 'd-inline-block w-75'}))
+    title = forms.CharField(label="",
+                             widget=forms.TextInput(attrs={'placeholder': 'Video Title',
+                                                           'class': 'd-inline-block w-75'}))
+    youtube_id = forms.CharField(label="",
+                             widget=forms.TextInput(attrs={'placeholder': 'Youtube Id',
+                                                           'class': 'd-inline-block w-75'}))
+
+    class Meta:
+        model = Video
+        fields = ('serial_number', 'title', 'youtube_id',)
+        
+# define a formset for video for a lesson
+VideoFormSet = inlineformset_factory(
+    parent_model=Lesson, model=Video, form=VideoLearnForm, formset=CustomInlineFormSet, extra=5, can_delete=True, can_delete_extra=True)
 
 

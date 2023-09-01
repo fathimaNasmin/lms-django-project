@@ -46,8 +46,9 @@ urlpatterns = [
          name='instructor-dashboard'),
     
     
-     path('instructor-add-course/', lms_main_view.instructor_add_course,
-             name='instructor-add-course'),
+     
+    path('instructor-edit-course/', lms_main_view.instructor_edit_course,
+         name='instructor-edit-course'),
     
     path('instructor-update-profile/', lms_main_view.update_instructor_profile,
          name='instructor-update-profile'),

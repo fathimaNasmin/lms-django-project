@@ -540,59 +540,93 @@ def instructor_dashboard(request):
     # Instantiate forms
     add_course_form = lms_main_forms.AddCourseForm()
     
-    # Inline Form set for requirement & whay you will learn
+    # Inline Form set for requirement & what you will learn
     requirement_formset = lms_main_forms.RequirementFormSet()
     what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet()
+    #  Lesson Form
+    add_lesson_form = lms_main_forms.AddLessonForm()
+    # Inline Form set for video
+    video_formset = lms_main_forms.VideoFormSet()
     
     instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
     # print(instructor.course_set.all())
     
     # Posting the form       
     if request.method == "POST" and request.is_ajax():
-        add_course_form = lms_main_forms.AddCourseForm(request.POST, request.FILES)
-        requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
-        what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet(request.POST)
         
-        
-        
-        if add_course_form.is_valid() and requirement_formset.is_valid() and what_you_will_learn_formset.is_valid():
-            # form validating & saving the form data to db
-            data['success'] = True
+        # Course POST request
+        if 'course-submit-btn' in request.POST:
+            add_course_form = lms_main_forms.AddCourseForm(
+                request.POST, request.FILES)
+            requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
+            what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet(
+            request.POST)
+            print(request.POST)
             
-            course_instance = add_course_form.save(commit=False)
-            course_price = add_course_form.cleaned_data['price']
-            if not course_price:
-                course_instance.price = 0
-            course_instance.author = user.instructor
-            course_instance.save()
+            if add_course_form.is_valid() and requirement_formset.is_valid() and what_you_will_learn_formset.is_valid():
+                # form validating & saving the form data to db
+                data['success'] = True
+
+                course_instance = add_course_form.save(commit=False)
+                course_price = add_course_form.cleaned_data['price']
+                if not course_price:
+                    course_instance.price = 0
+                course_instance.author = user.instructor
+                course_instance.save()
+
+                requirment_instance = requirement_formset.save(commit=False)
+                for instance in requirment_instance:
+                    instance.course = course_instance
+                    instance.save()
+
+                what_you_will_learn_instance = what_you_will_learn_formset.save(
+                    commit=False)
+                for instance in what_you_will_learn_instance:
+                    instance.course = course_instance
+                    instance.save()
+
+                print("successfully saved")
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                print(add_course_form.errors)
+                print(requirement_formset.errors)
+                data['course_form_errors'] = add_course_form.errors
+                data['requirement_form_errors'] = requirement_formset.errors
+
+                data['success'] = False
+                return HttpResponse(json.dumps(data), content_type='application/json')
             
-            requirment_instance = requirement_formset.save(commit=False)
-            for instance in requirment_instance:
-                instance.course = course_instance
-                instance.save()
+        # lesson POST request
+        elif 'lesson-submit-btn' in request.POST:
+            add_lesson_form = lms_main_forms.AddLessonForm(
+                request.POST)
+            video_formset = lms_main_forms.VideoFormSet(request.POST)
+            print(request.POST)
             
-            what_you_will_learn_instance = what_you_will_learn_formset.save(commit=False)
-            for instance in what_you_will_learn_instance:
-                instance.course = course_instance
-                instance.save()
+            if add_lesson_form.is_valid() and video_formset.is_valid():
+                data['success'] = True
+                print(add_lesson_form.cleaned_data)
+                print(video_formset.cleaned_data)
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+
+            else:
+                data['success'] = False
+                print(add_lesson_form.errors)
+                print(video_formset.errors)
+                data['lesson_form_errors'] = add_lesson_form.errors
+                data['video_form_errors'] = video_formset.errors
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
             
-            print("successfully saved")
-            
-            return HttpResponse(json.dumps(data), content_type='application/json')
-        else:
-            print(add_course_form.errors)
-            print(requirement_formset.errors)
-            data['course_form_errors'] = add_course_form.errors
-            data['requirement_form_errors'] = requirement_formset.errors
-            
-            data['success'] = False
-            return HttpResponse(json.dumps(data), content_type='application/json')
-    
     context = {
         'instructor': instructor,
         'course_form': add_course_form,
         'requirement_formset': requirement_formset,
         'what_you_will_learn_formset': what_you_will_learn_formset,
+        'lesson_form': add_lesson_form,
+        'video_formset': video_formset,
     }
     return render(request, 'user/instructor/instructor_dashboard.html', context)
     
@@ -654,12 +688,27 @@ def update_instructor_profile(request):
 
 
 @login_required
-def instructor_add_course(request):
+def instructor_edit_course(request, course_id):
     """views function to add new course by the instructor"""
-    add_course_form = lms_main_forms.AddCourseForm()
+    data = {}
+    
+    
+    if request.method == "POST" and request.is_ajax():
+        
+        # Course POST request
+        if 'course-submit-btn' in request.POST:
+            print(request.POST)
+        # lesson POST request   
+        elif 'lesson-submit-btn' in request.POST:
+            print(request.POST)
+            
+            
+        
+        
+        
 
     context = {
-        'course_form': add_course_form,
+        
     }
 
-    return render(request, 'user/instructor/instructor_add_course.html', context)
+    return render(request, 'user/instructor/instructor_dashboard.html', context)
