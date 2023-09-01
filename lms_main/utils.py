@@ -11,7 +11,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.files import File
 import time
-from random import *
+
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -28,7 +28,7 @@ def slugify_course_instance_title(instance, save=False, new_slug=None):
         # auto generate new slug
         rand_int = random.randint(300_000, 500_000)
         slug = f"{slug}-{rand_int}"
-        return slugify_instance_title(instance, save=save, new_slug=slug)
+        return slugify_course_instance_title(instance, save=save, new_slug=slug)
     instance.slug = slug
     if save:
         instance.save()

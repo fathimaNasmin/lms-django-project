@@ -58,6 +58,11 @@ class RequirementForm(forms.ModelForm):
         model = Requirement
         fields = ('requirement_points',)
         
+    # def clean(self):
+    #     super().clean()
+    #     requirement_points = self.cleaned_data.get("requirement_points")
+        
+        
 # Django model form to add WhatYouWillLearn fields to AddCourseForm
 
 
@@ -72,7 +77,7 @@ class WhatYouWillLearnForm(forms.ModelForm):
 
 
 RequirementFormSet = inlineformset_factory(
-    parent_model=Course, model=Requirement, form=RequirementForm, formset=CustomInlineFormSet, extra=1, can_delete=True, can_delete_extra=True)
+    parent_model=Course, model=Requirement, form=RequirementForm, formset=CustomInlineFormSet, extra=0, can_delete=True, can_delete_extra=True)
 
 WhatYouWillLearnFormSet = inlineformset_factory(
     parent_model=Course, model=WhatYouWillLearn, form=WhatYouWillLearnForm, formset=CustomInlineFormSet, extra=3, can_delete=True, can_delete_extra=True)

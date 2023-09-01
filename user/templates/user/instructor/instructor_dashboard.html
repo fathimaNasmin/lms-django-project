@@ -86,28 +86,44 @@
                                             <div class="modal-body">
                                                 
                                                 <!-- Add course form -->
-                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data" novalidate>
+                                                <form id="add-course-form-id" action="" method="POST" enctype="multipart/form-data" enctype="multipart/form-data" novalidate>
                                                     <div class="mx-auto w-75">
                                                         {% csrf_token %}
-                                                        {{ requirement_formset.management_form }}
+                                                        
+                                                        
                                                         <!-- course form -->
                                                         {{ course_form|crispy }}
                                                         <br>
                                                         <!-- requirement inline form -->
                                                         <div class="bg-info px-2 pt-2 pb-2">
+                                                            
                                                             <h6>Requirements</h6>
                                                         </div>
                                                         <br>
-                                                        {% for form in requirement_formset %}
+                                                        <!-- {% for form in requirement_formset %}
                                                         <div class="row">
                                                             {{ form|crispy }}
+                                                        </div> -->
+                                                        
+                                                        <!-- {% endfor %} -->
+                                                        <div id="requirement-list">
+                                                            {{ requirement_formset.management_form }}
+                                                            <!-- add more fields for requirement -->
+                                                            <div class="d-inline-flex w-100" id="empty-form">
+                                                                {{ requirement_formset.empty_form|crispy }}
+                                                            </div>
+                                                            <!-- requirement inline form ends -->
                                                         </div>
                                                         
-                                                        {% endfor %}
-                                                        <!-- requirement inline form ends -->
+                                                        <div>
+                                                            <button type="button" id="add-more-btn">Add</button>
+                                                        </div>
+                                                        
+                                                        
                                                         
                                                         <!-- what you will learn form -->
                                                         <div class="bg-info px-2 pt-2 pb-2">
+                                                            {{ what_you_will_learn_formset.management_form }}
                                                             <h6>What You will Learn</h6>
                                                         </div>
                                                         <br>
@@ -403,9 +419,32 @@
 <!-- Footer starts here -->
 {% include 'lms_main/components/footer.html' %}
 <!-- Footer ends here -->
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
+
+
 <script>
+    
+    const addMoreBtn = document.getElementById('add-more-btn');
+    addMoreBtn.addEventListener('click', add_more_fields);
+
+    const totalRequirmentForms = document.getElementById('id_requirement_set-TOTAL_FORMS')
+    console.log(totalRequirmentForms.length)
+
+    function add_more_fields(event){
+        if(event){
+            event.preventDefault();
+
+        }
+        console.log("button clicked")
+        const requirementListDiv = document.getElementById('requirement-list')
+        const emptyFormEl = document.getElementById('empty-form').cloneNode(true)
+        requirementListDiv.append(emptyFormEl)
+        console.log(emptyFormEl)
+    }
+
+
+
+
     $(document).ready(function(){
         // var alertError = document.getElementById('alert-error')
         var alertError = $('#alert-error');
@@ -415,12 +454,19 @@
         $('#add-course-form-id').on('submit', function(event){
             event.preventDefault();
 
+            var add_course_form_id = $("#add-course-form-id")
+            var formData = new FormData(add_course_form_id.get(0));
+            console.log(formData)
+
             $.ajax({
                 url: "{% url 'lms_main:instructor-dashboard' %}",
                 type: "POST",
                 header: { 'X-CSRFToken': '{% csrf_token %}' },
-                data: $(this).serialize(),
+                data: formData,
                 dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     var success = response['success']
                     if (success) {

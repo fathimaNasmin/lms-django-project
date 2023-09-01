@@ -553,23 +553,40 @@ def instructor_dashboard(request):
         requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
         what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet(request.POST)
         
+        
+        
         if add_course_form.is_valid() and requirement_formset.is_valid():
             # form validating & saving the form data to db
             data['success'] = True
+            print()
+            print(requirement_formset.cleaned_data)
+            print(requirement_formset.errors)
+        
+            print()
+            
+            
             course_instance = add_course_form.save(commit=False)
             course_price = add_course_form.cleaned_data['price']
             if not course_price:
                 course_instance.price = 0
             course_instance.author = user.instructor
-            course_instance.save()
+            # course_instance.save()
+            print(course_instance)
             
-            req_instance = requirement_formset.save(commit=False)
-            req_instance.course = course_instance
-            req_instance.save()
+            # req_instance = requirement_formset.save(commit=False)
+            # print(req_instance)
+            # req_instance.course = course_instance
+            # req_instance.save()
+            
+            # print(requirement_formset.cleaned_data['requirement_points'])
+            for form in requirement_formset:
+                requirement_points = form.cleaned_data['requirement_points']
+                print(requirement_points)
+            
             
             what_you_will_learn_instance = what_you_will_learn_formset.save(commit=False)
-            what_you_will_learn_instance.course = course_instance
-            what_you_will_learn_formset.save()
+            # what_you_will_learn_instance.course = course_instance
+            # what_you_will_learn_formset.save()
             
             
             print("successfully saved")
