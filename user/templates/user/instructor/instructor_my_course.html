@@ -1,0 +1,123 @@
+{% extends 'lms_main/base.html' %}
+
+{% load static %}
+
+{% load course_tags %}
+{% load time_tags %}
+
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy signup_form %}
+
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+
+
+{% block main %}
+
+<!--====== TEACHERS PART START ======-->
+
+<section id="teachers-singel" class="pt-70 pb-120 gray-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8">
+                <div class="teachers-left mt-50">
+                    <div class="hero">
+                        <img src="{{ instructor.profile_image }}" alt="Teachers">
+                    </div>
+                    <div class="name">
+                        <h6>{{ instructor.full_name }}</h6>
+                        <span>{{ instructor.designation}}</span>
+                    </div>
+                    <div class="social">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="description">
+                        <h5>About me</h5>
+                        <p>{{instructor.about}}</p>
+                    </div>
+                </div> <!-- teachers left -->
+            </div>
+            <div class="col-lg-8">
+                <div class="corses-singel-left mt-30">
+                    <div class="title">
+                        <h3>{{ course.title|title }}</h3>
+                    </div> <!-- title -->
+                    <div class="corses-singel-image pt-20">
+                        <img src="{{ course.featured_image_url }}" alt="Courses" width="50" height="150" class="w-50 mx-auto">
+                    </div> <!-- corses singel image -->    
+                    <div class="accordion mt-20" id="accordionExample">
+                        {% for video in videos %}
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <a href="#" class="accordion-button collapsed " data-toggle="collapse"
+                                    data-target="#id{{video.lesson.id}}" aria-expanded="true" aria-controls="collapseOne">
+                                    <ul>
+                                        <li class="d-inline list-inline-item">
+                                            <span class="lecture">{{forloop.counter}}.&nbsp;</span>
+                                        </li>
+                                        <li class="d-inline list-inline-item">
+            
+                                            <span class="head">{{video.lesson.name}}</span>
+            
+                                        </li>
+                                        <li class="d-inline list-inline-item">
+                                            <span class="time d-none d-md-block">
+                                                <i class="fa fa-clock-o"></i> 
+                                            <span>
+                                            {% time_in_hrs_min_sec video.time_duration %}</span></span>
+                                        </li>
+                                        
+                                    </ul>
+                                </a>
+                            </div>
+            
+                            <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne"
+                                data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <ul>
+                                        <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                        <li class="d-inline list-inline-item">
+                                            <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}" class="text-decoration-none text-secondary"
+                                                data-fancybox>{{video.title}}</a>
+                                        </li>
+            
+                                       
+            
+                                    </ul>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+            
+            
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+
+<!--====== EVENTS PART ENDS ======-->
+
+
+
+
+<!-- Footer starts here -->
+{% include 'lms_main/components/footer.html' %}
+<!-- Footer ends here -->
+
+
+
+
+{% endblock %}

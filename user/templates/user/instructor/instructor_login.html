@@ -63,7 +63,7 @@
 
 
 <script>
-    var my_token = "{{ csrf_token }}";
+    var my_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     $('#alert-error').hide();
 
     // Ajax for submitting the login form and handling the response
@@ -84,7 +84,7 @@
             $.ajax({
                 type: "POST",
                 url: "{% url 'lms_main:instructor-login' %}",
-                header: { 'X-CSRFToken': my_token },
+                headers: { 'X-CSRFToken': my_token },
                 data: formData,
                 success: function (response, textStatus, jqXHR) {
                     var success = response['success']

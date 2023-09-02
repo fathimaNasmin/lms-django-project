@@ -505,6 +505,19 @@ def instructor_login(request):
             if user is not None:
                 login(request, user, backend='user.custom_auth_backend.EmailBackend')
                 print(user.is_authenticated)
+                print(request.user)
+                instructor = user_model.Instructor.objects.filter(instructor=request.user.instructor).first()
+                # print(instructor.values_list('instructor'))
+                # Create a session to store instructor details
+                request.session['logged_instructor'] = {
+                    'email':instructor.instructor.email,
+                    'full_name':instructor.instructor.full_name,
+                    'profile_image':instructor.profile_image_url,
+                    'about':instructor.about_me,
+                    'designation': instructor.designation,
+                    
+                }
+                print(request.session['logged_instructor'])
                 data = {
                     'success': True,
                 }
@@ -534,8 +547,10 @@ def instructor_logout(request):
 @login_required
 def instructor_dashboard(request):
     print("you are in dashboard")
+    print(request.session['logged_instructor'])
     user = request.user
     data = {}
+    
     
     # Instantiate forms
     add_course_form = lms_main_forms.AddCourseForm()
@@ -647,6 +662,26 @@ def instructor_dashboard(request):
     return render(request, 'user/instructor/instructor_dashboard.html', context)
     
 
+@login_required
+def instructor_my_course(request, slug):
+    """views to display the course details in instructor panel"""
+    instructor = request.session.get('logged_instructor')
+    # print(instructor)
+    
+    course_detail = models.Course.objects.filter(slug=slug).first()
+    
+    print(course_detail.video_set.all())
+    for video in course_detail.video_set.all():
+        print(video.lesson.name)
+        print(video.title)
+        print(video.youtube_id)
+    context = {
+        'instructor':instructor,
+        'course': course_detail,
+        'videos': course_detail.video_set.all()
+        
+    }
+    return render(request, 'user/instructor/instructor_my_course.html', context)
 
 @login_required
 def update_instructor_profile(request):

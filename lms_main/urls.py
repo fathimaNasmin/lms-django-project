@@ -44,6 +44,8 @@ urlpatterns = [
          name='instructor-logout'),
     path('instructor/instructor-dashboard/', lms_main_view.instructor_dashboard,
          name='instructor-dashboard'),
+    path('instructor/instructor-dashboard/my-course/<slug:slug>/', lms_main_view.instructor_my_course,
+         name='instructor-my-course'),
     
     
      
