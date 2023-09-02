@@ -167,7 +167,6 @@ class Lesson(models.Model):
 
 class Video(models.Model):
     """videos of each courses"""
-    serial_number = models.IntegerField(null=True)
     title = models.CharField(
         max_length=100)
     youtube_id = models.CharField(

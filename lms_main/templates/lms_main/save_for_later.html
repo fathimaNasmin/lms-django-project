@@ -269,7 +269,7 @@
                 // Send the POST request using AJAX
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'lms_main:save-for-later-to-cart' %}", // Replace with your server endpoint
+                    url: "{% url 'lms_main:save-for-later-to-cart' %}", 
                     headers: { 'X-CSRFToken': csrftoken },
                     data: {
                         course_id: courseId,

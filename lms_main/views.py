@@ -555,10 +555,8 @@ def instructor_dashboard(request):
     if request.method == "POST" and request.is_ajax():
         form_type = request.POST.get('form_type')
         print(form_type)
-        print("post request")
-        print(request.POST)
-        print('course-submit-btn' in request.POST)
         print('lesson-submit-btn' in request.POST)
+        
         # Course POST request
         if form_type == 'course-submit-btn':
             add_course_form = lms_main_forms.AddCourseForm(
@@ -566,7 +564,7 @@ def instructor_dashboard(request):
             requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
             what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet(
             request.POST)
-            print(request.POST)
+            # print(request.POST)
             
             if add_course_form.is_valid() and requirement_formset.is_valid() and what_you_will_learn_formset.is_valid():
                 # form validating & saving the form data to db
@@ -610,10 +608,22 @@ def instructor_dashboard(request):
             print(request.POST)
             
             if add_lesson_form.is_valid() and video_formset.is_valid():
-                print("form is valid")
                 data['success'] = True
-                print(add_lesson_form.cleaned_data)
-                print(video_formset.cleaned_data)
+                course = models.Course.objects.get(
+                    id=request.POST['course_id'])
+                print(course)
+                # save Lesson to Model
+                lesson_instance = add_lesson_form.save(commit=False)
+                lesson_instance.course = course
+                lesson_instance.save()
+                
+                # save videos to the Model
+                video_instance = video_formset.save(
+                    commit=False)
+                for instance in video_instance:
+                    instance.course = course
+                    instance.lesson = lesson_instance
+                    instance.save()
 
                 return HttpResponse(json.dumps(data), content_type='application/json')
 

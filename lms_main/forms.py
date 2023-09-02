@@ -101,9 +101,6 @@ class AddLessonForm(forms.ModelForm):
 # Form to add lesson to the course
 class VideoLearnForm(forms.ModelForm):
     """form to add extra field for video"""
-    serial_number = forms.IntegerField(label="",
-                             widget=forms.TextInput(attrs={'placeholder': 'Serial Number',
-                                                           'class': 'd-inline-block w-75'}))
     title = forms.CharField(label="",
                              widget=forms.TextInput(attrs={'placeholder': 'Video Title',
                                                            'class': 'd-inline-block w-75'}))
@@ -113,7 +110,7 @@ class VideoLearnForm(forms.ModelForm):
 
     class Meta:
         model = Video
-        fields = ('serial_number', 'title', 'youtube_id',)
+        fields = ('title', 'youtube_id',)
         
 # define a formset for video for a lesson
 VideoFormSet = inlineformset_factory(

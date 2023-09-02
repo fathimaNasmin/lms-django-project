@@ -200,7 +200,7 @@
                                                             <div class="col-5 d-flex justify-content-end">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#" class="text-secondary text-decoration-none" id="" data-course-id="" data-toggle="modal" data-target="#edit-course"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
+                                                                    <a href="#" class="text-secondary text-decoration-none" id="edit-link" data-course-id="{{ course.id }}" data-toggle="modal" data-target="#edit-course"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
                                     
                                                                 </div>
                                                             </div>
@@ -217,11 +217,11 @@
 
                                                         <!-- model: edit course & add lesson-videos to the course starts-->
                                                         <!-- Modal -->
-                                                        <div class="modal fade" id="edit-course" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="edit-course" tabindex="-1" aria-labelledby="lessonLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                                                                 <div class="modal-content mx-5 my-5">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Course</h5>
+                                                                        <h5 class="modal-title" id="lessonLabel">Edit Course</h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
@@ -468,11 +468,16 @@
 
 <script>
 
+
+
     $(document).ready(function(){
+
         // var alertError = document.getElementById('alert-error')
         var alertError = $('#alert-error');
         console.log(alertError);
         // alertError.hide(); 
+
+        
 
         
 
@@ -487,7 +492,7 @@
             $.ajax({
                 url: "{% url 'lms_main:instructor-dashboard' %}",
                 type: "POST",
-                header: { 'X-CSRFToken': '{% csrf_token %}' },
+                header: { 'X-CSRFToken': csrftoken },
                 data: formData,
                 dataType: 'json',
                 cache: false,
@@ -526,22 +531,29 @@
     $('#edit-course-form-id').on('submit', function (event) {
             event.preventDefault();
 
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            console.log(csrftoken)
+
             var edit_course_form_id = $("#edit-course-form-id")
+            var courseId = $("#edit-link").data("course-id");
+            var formData = edit_course_form_id.serialize() + '&lesson-submit-btn=1' + '&course_id=' + courseId;
+            console.log(courseId)
+            console.log(formData)
             // var formData = new FormData(edit_course_form_id.get(0));
             // console.log(formData)
 
             $.ajax({
                 url: "{% url 'lms_main:instructor-dashboard' %}",
                 type: "POST",
-                header: { 'X-CSRFToken': '{% csrf_token %}' },
-                data: edit_course_form_id.serialize() + '&lesson-submit-btn=1',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: formData,
                 dataType: 'json',
                 success: function (response) {
                     var success = response['success']
                     if (success) {
-
+                        alert("lesson success")
                         // clear all field of the modal
-                        $('#edit-course-form-id form :input').val("");
+                        $("#edit-course-form-id")[0].reset();
                         /* Message box--window.confirm()---:
                         You want to add more lessons:
                         YES->display modal with clear field;
