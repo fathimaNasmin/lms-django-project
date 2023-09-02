@@ -539,10 +539,10 @@ def instructor_dashboard(request):
     
     # Instantiate forms
     add_course_form = lms_main_forms.AddCourseForm()
-    
-    # Inline Form set for requirement & what you will learn
+     # Inline Form set for requirement & what you will learn
     requirement_formset = lms_main_forms.RequirementFormSet()
     what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet()
+    
     #  Lesson Form
     add_lesson_form = lms_main_forms.AddLessonForm()
     # Inline Form set for video
@@ -553,9 +553,14 @@ def instructor_dashboard(request):
     
     # Posting the form       
     if request.method == "POST" and request.is_ajax():
-        
+        form_type = request.POST.get('form_type')
+        print(form_type)
+        print("post request")
+        print(request.POST)
+        print('course-submit-btn' in request.POST)
+        print('lesson-submit-btn' in request.POST)
         # Course POST request
-        if 'course-submit-btn' in request.POST:
+        if form_type == 'course-submit-btn':
             add_course_form = lms_main_forms.AddCourseForm(
                 request.POST, request.FILES)
             requirement_formset = lms_main_forms.RequirementFormSet(request.POST)
@@ -598,13 +603,14 @@ def instructor_dashboard(request):
                 return HttpResponse(json.dumps(data), content_type='application/json')
             
         # lesson POST request
-        elif 'lesson-submit-btn' in request.POST:
+        if 'lesson-submit-btn' in request.POST:
             add_lesson_form = lms_main_forms.AddLessonForm(
                 request.POST)
             video_formset = lms_main_forms.VideoFormSet(request.POST)
             print(request.POST)
             
             if add_lesson_form.is_valid() and video_formset.is_valid():
+                print("form is valid")
                 data['success'] = True
                 print(add_lesson_form.cleaned_data)
                 print(video_formset.cleaned_data)

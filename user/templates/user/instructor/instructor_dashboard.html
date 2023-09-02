@@ -227,7 +227,7 @@
                                                                     <div class="modal-body">
                                                         
                                                                         <!-- Add lesson form -->
-                                                                        <form id="edit-course-form-id" action="" method="POST" enctype="multipart/form-data" novalidate>
+                                                                        <form id="edit-course-form-id" action="" method="POST" novalidate>
                                                                             <div class="mx-auto w-75">
                                                                                 {% csrf_token %}
                                                         
@@ -257,7 +257,7 @@
                                                                                 </div>
                                                                                 <!-- what you will learn form ends -->
                                                                                 <div class="d-flex justify-content-center">
-                                                                                    <button type="submit" name="lesson-submit-btn" id="add-course-button" class="btn btn-warning my-3">Add
+                                                                                    <button type="submit" name="lesson-submit-btn" id="" class="btn btn-warning my-3">Add
                                                                                         Lesson & Video</button>
                                                                                 </div>
                                                                             </div>
@@ -481,6 +481,7 @@
 
             var add_course_form_id = $("#add-course-form-id")
             var formData = new FormData(add_course_form_id.get(0));
+            formData.append('form_type', 'course-submit-btn')
             console.log(formData)
 
             $.ajax({
@@ -518,53 +519,69 @@
                 failure: function (error) {
                     alert("Error occured while calling django view")
                 }
-        })
-    })
+            });
+        });
 
     // Ajax:edit/add lesson and video to the course
     $('#edit-course-form-id').on('submit', function (event) {
             event.preventDefault();
 
             var edit_course_form_id = $("#edit-course-form-id")
-            var formData = new FormData(edit_course_form_id.get(0));
-            console.log(formData)
+            // var formData = new FormData(edit_course_form_id.get(0));
+            // console.log(formData)
 
             $.ajax({
-                url: "{% url 'lms_main:instructor-edit-course' %}",
+                url: "{% url 'lms_main:instructor-dashboard' %}",
                 type: "POST",
                 header: { 'X-CSRFToken': '{% csrf_token %}' },
-                data: formData,
+                data: edit_course_form_id.serialize() + '&lesson-submit-btn=1',
                 dataType: 'json',
-                cache: false,
-                processData: false,
-                contentType: false,
                 success: function (response) {
                     var success = response['success']
                     if (success) {
-                        alert("lesson added to the course")
+
                         // clear all field of the modal
-                        /* Message box:You want to add more lessons:
+                        $('#edit-course-form-id form :input').val("");
+                        /* Message box--window.confirm()---:
+                        You want to add more lessons:
                         YES->display modal with clear field;
                         NO->close the modal 
                         return to dashboard
 
                         */
-                        // $('#exampleModal').modal('hide');
+                       if (window.confirm("Do you want to add more lesson?") == true){
+                            // Pressed 'OK'
+                            // clear modal and load the modal
+                            
+                            $('#edit-course').modal('show');
 
-                        // Refresh the current page
-                        // location.reload();
+                       }
+                       else{
+                            //  Pressed 'Cancel'
+                            // close the modal and refresh the dashboard page
+                            $('#edit-course').modal('hide');
+                            location.reload();
+
+                       }
                     }
                     else {
-                        alert("error on adding")
-                        var course_form_errors = response['course_form_errors']
-                        var requirement_form_errors = response['requirement_form_errors']
+                        alert("error on adding lessons")
+                        var lesson_form_errors = response['lesson_form_errors']
+                        var video_form_errors = response['video_form_errors']
+                        console.log(lesson_form_errors)
+                        console.log(video_form_errors)
 
 
-                        // $.each(course_form_errors, function (index, value) {
-                        //     // alertError.text += index + ":" + value[0] + "<br>"
-                        //     alertError.append(index + ":" + value[0] + "<br>")
-                        //     console.log(index, value[0])
-                        // });
+                        $.each(lesson_form_errors, function (index, value) {
+                            // alertError.text += index + ":" + value[0] + "<br>"
+                            alertError.append(index + ":" + value[0] + "<br>")
+                            console.log(index, value[0])
+                        });
+                        $.each(video_form_errors, function (index, value) {
+                            // alertError.text += index + ":" + value[0] + "<br>"
+                            alertError.append(index + ":" + value[0] + "<br>")
+                            console.log(index, value[0])
+                        });
                     }
                 },
                 failure: function (error) {
@@ -575,7 +592,7 @@
 
     });
 
-    
+});
 
 
 </script>

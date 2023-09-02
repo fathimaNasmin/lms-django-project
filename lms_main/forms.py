@@ -31,8 +31,8 @@ class AddCourseForm(forms.ModelForm):
     
     def clean_price(self):
         price = self.cleaned_data['price']
-        if price < 0:
-            raise ValidationError("Price of the course should be a positive value")
+        if price is None or price < 0:
+            raise ValidationError("Price of the course should be a greater than 0")
         
     def clean_status(self):
         status = self.cleaned_data['status']
@@ -93,7 +93,7 @@ class AddLessonForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if len(title) < 8:
+        if len(name) < 8:
             raise ValidationError("Name of Lesson should have atleast 8 characters")
         return name
 
