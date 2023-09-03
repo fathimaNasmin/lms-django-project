@@ -670,6 +670,11 @@ def instructor_my_course(request, slug):
     
     course_detail = models.Course.objects.filter(slug=slug).first()
     
+    #  Lesson Form
+    add_lesson_form = lms_main_forms.AddLessonForm()
+    # Inline Form set for video
+    video_formset = lms_main_forms.VideoFormSet()
+    
     print(course_detail.video_set.all())
     for video in course_detail.video_set.all():
         print(video.lesson.name)
@@ -678,10 +683,14 @@ def instructor_my_course(request, slug):
     context = {
         'instructor':instructor,
         'course': course_detail,
-        'videos': course_detail.video_set.all()
+        'videos': course_detail.video_set.all(),
+        'lesson_form': add_lesson_form,
+        'video_formset': video_formset,
         
     }
     return render(request, 'user/instructor/instructor_my_course.html', context)
+
+
 
 @login_required
 def update_instructor_profile(request):

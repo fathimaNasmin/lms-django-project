@@ -55,47 +55,90 @@
                     </div> <!-- corses singel image -->    
                     <div class="accordion mt-20" id="accordionExample">
                         {% for video in videos %}
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <a href="#" class="accordion-button collapsed " data-toggle="collapse"
-                                    data-target="#id{{video.lesson.id}}" aria-expanded="true" aria-controls="collapseOne">
-                                    <ul>
-                                        <li class="d-inline list-inline-item">
-                                            <span class="lecture">{{forloop.counter}}.&nbsp;</span>
-                                        </li>
-                                        <li class="d-inline list-inline-item">
-            
-                                            <span class="head">{{video.lesson.name}}</span>
-            
-                                        </li>
-                                        <li class="d-inline list-inline-item">
-                                            <span class="time d-none d-md-block">
-                                                <i class="fa fa-clock-o"></i> 
-                                            <span>
-                                            {% time_in_hrs_min_sec video.time_duration %}</span></span>
-                                        </li>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne">
+                                        <ul>
+                                            <li class="d-inline list-inline-item">{{forloop.counter}}.&nbsp;</li>
+                                            <li class="d-inline list-inline-item">{{ video.lesson.name }}</li>
+                                            <li><a href="" data-toggle="modal" data-target="#edit-lesson-modal" id="edit-lesson-link" data-lesson-id="{{ video.lesson.id }}"><i class="fas fa-edit"></i></a></li>
+                                            
+                                        </ul>
                                         
-                                    </ul>
-                                </a>
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                            <li class="d-inline list-inline-item">
+                                                <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}" class="text-decoration-none text-secondary"
+                                                    data-fancybox>{{video.title}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-            
-                            <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne"
-                                data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <ul>
-                                        <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
-                                        <li class="d-inline list-inline-item">
-                                            <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}" class="text-decoration-none text-secondary"
-                                                data-fancybox>{{video.title}}</a>
-                                        </li>
-            
-                                       
-            
-                                    </ul>
-                                    <p></p>
+                            
+                        </div>
+                        <!-- model: edit course & add lesson-videos to the course starts-->
+                        <!-- Modal -->
+                        <div class="modal fade" id="edit-lesson-modal" tabindex="-1" aria-labelledby="lessonLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content mx-5 my-5">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="lessonLabel">Edit Lesson</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                        
+                                        <!-- Add lesson form -->
+                                        <form id="edit-course-form-id" action="" method="POST" novalidate>
+                                            <div class="mx-auto w-75">
+                                                {% csrf_token %}
+                        
+                                                <!-- course form -->
+                                                {{ lesson_form|crispy }}
+                        
+                                                <br>
+                        
+                                                <!-- Video inline form -->
+                                                <div class="bg-info px-2 pt-2 pb-2">
+                                                    <h6>Videos</h6>
+                                                </div>
+                                                <br>
+                                                {{ video_formset.management_form }}
+                                                {% for form in video_formset %}
+                                                <div class="d-inline-flex w-100">
+                                                    {{ form|crispy }}
+                                                </div>
+                        
+                                                {% endfor %}
+                        
+                        
+                        
+                                                <!----display validation errors through ajax-->
+                                                <div class="mx-auto">
+                                                    <p class="text-danger" id="alert-error"></p>
+                                                </div>
+                                                <!-- what you will learn form ends -->
+                                                <div class="d-flex justify-content-center">
+                                                    <button type="submit" name="lesson-submit-btn" id="" class="btn btn-warning my-3">Edit
+                                                        Lesson & Video</button>
+                                                </div>
+                                            </div>
+                        
+                                        </form>
+                                        <!-- end course form -->
+                                    </div>
+                        
                                 </div>
                             </div>
                         </div>
+                        <!-- model:add course ends -->
                         {% endfor %}
             
             
