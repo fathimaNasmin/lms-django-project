@@ -666,24 +666,85 @@ def instructor_dashboard(request):
 def instructor_my_course(request, slug):
     """views to display the course details in instructor panel"""
     instructor = request.session.get('logged_instructor')
+    data = {}
     # print(instructor)
     
     course_detail = models.Course.objects.filter(slug=slug).first()
+    course_videos = course_detail.video_set.all()
     
     #  Lesson Form
     add_lesson_form = lms_main_forms.AddLessonForm()
     # Inline Form set for video
     video_formset = lms_main_forms.VideoFormSet()
     
-    print(course_detail.video_set.all())
-    for video in course_detail.video_set.all():
-        print(video.lesson.name)
-        print(video.title)
-        print(video.youtube_id)
+    # print(course_detail.video_set.all())
+    # for video in course_detail.video_set.all():
+    #     print(video.lesson.name)
+    #     print(video.title)
+    #     print(video.youtube_id)
+    if request.method == "POST" and request.is_ajax():
+        if 'edit-link' in request.POST:
+            lesson_id = request.POST.get("lesson_id")
+            print(lesson_id)
+            # lesson and video instance to initial in formset
+            lesson_query = models.Lesson.objects.filter(id=lesson_id).defer('id','course_id')
+            lesson_instance = [{'name':instance.name, 'course_id': instance.course_id} for instance in lesson_query]
+            print(lesson_instance)
+            
+            # video_instance = models.Video.objects.filter(lesson__id=lesson_id).values()
+            # Exclude the fields that are not required form queryset
+            
+            # Add initial to the formset
+            add_lesson_form = lms_main_forms.AddLessonForm(request.POST, initial=lesson_instance)
+            # video_formset = lms_main_forms.VideoFormSet(
+            #     request.POST, initial=video_instance)
+            # print(lesson_instance.id)
+            # print(video_instance)
+            data['success'] = True
+            print(data)
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    
+        # lesson POST request
+        if 'lesson-submit-btn' in request.POST:
+            add_lesson_form = lms_main_forms.AddLessonForm(
+                request.POST)
+            video_formset = lms_main_forms.VideoFormSet(request.POST)
+            print(request.POST)
+
+            if add_lesson_form.is_valid() and video_formset.is_valid():
+                data['success'] = True
+                course = models.Course.objects.get(
+                    id=request.POST['course_id'])
+                print(course)
+                # save Lesson to Model
+                lesson_instance = add_lesson_form.save(commit=False)
+                lesson_instance.course = course
+                lesson_instance.save()
+
+                # save videos to the Model
+                video_instance = video_formset.save(
+                    commit=False)
+                for instance in video_instance:
+                    instance.course = course
+                    instance.lesson = lesson_instance
+                    instance.save()
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+
+            else:
+                data['success'] = False
+                print(add_lesson_form.errors)
+                print(video_formset.errors)
+                data['lesson_form_errors'] = add_lesson_form.errors
+                data['video_form_errors'] = video_formset.errors
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+    
+        
     context = {
         'instructor':instructor,
         'course': course_detail,
-        'videos': course_detail.video_set.all(),
+        'videos': course_videos,
         'lesson_form': add_lesson_form,
         'video_formset': video_formset,
         
