@@ -17,6 +17,9 @@
 <!--====== TEACHERS PART START ======-->
 
 <section id="teachers-singel" class="pt-70 pb-120 gray-bg">
+    <div class="alert alert-success w-50 mx-auto" id="success-msg" role="alert">
+        
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-8">
@@ -207,7 +210,7 @@
                                                             <div class="col-5 d-flex justify-content-end">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="#" class="text-secondary text-decoration-none" id="remove" data-course-id=""><i
+                                                                    <a href="" class="text-secondary text-decoration-none" id="remove-course" data-course-id="{{ course.id }}"><i
                                                                             class="fa-solid fa-trash"></i>&nbsp;&nbsp;Delete</a>
                                     
                                                                 </div>
@@ -232,7 +235,7 @@
                                                                                 {% csrf_token %}
                                                         
                                                                                 <!-- course form -->
-                                                                                {{ lesson_form|crispy }}
+                                                                                {{ course_form|crispy }}
                                                         
                                                                                 <br>
                                                         
@@ -467,20 +470,22 @@
 
 
 <script>
-
+    var successMsg = $('#success-msg');
+    
 
 
     $(document).ready(function(){
+        successMsg.hide();
 
         // var alertError = document.getElementById('alert-error')
         var alertError = $('#alert-error');
         console.log(alertError);
         // alertError.hide(); 
 
+        function showSuccessMsg(msg){
+            successMsg.text(msg).show();
+        }
         
-
-        
-
         $('#add-course-form-id').on('submit', function(event){
             event.preventDefault();
 
@@ -527,82 +532,133 @@
             });
         });
 
-    // Ajax:edit/add lesson and video to the course
-    $('#edit-course-form-id').on('submit', function (event) {
+        // Ajax:edit/add lesson and video to the course
+        $('#edit-course-form-id').on('submit', function (event) {
+                event.preventDefault();
+
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                console.log(csrftoken)
+
+                var edit_course_form_id = $("#edit-course-form-id")
+                var courseId = $("#edit-link").data("course-id");
+                var formData = edit_course_form_id.serialize() + '&lesson-submit-btn=1' + '&course_id=' + courseId;
+                console.log(courseId)
+                console.log(formData)
+                // var formData = new FormData(edit_course_form_id.get(0));
+                // console.log(formData)
+
+                $.ajax({
+                    url: "{% url 'lms_main:instructor-dashboard' %}",
+                    type: "POST",
+                    headers: { 'X-CSRFToken': csrftoken },
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        var success = response['success']
+                        if (success) {
+                            alert("lesson success")
+                            // clear all field of the modal
+                            $("#edit-course-form-id")[0].reset();
+                            /* Message box--window.confirm()---:
+                            You want to add more lessons:
+                            YES->display modal with clear field;
+                            NO->close the modal 
+                            return to dashboard
+
+                            */
+                        if (window.confirm("Do you want to add more lesson?") == true){
+                                // Pressed 'OK'
+                                // clear modal and load the modal
+                                
+                                $('#edit-course').modal('show');
+
+                        }
+                        else{
+                                //  Pressed 'Cancel'
+                                // close the modal and refresh the dashboard page
+                                $('#edit-course').modal('hide');
+                                location.reload();
+
+                        }
+                        }
+                        else {
+                            alert("error on adding lessons")
+                            var lesson_form_errors = response['lesson_form_errors']
+                            var video_form_errors = response['video_form_errors']
+                            console.log(lesson_form_errors)
+                            console.log(video_form_errors)
+
+
+                            $.each(lesson_form_errors, function (index, value) {
+                                // alertError.text += index + ":" + value[0] + "<br>"
+                                alertError.append(index + ":" + value[0] + "<br>")
+                                console.log(index, value[0])
+                            });
+                            $.each(video_form_errors, function (index, value) {
+                                // alertError.text += index + ":" + value[0] + "<br>"
+                                alertError.append(index + ":" + value[0] + "<br>")
+                                console.log(index, value[0])
+                            });
+                        }
+                    },
+                    failure: function (error) {
+                        alert("Error occured while calling django view")
+                    }
+                })
+
+
+        });
+
+        // delete course click on delete
+        $('#remove-course').click(function(event) {
             event.preventDefault();
+            console.log("clicked")
+            alert("clicked")
+            msg = confirm("Are you sure you want to delete the course?")
 
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            console.log(csrftoken)
+            if (msg == true){
+                console.log("pressed OK")
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                console.log(csrftoken)
+                var courseId = $(this).data("course-id");
+                console.log(courseId)
 
-            var edit_course_form_id = $("#edit-course-form-id")
-            var courseId = $("#edit-link").data("course-id");
-            var formData = edit_course_form_id.serialize() + '&lesson-submit-btn=1' + '&course_id=' + courseId;
-            console.log(courseId)
-            console.log(formData)
-            // var formData = new FormData(edit_course_form_id.get(0));
-            // console.log(formData)
-
-            $.ajax({
-                url: "{% url 'lms_main:instructor-dashboard' %}",
-                type: "POST",
-                headers: { 'X-CSRFToken': csrftoken },
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    var success = response['success']
-                    if (success) {
-                        alert("lesson success")
-                        // clear all field of the modal
-                        $("#edit-course-form-id")[0].reset();
-                        /* Message box--window.confirm()---:
-                        You want to add more lessons:
-                        YES->display modal with clear field;
-                        NO->close the modal 
-                        return to dashboard
-
-                        */
-                       if (window.confirm("Do you want to add more lesson?") == true){
-                            // Pressed 'OK'
-                            // clear modal and load the modal
-                            
-                            $('#edit-course').modal('show');
-
-                       }
-                       else{
-                            //  Pressed 'Cancel'
-                            // close the modal and refresh the dashboard page
-                            $('#edit-course').modal('hide');
-                            location.reload();
-
-                       }
+                $.ajax({
+                    url: "{% url 'lms_main:instructor-delete-course' %}",
+                    type: "POST",
+                    headers: { 'X-CSRFToken': csrftoken },
+                    data: '&course_id=' + courseId,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response['success']) {
+                            // show alert message with timeout
+                            var text = "Course Successfully deleted"
+                            showSuccessMsg(text);
+                            setTimeout(function () {
+                                successMsg.hide();
+                            },2000)
+                            console.log("deletion succesfull")
+                            // reload the page after sometime
+                            setTimeout(function () {
+                                location.reload();
+                            },3000) 
+                        }
+                        else {
+                            // deletion not success
+                            console.log("deletion unsuccesfull")
+                        }
+                    },
+                    error: function (response) {
+                        console.log("error in ajax request")
                     }
-                    else {
-                        alert("error on adding lessons")
-                        var lesson_form_errors = response['lesson_form_errors']
-                        var video_form_errors = response['video_form_errors']
-                        console.log(lesson_form_errors)
-                        console.log(video_form_errors)
+                });
 
-
-                        $.each(lesson_form_errors, function (index, value) {
-                            // alertError.text += index + ":" + value[0] + "<br>"
-                            alertError.append(index + ":" + value[0] + "<br>")
-                            console.log(index, value[0])
-                        });
-                        $.each(video_form_errors, function (index, value) {
-                            // alertError.text += index + ":" + value[0] + "<br>"
-                            alertError.append(index + ":" + value[0] + "<br>")
-                            console.log(index, value[0])
-                        });
-                    }
-                },
-                failure: function (error) {
-                    alert("Error occured while calling django view")
-                }
-            })
-
-
-    });
+            }
+            else{
+                console.log("pressed cancel")
+            }
+        
+        });
 
 });
 

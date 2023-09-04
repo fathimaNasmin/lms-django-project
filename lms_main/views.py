@@ -558,10 +558,6 @@ def instructor_dashboard(request):
     requirement_formset = lms_main_forms.RequirementFormSet()
     what_you_will_learn_formset = lms_main_forms.WhatYouWillLearnFormSet()
     
-    #  Lesson Form
-    add_lesson_form = lms_main_forms.AddLessonForm()
-    # Inline Form set for video
-    video_formset = lms_main_forms.VideoFormSet()
     
     instructor = user_model.Instructor.objects.filter(instructor_id=user.id).first()
     # print(instructor.course_set.all())
@@ -615,49 +611,13 @@ def instructor_dashboard(request):
                 data['success'] = False
                 return HttpResponse(json.dumps(data), content_type='application/json')
             
-        # lesson POST request
-        if 'lesson-submit-btn' in request.POST:
-            add_lesson_form = lms_main_forms.AddLessonForm(
-                request.POST)
-            video_formset = lms_main_forms.VideoFormSet(request.POST)
-            print(request.POST)
-            
-            if add_lesson_form.is_valid() and video_formset.is_valid():
-                data['success'] = True
-                course = models.Course.objects.get(
-                    id=request.POST['course_id'])
-                print(course)
-                # save Lesson to Model
-                lesson_instance = add_lesson_form.save(commit=False)
-                lesson_instance.course = course
-                lesson_instance.save()
-                
-                # save videos to the Model
-                video_instance = video_formset.save(
-                    commit=False)
-                for instance in video_instance:
-                    instance.course = course
-                    instance.lesson = lesson_instance
-                    instance.save()
-
-                return HttpResponse(json.dumps(data), content_type='application/json')
-
-            else:
-                data['success'] = False
-                print(add_lesson_form.errors)
-                print(video_formset.errors)
-                data['lesson_form_errors'] = add_lesson_form.errors
-                data['video_form_errors'] = video_formset.errors
-
-                return HttpResponse(json.dumps(data), content_type='application/json')
+       
             
     context = {
         'instructor': instructor,
         'course_form': add_course_form,
         'requirement_formset': requirement_formset,
         'what_you_will_learn_formset': what_you_will_learn_formset,
-        'lesson_form': add_lesson_form,
-        'video_formset': video_formset,
     }
     return render(request, 'user/instructor/instructor_dashboard.html', context)
     
@@ -752,6 +712,21 @@ def instructor_my_course(request, slug):
     return render(request, 'user/instructor/instructor_my_course.html', context)
 
 
+@login_required
+def instructor_delete_course(request):
+    data = {}
+    if request.method == "POST" and request.is_ajax():
+        course_id = request.POST.get('course_id')
+        print(course_id)
+        try:
+            query_course = models.Course.objects.get(id=course_id)
+            print(query_course)
+            query_course.delete()
+            data['success'] = True
+        except Exception as e:
+            print("Exception",e)
+            data['success'] = False
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
 @login_required
 def update_instructor_profile(request):
