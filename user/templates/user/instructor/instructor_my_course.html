@@ -23,7 +23,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-8">
-                <div class="teachers-left mt-50">
+                <div class="teachers-left mt-30">
                     <div class="hero">
                         <img src="{{ instructor.profile_image }}" alt="Teachers">
                     </div>
@@ -47,6 +47,68 @@
             </div>
             <div class="col-lg-8">
                 <div class="corses-singel-left mt-30">
+                    <!-- button to create a quiz -->
+                    <div class="row my-2">
+                        <div class="col-6 d-flex justify-content-start">
+                            <button type="button" class="btn btn-light">
+                                <a href=""><i class="fa-solid fa-arrow-left" style="color: #080808;"></i></a>
+                            </button>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <button type="button" class="btn btn-dark"  data-bs-toggle="modal" data-bs-target="#quiz-form-model">Create quiz for course</button>
+                        </div>
+                    </div>
+                    <!-- Modal for Quiz form starts -->
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="quiz-form-model" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add Quiz</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Quiz form here -->
+                                    <form action="">
+                                        {% csrf_token %}
+                                        <!-- question form -->
+                                        {{ question_form|crispy }}
+                                        
+                                        <br>
+                                        
+                                        <!-- quiz option inline form -->
+                                        <div class="bg-info px-2 pt-2 pb-2">
+                                            <h6>Options</h6>
+                                        </div>
+                                        <br>
+                                        {{ quiz_option_formset.management_form }}
+                                        {% for form in quiz_option_formset %}
+                                        <div class="d-inline-flex w-100">
+                                            {{ form|crispy }}
+                                        </div>
+                                        
+                                        {% endfor %}
+                                        <!----display validation errors through ajax-->
+                                        <div class="mx-auto">
+                                            <p class="text-danger" id="alert-error"></p>
+                                        </div>
+                                        <!-- what you will learn form ends -->
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit" id="" name="lesson-submit-btn" class="btn btn-warning my-3">Add
+                                                question & options</button>
+                                        </div>
+
+                                    </form>
+                                    <!-- Quiz form ends here -->
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for quiz form ends -->
+
                     <div class="row">
                         <div class="col-8">
                             <div class="title">

@@ -3,7 +3,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-from .models import Course,Category,Requirement,WhatYouWillLearn,Lesson,Video
+from .models import Course,Category,Requirement,WhatYouWillLearn,Lesson,Video, Question, QuizOption
 
 
 # Custom form validation by inheritinf BaseInlineFormSet
@@ -117,3 +117,37 @@ VideoFormSet = inlineformset_factory(
     parent_model=Lesson, model=Video, form=VideoLearnForm, formset=CustomInlineFormSet, extra=5, can_delete=True, can_delete_extra=True)
 
 
+# ===========================QUIZ FORMS==========================
+
+# Model Form for Question
+class QuestionForm(forms.ModelForm):
+    """Form for Question"""
+    class Meta:
+        model = Question
+        fields = "__all__"
+        exclude = ('course',)
+        
+    def clean_question_text(self):
+        question_text = self.cleaned_data['question_text']
+        if len(question_text) < 0:
+            raise ValidationError("question can't be blank")
+        return question_text
+    
+    
+# Form for options for questions
+class OptionForm(forms.ModelForm):
+    """Form for options for questions"""
+    
+    option = forms.CharField(label="",
+                            widget=forms.TextInput(attrs={'placeholder': 'Option',
+                                                          'class': 'd-inline-block w-75'}))
+    is_answer = forms.BooleanField(label="is_answer")
+    class Meta:
+        model = QuizOption
+        fields = "__all__"
+        exclude = ('question_id',)
+    
+
+# define a formset for options for question
+QuizOptionFormSet = inlineformset_factory(
+    parent_model=Question, model=QuizOption, form=OptionForm, formset=CustomInlineFormSet, extra=4, can_delete=False)

@@ -269,7 +269,7 @@ class OrderItems(models.Model):
 
 class Question(models.Model):
     """Question model to store questions for quiz"""
-    question_text = models.TextField(max_length=300)
+    question_text = models.CharField(max_length=300)
     # foreignkey and relationship
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     
@@ -279,7 +279,7 @@ class Question(models.Model):
 # model to store options for the quiz
 class QuizOption(models.Model):
     """model to store options for the quiz"""
-    option = models.TextField(max_length=200)
+    option = models.CharField(max_length=200)
     is_answer = models.BooleanField(default=False)
     # Foreign Key and Relationships
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
