@@ -263,3 +263,26 @@ class OrderItems(models.Model):
     class Meta:
         # Ensure that each combination of course and student is unique
         unique_together = ('course', 'order', 'student')
+
+
+# =================QUIZ MODELS================================
+
+class Question(models.Model):
+    """Question model to store questions for quiz"""
+    question_text = models.TextField(max_length=300)
+    # foreignkey and relationship
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.question_text} - {self.course.title}"
+    
+# model to store options for the quiz
+class QuizOption(models.Model):
+    """model to store options for the quiz"""
+    option = models.TextField(max_length=200)
+    is_answer = models.BooleanField(default=False)
+    # Foreign Key and Relationships
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"Options-{self.question_id.question_text}"
