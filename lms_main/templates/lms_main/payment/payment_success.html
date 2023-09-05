@@ -14,44 +14,46 @@
 <section id="courses-part" class="pt-120 pb-120 gray-bg">
     <div class="container">
         <div class="row border border-dark">
-            <div class="row d-flex align-items-center">
-                <div><img src="{% static 'images/cart/success.png' %}" alt="" width="150" class="mx-auto"></div>
+            <!-- success image -->
+            <div class="row">
+                <div class="d-flex justify-content-center">
+                    <img src="{% static 'images/cart/success.png' %}" alt="" width="150" class="mx-auto">
+                </div>
             </div>
-                <div class="col-xl-8 mx-xl-auto d-flex align-items-center">
-                    
+            <!-- success image ends -->
+            <div class="row">
+                <div class="d-flex justify-content-center">
                     <header class="entry-header">
                         <h1 class="entry-title">Order received</h1>
                     </header>
-                
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="d-flex justify-content-center">
                     <div class="entry-content">
                         <div class="woocommerce">
                             <div class="woocommerce-order">
                                 <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received">Thank you.
                                     Your order has been received.</p>
-                                    
+                    
                                 <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
                                     <li class="woocommerce-order-overview__order order">
                                         Order number:
                                         <strong>{{order.order_no}}</strong>
                                     </li>
-                
+                    
                                     <li class="woocommerce-order-overview__date date">
                                         Date:
                                         <strong>{{ order.order_date }}</strong>
                                     </li>
-                
-                                    <li class="woocommerce-order-overview__total total">
-                                        Total:
-                                        <strong><span class="woocommerce-Price-amount amount"><span
-                                                    class="woocommerce-Price-currencySymbol">&#36;</span>{{ order.total_price }}</span></strong>
-                                    </li>
-                
+                    
                                     <li class="woocommerce-order-overview__payment-method method">
                                         Payment method:
                                         <strong>Check payments</strong>
                                     </li>
                                 </ul>
-                                
+                    
                                 <section class="woocommerce-order-details">
                                     <h2 class="woocommerce-order-details__title">Order details</h2>
                                     <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
@@ -61,37 +63,38 @@
                                                 <th class="woocommerce-table__product-table product-total">Total</th>
                                             </tr>
                                         </thead>
-                
+                    
                                         <tbody>
                                             {% for item in order_items %}
                                             <tr class="woocommerce-table__line-item order_item">
                                                 <td class="woocommerce-table__product-name product-name">
                                                     <p>{{ item.course.title }}</p>
-                                                    
+                    
                                                 </td>
-                
+                    
                                                 <td class="woocommerce-table__product-total product-total">
                                                     <span class="woocommerce-Price-amount amount"><span
                                                             class="woocommerce-Price-currencySymbol">$</span>{{ item.item_price }}</span>
                                                 </td>
                                             </tr>
                                             {% endfor %}
-                
-                                            
+                    
+                    
                                         </tbody>
-                
+                    
                                         <tfoot>
-                                            
+                    
                                             <tr>
                                                 <th scope="row">Total:</th>
                                                 <td><span class="woocommerce-Price-amount amount"><span
-                                                            class="woocommerce-Price-currencySymbol">$</span>{{ order.total_price }}</span></td>
+                                                            class="woocommerce-Price-currencySymbol">$</span>{{ order.total_price }}</span>
+                                                </td>
                                             </tr>
-                                            
+                    
                                         </tfoot>
                                     </table>
                                 </section>
-                
+                    
                                 <section class="woocommerce-customer-details">
                                     <h2 class="woocommerce-column__title">Billing address</h2>
                                     <address>
@@ -107,7 +110,11 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+                
+            </div>
+                
         
             
             
@@ -126,12 +133,6 @@
 
 <!--====== BACK TO TP PART ENDS ======-->
 
-<!-- <script>
-    document.getElementById('receipt').addEventListener('click', function () {
-        const orderId ="{{ order.order_no }}";  // Replace with the actual PDF document ID
-        const url = "{% url 'lms_main:order-receipt' order.order_no %}"
-        window.open(url, '_blank');
-    });
-</script> -->
+
 
 {% endblock %}

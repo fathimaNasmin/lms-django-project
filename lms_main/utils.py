@@ -1,7 +1,7 @@
 import os
 import requests
 import re
-import random
+from random import randint
 from dotenv import load_dotenv
 from datetime import timedelta
 from django.utils.text import slugify
@@ -26,7 +26,7 @@ def slugify_course_instance_title(instance, save=False, new_slug=None):
     qs = Klass.objects.filter(slug=slug).exclude(id=instance.id)
     if qs.exists():
         # auto generate new slug
-        rand_int = random.randint(300_000, 500_000)
+        rand_int = randint(300_000, 500_000)
         slug = f"{slug}-{rand_int}"
         return slugify_course_instance_title(instance, save=save, new_slug=slug)
     instance.slug = slug
