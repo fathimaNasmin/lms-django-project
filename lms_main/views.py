@@ -643,6 +643,7 @@ def instructor_my_course(request, slug):
     quiz_option_formset = lms_main_forms.QuizOptionFormSet()
     
     if request.method == "POST" and request.is_ajax():
+        print(request.POST)
         if 'edit-link' in request.POST:
             lesson_id = request.POST.get("lesson_id")
             print(lesson_id)
@@ -700,6 +701,40 @@ def instructor_my_course(request, slug):
 
                 return HttpResponse(json.dumps(data), content_type='application/json')
     
+        # Quiz POST request
+        if 'quiz-form-btn' in request.POST:
+            question_form = lms_main_forms.QuestionForm(request.POST)
+            quiz_option_formset = lms_main_forms.QuizOptionFormSet(request.POST)
+            
+            if question_form.is_valid() and quiz_option_formset.is_valid():
+                data['success'] = True
+                try:
+                    # store question_form to Question model
+                    question_instance = question_form.save(commit=False)
+                    question_instance.course = course_detail
+                    question_instance.save()
+                    print(question_form.cleaned_data)
+                  
+                    # store quiz_option_formset to the QuizOption model
+                    option_instance = quiz_option_formset.save(commit=False)
+                    for instance in option_instance:
+                        instance.question_id = question_instance
+                        instance.save()
+                except Exception as e:
+                    print(e)
+                    print("error on saving...")
+            
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                data['success'] = False
+                print("form validation failed")
+                print(question_form.errors)
+                print(quiz_option_formset.errors)
+
+                return HttpResponse(json.dumps(data), content_type='application/json')
+                
+        
+            
         
     context = {
         'instructor':instructor,

@@ -119,6 +119,24 @@ VideoFormSet = inlineformset_factory(
 
 # ===========================QUIZ FORMS==========================
 
+# Custom form validation for 'option' by inheriting BaseInlineFormSet
+class QuizOptionCustomInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        count = 0
+        for form in self.forms:
+            for field in form.changed_data:
+                if field == 'is_answer':
+                    value = form.cleaned_data[field]
+                    if value:
+                        count += 1
+        print("count:", count)
+                
+        if count != 1:
+            raise forms.ValidationError(
+                "Only one answer can be selected.")
+        
+
 # Model Form for Question
 class QuestionForm(forms.ModelForm):
     """Form for Question"""
@@ -141,7 +159,7 @@ class OptionForm(forms.ModelForm):
     option = forms.CharField(label="",
                             widget=forms.TextInput(attrs={'placeholder': 'Option',
                                                           'class': 'd-inline-block w-75'}))
-    is_answer = forms.BooleanField(label="is_answer")
+    is_answer = forms.BooleanField(label="is_answer", required=False, widget=forms.CheckboxInput())
     class Meta:
         model = QuizOption
         fields = "__all__"
@@ -150,4 +168,4 @@ class OptionForm(forms.ModelForm):
 
 # define a formset for options for question
 QuizOptionFormSet = inlineformset_factory(
-    parent_model=Question, model=QuizOption, form=OptionForm, formset=CustomInlineFormSet, extra=4, can_delete=False)
+    parent_model=Question, model=QuizOption, form=OptionForm, formset=QuizOptionCustomInlineFormSet, extra=4, can_delete=False)

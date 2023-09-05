@@ -274,13 +274,13 @@ class Question(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.question_text} - {self.course.title}"
+        return f"{self.question_text}"
     
 # model to store options for the quiz
 class QuizOption(models.Model):
     """model to store options for the quiz"""
     option = models.CharField(max_length=200)
-    is_answer = models.BooleanField(default=False)
+    is_answer = models.BooleanField(default=False,blank=True)
     # Foreign Key and Relationships
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     

@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <!-- Quiz form here -->
-                                    <form action="">
+                                    <form action="" name="quiz-form" method="POST" id="quiz-form-id">
                                         {% csrf_token %}
                                         <!-- question form -->
                                         {{ question_form|crispy }}
@@ -95,7 +95,7 @@
                                         </div>
                                         <!-- what you will learn form ends -->
                                         <div class="d-flex justify-content-center">
-                                            <button type="submit" id="" name="lesson-submit-btn" class="btn btn-warning my-3">Add
+                                            <button type="submit" id="" name="quiz-form-btn" class="btn btn-warning my-3">Add
                                                 question & options</button>
                                         </div>
 
@@ -401,6 +401,38 @@
             })
 
 
+        });
+
+        // Quiz form submission
+        $('#quiz-form-id').on('submit', function(event){
+            event.preventDefault();
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            console.log(csrftoken)
+
+            var formData = $(this).serialize() + '&quiz-form-btn=1'
+            console.log(formData)
+
+            $.ajax({
+                url: "{% url 'lms_main:instructor-my-course' course.slug %}",
+                type: "POST",
+                headers: { 'X-CSRFToken': csrftoken },
+                data: formData,
+                success: function (response) {
+                    if(response['success']){
+                        console.log("success")
+                    }
+                    else{
+                        console.log("unsuccess")
+                    }
+                },
+                error:function(textStatus, errorThrown){
+                    console.log('error on ajax request')
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+
+    
+            })
         });
 
     })
