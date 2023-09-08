@@ -38,7 +38,7 @@ class SignUpForm(UserCreationForm):
         for fieldname in ['first_name', 'last_name', 'email', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
             self.fields[fieldname].label = ""
-            self.fields[fieldname].widget.attrs['class'] = 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1'
+            self.fields[fieldname].widget.attrs['class'] = 'form-control border border-dark mt-3 pt-3 pb-3 fs-5'
 
         
 
@@ -73,12 +73,12 @@ class LoginForm(AuthenticationForm):
     """Custom Login Form inherit the Authentication form for authenticating the user"""
     username = forms.EmailField(
         label='',
-        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email'}),
+        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-dark mt-3 pt-3 pb-3 fs-5', 'placeholder': 'Email'}),
     )
 
     password = forms.CharField(
         label="",
-        widget=forms.PasswordInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control border border border-dark mt-3 pt-3 pb-3 fs-5', 'placeholder': 'Password'})
     )
 
     class Meta:
@@ -129,12 +129,12 @@ class InstructorLoginForm(AuthenticationForm):
     """Custom Login Form inherit the Authentication form for authenticating the user"""
     username = forms.EmailField(
         label='',
-        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Email'}),
+        widget=forms.EmailInput(attrs={'autofocus': True,'class': 'form-control border border-dark mt-3 pt-3 pb-3 fs-5', 'placeholder': 'Email'}),
     )
 
     password = forms.CharField(
         label="",
-        widget=forms.PasswordInput(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control border border-dark mt-3 pt-3 pb-3 fs-5', 'placeholder': 'Password'})
     )
 
     class Meta:
@@ -173,7 +173,7 @@ class InstructorLoginForm(AuthenticationForm):
 class InstructorUpdateForm(forms.ModelForm):
     """Form class to update the profile of Instructor"""
     profile_image = forms.ImageField(label="") 
-    # about_me = forms.TextField(label="", widget=forms.Textarea(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-1', 'placeholder': 'Password'})) 
+    # about_me = forms.TextField(label="", widget=forms.Textarea(attrs={'class': 'form-control border border-5 border-dark mt-3 pt-3 pb-3 fs-5', 'placeholder': 'Password'})) 
     about_me = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Tell About Yourself'}))
 
 
