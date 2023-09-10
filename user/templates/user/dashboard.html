@@ -25,20 +25,49 @@
             </div>
             <hr>
             <div class="row">
-                <div class="text-center p-2 m-2 menu-item"></div>
+                <div class="text-center p-2 m-2 menu-item" id="profile">
                     <a class="text-dark" href="">Update Profile</a>
                 </div>
             </div>
             <div class="row">
-                <div class="text-center p-2 m-2 menu-item"></div>
-                    <a class="text-dark" href="">My Course</a>
+                <div class="text-center p-2 m-2 menu-item" id="course">
+                    <a class="text-dark" href="">My Courses</a>
                 </div>
             </div>
-            <div class="row"></div>
-            <div class="row"></div>
+            
+            
 
         </div>
-        <div class="col-9 border border-danger"></div>
+        <div class="col-9 border border-danger" style="background: #edf0f2;">
+            <div class="row justify-content-center">
+                {% for course in my_courses %}
+                <div class="col-lg-3 col-md-6 col-sm-8">
+                    <div class="singel-publication mt-30 h-100">
+                        <div class="image">
+                            <img src="{{ course.course.featured_image.url }}" alt="enrolled-course">
+                            
+                        </div>
+                        <div class="cont">
+                            <div class="name">
+                                <a href="shop-singel.html">
+                                    <h6>{{ course.course.title }}</h6>
+                                </a>
+                            </div>
+                            
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
+                                aria-valuemax="100">
+                                <div class="progress-bar bg-success" style="width: 25%">25%</div>
+                            </div>
+                        </div>
+                    </div> <!-- singel publication -->
+                </div>
+                {% endfor %}
+                
+            </div> <!-- row -->
+        </div>
     </div>
 </div>
 
@@ -51,6 +80,16 @@
 <!-- Footer ends here -->
 
 <script>
+    $(document).ready(function(){
+        let selectedItem = null;
+
+        $('.menu-item').click(function () {
+            console.log("clicked")
+            text = $(this).html();
+            console.log(text);
+            // $(this).addClass('selected');
+        });
+    });
     
 </script>
 

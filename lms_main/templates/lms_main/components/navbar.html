@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-4">
                     <div class="logo">
-                        <a href="index-2.html">
+                        <a href="{% url 'lms_main:home' %}">
                             <img src="{% static 'images/logo.png' %}" alt="Logo">
                         </a>
                     </div>
@@ -84,9 +84,6 @@
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a href="{% url 'lms_main:home' %}">Home</a>
-                                </li>
-                                <li class="nav-item">
                                     <a href="{% url 'user:dashboard' %}">Dashboard</a>
                                 </li>
                                 <li class="nav-item">
@@ -103,19 +100,6 @@
                                 <li class="nav-item">
                                     <a href="{% url 'lms_main:course-lists' %}">all courses</a>
                                 </li>
-                                
-                                
-                                <li class="nav-item">
-                                    <a href="{% url 'user:my-course' %}">My course</a>
-                                
-                                </li>
-                                <li class="nav-item">
-                                    <a href="contact.html">Contact</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="contact.html">Contact Us</a></li>
-                                        <li><a href="contact-2.html">Contact Us 2</a></li>
-                                    </ul>
-                                </li>
                             </ul>
                         </div>
                     </nav> <!-- nav -->
@@ -124,8 +108,9 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-4">
                     <div class="right-icon text-right">
                         <ul>
-                            <li><a href="{% url 'lms_main:save-for-later' %}" id="search"><i class="fa-solid fa-heart"></i></a></li>
-                            <li><a href="{% url 'lms_main:shopping-cart' %}"><i class="fa fa-shopping-bag"></i><span>0</span></a></li>
+                            <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
+                            <li><a href="{% url 'lms_main:save-for-later' %}" id=""><i class="fa-solid fa-heart"></i></a></li>
+                            <li><a href="{% url 'lms_main:shopping-cart' %}"><i class="fa fa-shopping-bag"></i><span>{{count}}</span></a></li>
                         </ul>
                     </div> <!-- right icon -->
                 </div>
@@ -182,7 +167,7 @@
                         <div class="right-icon text-right">
                             <ul>
                                 <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-bag"></i><span>0</span></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-bag"></i><span>{{count}}</span></a></li>
                             </ul>
                         </div> <!-- right icon -->
                     </div>
@@ -257,7 +242,7 @@
                     <div class="right-icon text-right">
                         <ul>
                             <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i><span>0</span></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-bag"></i></a></li>
                         </ul>
                     </div> <!-- right icon -->
                 </div>

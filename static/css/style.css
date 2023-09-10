@@ -1533,7 +1533,7 @@ p {
     padding-top: 25px;
 }
 .singel-publication .cont .name{
-    width: 50%;
+    width: 100%;
 }
 .singel-publication .cont .name a{
     display: block;
@@ -3822,6 +3822,7 @@ a{
     background-color: #c8d1e0;
 }
 .selected{
-    background-color: #c8d1e0;
+    background-color: #d2d7e1;
+    opacity: 0.5;
 }
 

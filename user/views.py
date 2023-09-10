@@ -91,9 +91,12 @@ def login_user(request):
 def dashboard(request):
     print("you are in dashboard")
     user = request.user
+    my_courses = EnrolledCourses.objects.filter(student=user.student)
+    
     if user:
         context = {
             'user': user,
+            'my_courses': my_courses,
         }
         return render(request, 'user/dashboard.html', context)
     return Http404

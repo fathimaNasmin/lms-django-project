@@ -26,16 +26,8 @@ from . import forms as lms_main_forms
 
 
 def home_page(request):
-    categories = models.Category.objects.all()
-    courses = models.Course.objects.filter(status='PUBLISH').all()
-    # print(courses)
-    # print(categories)
 
-    context = {
-        'categories': categories,
-    }
-
-    return render(request, 'lms_main/home.html', context)
+    return render(request, 'lms_main/home.html')
 
 
 def search(request):
