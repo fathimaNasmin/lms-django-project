@@ -46,10 +46,10 @@
                 <div class="row">
                     {% for course in my_courses %}
                     <div class="col-lg-4 col-md-6">
-                        <div class="singel-course mt-30">
-                            <div class="thum">
+                        <div class="singel-course mt-30" style="height: 100%;">
+                            <div class="thum h-50">
                                 <div class="image">
-                                    <img src="{{ course.course.featured_image.url }}" alt="Course">
+                                    <img src="{{ course.course.featured_image.url }}" alt="Course" class="h-100 object-fit-fill">
                                 </div>
                                 
                             </div>

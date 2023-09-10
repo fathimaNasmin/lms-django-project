@@ -3818,7 +3818,10 @@ a{
 
 /* slider css */
 
-
-
-
+.menu-item:hover {
+    background-color: #c8d1e0;
+}
+.selected{
+    background-color: #c8d1e0;
+}
 

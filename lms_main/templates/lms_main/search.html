@@ -121,7 +121,14 @@
                         </div>
                         {% endfor %}
                     {% else %}
+                    <div class="mx-4">
                         <h2>Search Not found</h2>
+                        <div class="row w-50 d-flex justify-content-center">
+                            <img src="{% static 'images/not-found/search-not-found.avif' %}" alt="">
+                        </div>
+                    </div>
+                        
+                        
                     
                     {% endif %}
 
@@ -136,7 +143,7 @@
                                 <div class="col-md-6">
                                     <div class="thum">
                                         <div class="image">
-                                            <img src="{{ result.featured_image.url }}" alt="Course">
+                                            <img src="{{ result.featured_image.url }}" alt="Course" class="w-100">
                                         </div>
                                         <div class="price">
                                             {% if result.price == 0 %}
@@ -170,7 +177,7 @@
                                         <div class="course-teacher">
                                             <div class="thum">
                                                 <a href="#">
-                                                    <img src="{{ result.author.profile_image_url }}" alt="profile image" class="w-25">
+                                                    <img src="{{ result.author.profile_image_url }}" alt="profile image" class="w-100">
                                                 </a>
                                             </div>
                                             <div class="name">
