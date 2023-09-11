@@ -1,0 +1,230 @@
+{% extends 'lms_main/base.html' %}
+{% load static %}
+
+{% load course_tags %}
+{% load time_tags %}
+
+{% block navbar %}
+{% include 'lms_main/components/navbar.html' %}
+{% endblock %}
+
+{% block main %}
+
+<!--====== COURSES DETAIL PART START ======-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8 border border-danger px-5 py-2">
+            <div class="w-100">
+                <video controls style="width: 100%;height: 50%;">
+                    <source src="https://www.youtube.com/watch?v=M6wpkLCiHoI" type="video/youtube">
+                    <source src="movie.ogg" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <!-- course description part -->
+            <div class="overview-description">
+                <div class="singel-description pt-40">
+                    <h5>Course Description</h5>
+                    <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis
+                        sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum
+                        velit. Nam nec tellus .</p>
+                </div>
+            </div> <!-- overview description -->
+            <!-- course description part ends -->
+            <!-- Group discussion part -->
+            <div class="reviews-cont">
+                <div class="title">
+                    <h6>Group discussion</h6>
+                </div>
+                <ul>
+                    <li>
+                        <div class="singel-reviews">
+                            <div class="reviews-author">
+                                <div class="author-thum">
+                                    <img src="images/review/r-1.jpg" alt="Reviews">
+                                </div>
+                                <div class="author-name">
+                                    <h6>Bobby Aktar</h6>
+                                    <span>April 03, 2019</span>
+                                </div>
+                            </div>
+                            <div class="reviews-description pt-20">
+                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                                    alteration in some form, by injected humour, or randomised words which.</p>
+                                <div class="rating">
+                                    <ul>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                    </ul>
+                                    <span>/ 5 Star</span>
+                                </div>
+                            </div>
+                        </div> <!-- singel reviews -->
+                    </li>
+                    <li>
+                        <div class="singel-reviews">
+                            <div class="reviews-author">
+                                <div class="author-thum">
+                                    <img src="images/review/r-2.jpg" alt="Reviews">
+                                </div>
+                                <div class="author-name">
+                                    <h6>Humayun Ahmed</h6>
+                                    <span>April 13, 2019</span>
+                                </div>
+                            </div>
+                            <div class="reviews-description pt-20">
+                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                                    alteration in some form, by injected humour, or randomised words which.</p>
+                                <div class="rating">
+                                    <ul>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                    </ul>
+                                    <span>/ 5 Star</span>
+                                </div>
+                            </div>
+                        </div> <!-- singel reviews -->
+                    </li>
+                    <li>
+                        <div class="singel-reviews">
+                            <div class="reviews-author">
+                                <div class="author-thum">
+                                    <img src="images/review/r-3.jpg" alt="Reviews">
+                                </div>
+                                <div class="author-name">
+                                    <h6>Tania Aktar</h6>
+                                    <span>April 20, 2019</span>
+                                </div>
+                            </div>
+                            <div class="reviews-description pt-20">
+                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                                    alteration in some form, by injected humour, or randomised words which.</p>
+                                <div class="rating">
+                                    <ul>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                    </ul>
+                                    <span>/ 5 Star</span>
+                                </div>
+                            </div>
+                        </div> <!-- singel reviews -->
+                    </li>
+                </ul>
+                <div class="title pt-15">
+                    <h6>Leave A Comment</h6>
+                </div>
+                <div class="reviews-form">
+                    <form action="#">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-singel">
+                                    <input type="text" placeholder="Fast name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-singel">
+                                    <input type="text" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-singel">
+                                    <div class="rate-wrapper">
+                                        <div class="rate-label">Your Rating:</div>
+                                        <div class="rate">
+                                            <div class="rate-item"><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            <div class="rate-item"><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            <div class="rate-item"><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            <div class="rate-item"><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            <div class="rate-item"><i class="fa fa-star" aria-hidden="true"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-singel">
+                                    <textarea placeholder="Comment"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-singel">
+                                    <button type="button" class="main-btn">Post Comment</button>
+                                </div>
+                            </div>
+                        </div> <!-- row -->
+                    </form>
+                </div>
+            </div> <!-- reviews cont -->
+            <!-- Group discussion part ends -->
+        </div>
+    <!-- Right Part -->
+        <div class="col-4 border border-warning">
+            <div class="accordion" id="accordionExample">
+                {% for video in videos %}
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <a href="#" class="accordion-button collapsed" data-toggle="collapse" data-target="#id{{video.lesson.id}}"
+                            aria-expanded="true" aria-controls="collapseOne">
+                            <ul>
+                                <li class="accordion-lists"><span class="lecture">{{forloop.counter}}.&nbsp;</span></li>
+                                <li class="accordion-lists">
+                                    <span class="head">{{video.lesson.name}}</span>
+                                </li>
+                                <li class="accordion-lists"><span class="time d-none d-md-block"><i class="fa fa-clock-o"></i> <span>
+                                            {% time_in_hrs_min_sec video.time_duration %}</span></span></li>
+                            </ul>
+                        </a>
+                    </div>
+            
+                    <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul>
+                                {% if user_enrolled_course %}
+                                <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                <li class="d-inline list-inline-item">
+                                    <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}"
+                                        class="text-decoration-none text-secondary" data-fancybox>{{video.title}}</a>
+                                </li>
+                                {% else %}
+                                <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                <li class="d-inline list-inline-item">
+                                    <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Enroll this course"
+                                        class="text-decoration-none text-secondary">{{video.title}}</a>
+                                </li>
+            
+                                {% endif %}
+            
+                            </ul>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--====== COURSES DETAIL PART ENDS ======-->
+
+{% include 'lms_main/components/footer.html' %}
+
+<!--====== BACK TO TP PART START ======-->
+
+<a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+<!--====== BACK TO TP PART ENDS ======-->
+
+{% endblock %}

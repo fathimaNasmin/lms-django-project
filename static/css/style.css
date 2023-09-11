@@ -3826,3 +3826,13 @@ a{
     opacity: 0.5;
 }
 
+/* Accordion */
+
+.accordion-lists{
+    display: inline-block;
+}
+
+li.accordion-lists:last-child {
+    float: right;
+    margin-left: 40px;
+}

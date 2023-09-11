@@ -11,9 +11,9 @@
 
 {% block main %}
 
-<div class="container-fluid">
+<div class="container-fluid h-100">
     <div class="row">
-        <div class="col-3 border border-info h-100 p-4">
+        <div class="col-3 h-100 p-4">
             <!-- Profile Image row -->
             <div class="row d-flex justify-content-center my-2">
                 <img src="{{ user.student.profile_image_url }}" alt="profile image" class="w-50" style="border-radius: 50%;">
@@ -34,12 +34,22 @@
                     <a class="text-dark" href="">My Courses</a>
                 </div>
             </div>
+            <div class="row">
+                <div class="text-center p-2 m-2 menu-item" id="course">
+                    <a class="text-dark" href="">Chat</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text-center p-2 m-2 menu-item" id="course">
+                    <a class="text-dark" href="">Dummy</a>
+                </div>
+            </div>
             
             
 
         </div>
-        <div class="col-9 border border-danger" style="background: #edf0f2;">
-            <div class="row justify-content-center">
+        <div class="col-9" style="background: #edf0f2;">
+            <div class="row justify-content-evenly">
                 {% for course in my_courses %}
                 <div class="col-lg-3 col-md-6 col-sm-8">
                     <div class="singel-publication mt-30 h-100">
@@ -49,7 +59,7 @@
                         </div>
                         <div class="cont">
                             <div class="name">
-                                <a href="shop-singel.html">
+                                <a href="{% url 'user:my-course-detail' course.course.slug %}">
                                     <h6>{{ course.course.title }}</h6>
                                 </a>
                             </div>

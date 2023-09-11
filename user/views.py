@@ -10,6 +10,7 @@ from lms_main import forms as lms_main_forms
 import json
 from django.contrib import messages
 from .models import Student, Instructor, User, EnrolledCourses
+from lms_main.models import Course, Video
 from .custom_auth_backend import EmailBackend
 
 from lms_app import settings
@@ -117,6 +118,19 @@ def my_course(request):
     for course in my_courses:
         print(course)
     return render(request, 'user/my_course.html', context)
+
+
+
+# View for detailed course for enrolled course
+@login_required
+def my_course_detail_view(request, slug):
+    course_video = Video.objects.filter(course__slug=slug)
+    print(course_video)
+    context = {
+        'videos': course_video,
+    }
+    return render(request,'user/my_course_detail.html', context)
+
 
 
 @login_required

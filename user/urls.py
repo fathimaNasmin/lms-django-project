@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', user_view.login_user, name='login-user'),
     path('dashboard/', user_view.dashboard, name='dashboard'),
     path('my-course/', user_view.my_course, name='my-course'),
+    path('my-course-detail/<slug:slug>', user_view.my_course_detail_view, name='my-course-detail'),
 
     path('logout/', user_view.logout_user, name='logout-user'),
     path('update_profile/', user_view.update_student_profile, name='update-profile'),
