@@ -5,6 +5,7 @@ from PIL import Image
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 from .utils import slugify_course_instance_title, calculate_video_duration
 
@@ -170,7 +171,8 @@ class Video(models.Model):
     """videos of each courses"""
     title = models.CharField(
         max_length=100)
-    video_file = models.FileField(upload_to='videos/', null=True, blank=True)
+    video_file = models.FileField(upload_to='videos/', null=True, blank=True,
+                                  validators=[FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     time_duration = models.FloatField(null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
 

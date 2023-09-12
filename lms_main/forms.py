@@ -104,13 +104,11 @@ class VideoLearnForm(forms.ModelForm):
     title = forms.CharField(label="",
                              widget=forms.TextInput(attrs={'placeholder': 'Video Title',
                                                            'class': 'd-inline-block w-75'}))
-    youtube_id = forms.CharField(label="",
-                             widget=forms.TextInput(attrs={'placeholder': 'Youtube Id',
-                                                           'class': 'd-inline-block w-75'}))
+    video_file = forms.FileField()
 
     class Meta:
         model = Video
-        fields = ('title', 'youtube_id',)
+        fields = ('title', 'video_file',)
         
 # define a formset for video for a lesson
 VideoFormSet = inlineformset_factory(
