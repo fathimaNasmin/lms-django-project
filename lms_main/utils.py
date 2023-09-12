@@ -35,51 +35,61 @@ def slugify_course_instance_title(instance, save=False, new_slug=None):
     return instance
 
 
-def calculate_video_duration(id):
-    """calculate the video duration using Google API"""
-    video_id = id
-    url = f"https://www.googleapis.com/youtube/v3/videos?key={GOOGLE_API_KEY}&part=contentDetails&id={video_id}"
+# def calculate_video_duration(id):
+#     """calculate the video duration using Google API"""
+#     video_id = id
+#     url = f"https://www.googleapis.com/youtube/v3/videos?key={GOOGLE_API_KEY}&part=contentDetails&id={video_id}"
 
-    payload = {}
-    headers = {}
+#     payload = {}
+#     headers = {}
 
+#     try:
+#         response = requests.request("GET", url, headers=headers, data=payload)
+#         if response.status_code == 200:
+#             data = response.json()
+
+#             duration = data['items'][0]['contentDetails']['duration']
+
+#             # get the duration in seconds using regular expression
+#             hours_pattern = re.compile(r'(\d+)H')
+#             minutes_pattern = re.compile(r'(\d+)M')
+#             seconds_pattern = re.compile(r'(\d+)S')
+
+#             hours = hours_pattern.search(duration)
+#             minutes = minutes_pattern.search(duration)
+#             seconds = seconds_pattern.search(duration)
+
+#             hours = int(hours.group(1)) if hours else 0
+#             minutes = int(minutes.group(1)) if minutes else 0
+#             seconds = int(seconds.group(1)) if seconds else 0
+
+#             # print(hours, minutes, seconds)
+
+#             video_duration = timedelta(
+#                 hours=hours,
+#                 minutes=minutes,
+#                 seconds=seconds
+#             ).total_seconds()
+
+#             return video_duration
+#         else:
+#             return 0
+#     except requests.RequestException as e:
+#         print(f"Error while fetching video duration: {e}")
+#         return 0
+
+def calculate_video_duration(video_path):
     try:
-        response = requests.request("GET", url, headers=headers, data=payload)
-        if response.status_code == 200:
-            data = response.json()
+        clip = VideoFileClip(video_path)
+        duration = clip.duration
+        clip.close()  # Close the video file
+        print(duration)
+        return duration
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return None
 
-            duration = data['items'][0]['contentDetails']['duration']
-
-            # get the duration in seconds using regular expression
-            hours_pattern = re.compile(r'(\d+)H')
-            minutes_pattern = re.compile(r'(\d+)M')
-            seconds_pattern = re.compile(r'(\d+)S')
-
-            hours = hours_pattern.search(duration)
-            minutes = minutes_pattern.search(duration)
-            seconds = seconds_pattern.search(duration)
-
-            hours = int(hours.group(1)) if hours else 0
-            minutes = int(minutes.group(1)) if minutes else 0
-            seconds = int(seconds.group(1)) if seconds else 0
-
-            # print(hours, minutes, seconds)
-
-            video_duration = timedelta(
-                hours=hours,
-                minutes=minutes,
-                seconds=seconds
-            ).total_seconds()
-
-            return video_duration
-        else:
-            return 0
-    except requests.RequestException as e:
-        print(f"Error while fetching video duration: {e}")
-        return 0
 # function to generate Receipt using xhtml2pdf
-
-
 def receipt_render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)

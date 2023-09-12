@@ -4,6 +4,7 @@ from django.db import models
 from PIL import Image
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
+from django.utils import timezone
 
 from .utils import slugify_course_instance_title, calculate_video_duration
 
@@ -169,9 +170,9 @@ class Video(models.Model):
     """videos of each courses"""
     title = models.CharField(
         max_length=100)
-    youtube_id = models.CharField(
-        max_length=200, unique=True)
+    video_file = models.FileField(upload_to='videos/', null=True, blank=True)
     time_duration = models.FloatField(null=True, blank=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
 
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
@@ -184,7 +185,7 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         # super().save(*args, **kwargs)
-        duration = calculate_video_duration(self.youtube_id)
+        duration = calculate_video_duration(self.video_file)
 
         if duration:
             self.time_duration = duration

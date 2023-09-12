@@ -17,7 +17,7 @@
         <div class="col-8 border border-danger px-5 py-2">
             <div class="w-100 h-25">
                 
-                <iframe style="width: 100%;height: 100%;" src="https://www.youtube.com/embed/M6wpkLCiHoI" frameborder="0" allowfullscreen></iframe>
+                <iframe id="videoFrame" style="width: 100%;height: 100%;" src="https://www.youtube.com/embed/M6wpkLCiHoI" frameborder="0" allowfullscreen></iframe>
                 
             </div>
             <!-- course description part -->
@@ -186,21 +186,11 @@
                     <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                {% if user_enrolled_course %}
                                 <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
                                 <li class="d-inline list-inline-item">
-                                    <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}"
+                                    <a id="video-id-link" href="{{ video.youtube_id}}"
                                         class="text-decoration-none text-secondary" data-fancybox>{{video.title}}</a>
                                 </li>
-                                {% else %}
-                                <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
-                                <li class="d-inline list-inline-item">
-                                    <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Enroll this course"
-                                        class="text-decoration-none text-secondary">{{video.title}}</a>
-                                </li>
-            
-                                {% endif %}
-            
                             </ul>
                             <p></p>
                         </div>
@@ -224,5 +214,22 @@
 <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
 <!--====== BACK TO TP PART ENDS ======-->
+
+<!-- Javascript starts here -->
+<script>
+    const playVideoLink = document.getElementById('video-id-link');
+    const videoFrame = document.getElementById('videoFrame');
+    
+
+    // Add click event listener to the video link
+    playVideoLink.addEventListener('click', function(event){
+        event.preventDefault();
+        console.log(playVideoLink.getAttribute('href'));
+        videoId = playVideoLink.getAttribute('href');
+        videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
+    })
+</script>
+
+<!-- Javascript ends here -->
 
 {% endblock %}
