@@ -170,14 +170,15 @@
                                                 <div class="card-body">
                                                     <ul>
                                                         {% if user_enrolled_course %}
-                                                            <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                                            <li class="d-inline list-inline-item"><i class="fa-regular fa-play"></i></li>
                                                             <li class="d-inline list-inline-item">
                                                                 <a href="https://www.youtube.com/watch?v={{ video.video_file.url}}" class="text-decoration-none text-secondary"
                                                                     data-fancybox>{{video.title}}</a>
                                                                     
                                                             </li>
                                                         {% else %}
-                                                            <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
+                                                        
+                                                            <li class="d-inline list-inline-item"><i class="fa-solid fa-play"></i></li>
                                                             <li class="d-inline list-inline-item">
                                                                 <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Enroll this course" class="text-decoration-none text-secondary">{{video.title}}</a>
                                                             </li>
