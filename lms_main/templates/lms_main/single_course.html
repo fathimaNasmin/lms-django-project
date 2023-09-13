@@ -395,7 +395,7 @@
                                 <div class="price-button pt-10">
                                     {% if user_enrolled_course %}
                 
-                                        <button type="button" class="btn btn-secondary" disabled>Already Enrolled</button>
+                                        <button type="button" class="btn btn-dark"><a class="text-light" href="{% url 'user:my-course-detail' course.slug %}">View Course</a></button>
                         
                                     {% else %}
                                     <span>Free</span><br>
