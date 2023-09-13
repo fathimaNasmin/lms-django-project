@@ -86,6 +86,7 @@ def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
     videos = models.Video.objects.filter(course__slug=slug)
+    lessons = models.Lesson.objects.filter(course__slug=slug)
     no_of_students_enrolled = user_model.EnrolledCourses.objects.filter(
         course__slug=slug).all().count()
 
@@ -93,12 +94,17 @@ def single_course(request, slug):
     context = {}
     user = request.user
     # print(user.is_authenticated)
-
-    # for video in videos:
-    #     print("video id", video.lesson.id)
+    
+    # print(lessons)
+    for lesson in lessons:
+        videoss = lesson.video_set.order_by('-upload_date')
+        for v in videoss:
+            print(v.time_duration)
+    # for lesson in lessons.video_set.all():
+    #     print(lesson.title)
     context = {
         'course': single_course,
-        'videos': videos,
+        'lessons': lessons,
         'total_time_duration_course': total_time_duration_course,
         'no_of_videos': videos.count(),
         'no_of_students_enrolled': no_of_students_enrolled,

@@ -13,6 +13,8 @@ def common_context(request):
 def student_cart_count(request):
     if request.path.startswith('/admin/'):
         return {}
+    if request.path.startswith('/instructor/'):
+        return {}
     if request.user.is_authenticated:
         no_of_items_cart = Cart.objects.filter(student=request.user.student).count()
         return {'count' : no_of_items_cart }

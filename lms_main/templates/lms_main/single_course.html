@@ -144,40 +144,48 @@
                             <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
                                 <div class="curriculam-cont">
                                     <div class="accordion" id="accordionExample">
-                                        {% for video in videos %}
+                                        {% for lesson in lessons %}
                                         <div class="card">
                                             <div class="card-header" id="headingOne">
-                                                <a href="#" class="accordion-button collapsed" data-toggle="collapse" data-target="#id{{video.lesson.id}}" aria-expanded="true"
+                                                <a href="#" class="accordion-button collapsed" data-toggle="collapse" data-target="#id{{lesson.id}}" aria-expanded="true"
                                                     aria-controls="collapseOne">
                                                     <ul>
                                                         <li></li>
                                                         <li><span class="lecture">{{forloop.counter}}.&nbsp;</span></li>
                                                         <li>
                                                             
-                                                                <span class="head">{{video.lesson.name}}</span>
+                                                                <span class="head">{{lesson.name}}</span>
                                                             
                                                         </li>
-                                                        <li><span class="time d-none d-md-block"><i class="fa fa-clock-o"></i> <span>
-                                                                    {% time_in_hrs_min_sec video.time_duration %}</span></span></li>
+                                                        <li>
+                                                            
+                                                        </li>
                                                     </ul>
                                                 </a>
                                             </div>
-                            
-                                            <div id="id{{video.lesson.id}}" class="collapse" aria-labelledby="headingOne"
+
+                                            {% for video in lesson.video_set.all|dictsort:"upload_date" %}
+                                            <div id="id{{lesson.id}}" class="collapse" aria-labelledby="headingOne"
                                                 data-parent="#accordionExample">
                                                 <div class="card-body">
                                                     <ul>
                                                         {% if user_enrolled_course %}
                                                             <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
                                                             <li class="d-inline list-inline-item">
-                                                                <a href="https://www.youtube.com/watch?v={{ video.youtube_id}}" class="text-decoration-none text-secondary"
+                                                                <a href="https://www.youtube.com/watch?v={{ video.video_file.url}}" class="text-decoration-none text-secondary"
                                                                     data-fancybox>{{video.title}}</a>
+                                                                    
                                                             </li>
                                                         {% else %}
                                                             <li class="d-inline list-inline-item"><i class="fa-brands fa-youtube" style="color: red;"></i></li>
                                                             <li class="d-inline list-inline-item">
                                                                 <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Enroll this course" class="text-decoration-none text-secondary">{{video.title}}</a>
                                                             </li>
+                                                            <li style="float: right;"><span class="time d-none d-md-block">
+                                                                <i class="fa fa-clock-o"></i>
+                                                                <span>
+                                                                    {% time_in_hrs_min_sec video.time_duration %}</span>
+                                                            </span></li>
                                                             
                                                         {% endif %}
                                                         
@@ -185,6 +193,7 @@
                                                     <p></p>
                                                 </div>
                                             </div>
+                                            {% endfor %}
                                         </div>
                                         {% endfor %}
                             

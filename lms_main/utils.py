@@ -11,7 +11,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.files import File
 import time
-
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
