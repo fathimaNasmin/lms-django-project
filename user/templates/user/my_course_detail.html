@@ -199,8 +199,9 @@
                             <ul>
                                 <li class="d-inline list-inline-item"><i class="fa-solid fa-play"></i></li>
                                 <li class="d-inline list-inline-item">
-                                    <a id="video-id-link" href="{{ video.video_file.url}}"
-                                        class="text-decoration-none text-secondary">{{video.title}}</a>
+                                    <!-- <a id="video-id-link" href="{{ video.video_file.url}}"
+                                        class="text-decoration-none text-secondary">{{video.title}}</a> -->
+                                        <button class="btn btn-link text-decoration-none text-dark" id="video-btn" data-videoUrl="{{ video.video_file.url}}">{{video.title}}</button>
             
                                 </li>
                                 <li style="float: right;"><span class="time d-none d-md-block">
@@ -237,16 +238,22 @@
 
 <!-- Javascript starts here -->
 <script>
-    const playVideoLink = document.getElementById('video-id-link');
+    const buttonContainer = document.getElementById('accordionExample');
     const video = document.getElementById('videoFrame');
     const videoSource = document.getElementById('videoSource');
+     console.log("loaded")
     
-    
-    // Add click event listener to the video link
-    playVideoLink.addEventListener('click', function(event){
-        event.preventDefault();
-        console.log('clicked')
-        
+    // Add a click event listener to the parent element
+    buttonContainer.addEventListener('click', function (event) {
+        // Check if the clicked element is a button with the data-videoUrl attribute
+        if (event.target.tagName === 'BUTTON' && event.target.hasAttribute('data-videoUrl')) {
+            event.preventDefault();
+            const videoUrl = event.target.getAttribute('data-videoUrl');
+            // console.log('Clicked on button with video URL:', videoUrl);
+            videoSource.setAttribute('src', videoUrl);
+            video.load();
+            video.play();
+        }
     });
 </script>
 
