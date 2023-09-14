@@ -188,7 +188,9 @@ class Video(models.Model):
     def save(self, *args, **kwargs):
         # super().save(*args, **kwargs)
         # duration is saved in 'seconds'
-        duration = calculate_video_duration(self.video_file.path)
+        if self.video_file.path:
+            duration = calculate_video_duration(self.video_file.path)
+            print(duration)
 
         if duration:
             self.time_duration = duration

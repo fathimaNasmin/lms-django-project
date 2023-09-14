@@ -89,8 +89,9 @@ def single_course(request, slug):
     lessons = models.Lesson.objects.filter(course__slug=slug)
     no_of_students_enrolled = user_model.EnrolledCourses.objects.filter(
         course__slug=slug).all().count()
-
-    total_time_duration_course = sum([video.time_duration for video in videos])
+    for video in videos:
+        print(video.time_duration)
+    # total_time_duration_course = sum([video.time_duration for video in videos])
     context = {}
     user = request.user
     # print(user.is_authenticated)
@@ -105,7 +106,7 @@ def single_course(request, slug):
     context = {
         'course': single_course,
         'lessons': lessons,
-        'total_time_duration_course': total_time_duration_course,
+        'total_time_duration_course': 1,
         'no_of_videos': videos.count(),
         'no_of_students_enrolled': no_of_students_enrolled,
     }

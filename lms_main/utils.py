@@ -83,7 +83,7 @@ def calculate_video_duration(video_path):
         clip = VideoFileClip(video_path)
         duration = clip.duration
         clip.close()  # Close the video file
-        print(duration)
+        duration = round(duration,2)
         return duration
     except Exception as e:
         print(f"An error occurred: {str(e)}")
