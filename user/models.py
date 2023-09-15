@@ -104,3 +104,17 @@ class EnrolledCourses(models.Model):
     class Meta:
         # Ensure that each combination of course and student is unique
         unique_together = ('course', 'student')
+
+
+class PlayingVideo(models.Model):
+    """Keep track of playing video"""
+    pause_time = models.FloatField(null=True,blank=True)
+    # ======FOREIGN KEY AND RELATIONSHIPS=======
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        "lms_main.Lesson", on_delete=models.CASCADE)
+    video = models.ForeignKey("lms_main.Video", on_delete=models.CASCADE)
+    

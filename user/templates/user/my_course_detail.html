@@ -291,7 +291,7 @@
         console.log(csrftoken)
 
         $video.on('pause', function () {
-            suspendTime = this.currentTime;
+            suspendTime = (this.currentTime).toFixed(2);
             console.log(suspendTime)
             $.ajax({
                 type:"POST",
