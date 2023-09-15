@@ -287,18 +287,24 @@
 
     $(document).ready(function (){
         console.log("dom element")
-        var $video = $("#videoFrame");
+        // var $video = $("#videoFrame");
         console.log(csrftoken)
 
-        $video.on('pause', function () {
-            suspendTime = (this.currentTime).toFixed(2);
-            console.log(suspendTime)
+        $(video).on('pause', function (event) {
+            event.preventDefault();
+            let suspendTime = (this.currentTime).toFixed(2);
+            let currentVideoUrl = videoSource.getAttribute('src'); 
+            console.log(suspendTime);
+            currentVideoUrl = currentVideoUrl.replace('/media/','');
+
             $.ajax({
                 type:"POST",
                 url: "{% url 'user:track-video' %}",
                 contentType: 'application/json',
                 headers: { 'X-CSRFToken': csrftoken },
-                data: JSON.stringify({'suspended_time': suspendTime}),
+                data: JSON.stringify({
+                    'suspended_time': suspendTime,
+                    'currentVideoUrl':currentVideoUrl}),
                 success: function(response){
                     if (response['success']){
                         console.log("success");
@@ -314,7 +320,7 @@
 
 
         // Ajax post when video is ended or watched completely
-        $video.on('ended', function (){
+        $(video).on('ended', function (){
             console.log("Video ended");
         });
 

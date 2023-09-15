@@ -9,7 +9,7 @@ from . import forms as user_forms
 from lms_main import forms as lms_main_forms
 import json
 from django.contrib import messages
-from .models import Student, Instructor, User, EnrolledCourses
+from .models import Student, Instructor, User, EnrolledCourses, PlayingVideo
 from lms_main.models import Course, Video, Lesson
 from .custom_auth_backend import EmailBackend
 
@@ -142,6 +142,14 @@ def track_video(request):
         req_obj = json.load(request)
         suspend_time = req_obj['suspended_time']
         print(suspend_time)
+        print(req_obj['currentVideoUrl'])
+        print(request.user.student)
+        # playing_video_instance = PlayingVideo(pause_time=suspend_time)
+        # playing_video_instance.student = request.user
+        # playing_video_instance.course = 
+        # playing_video_instance.lesson = 
+        # playing_video_instance.video = 
+        
         return HttpResponse(json.dumps(data), content_type='application/json')
     return JsonResponse({'status:200'})
 
