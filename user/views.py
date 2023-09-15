@@ -133,6 +133,18 @@ def my_course_detail_view(request, slug):
     return render(request,'user/my_course_detail.html', context)
 
 
+# view for posting the playback time 
+@login_required 
+def track_video(request):
+    data = {}
+    if request.method == "POST" and request.is_ajax():
+        data['success'] = True
+        req_obj = json.load(request)
+        suspend_time = req_obj['suspended_time']
+        print(suspend_time)
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return JsonResponse({'status:200'})
+
 
 @login_required
 def update_student_profile(request):

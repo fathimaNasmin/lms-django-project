@@ -238,10 +238,39 @@
 
 <!-- Javascript starts here -->
 <script>
+
+    function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    const csrftoken = getCookie('csrftoken');
+
     const buttonContainer = document.getElementById('accordionExample');
     const video = document.getElementById('videoFrame');
     const videoSource = document.getElementById('videoSource');
      console.log("loaded")
+    //  video.currentTime = 5
+    //  console.log(video.currentTime)
+
+    //  video.onpause = function() {
+    //     console.log(video.currentTime)
+    //  }
+
+
+    //  video.onended = function(){
+    //     console.log("Video ended")
+    //  }
     
     // Add a click event listener to the parent element
     buttonContainer.addEventListener('click', function (event) {
@@ -254,6 +283,42 @@
             video.load();
             video.play();
         }
+    });
+
+    $(document).ready(function (){
+        console.log("dom element")
+        var $video = $("#videoFrame");
+        console.log(csrftoken)
+
+        $video.on('pause', function () {
+            suspendTime = this.currentTime;
+            console.log(suspendTime)
+            $.ajax({
+                type:"POST",
+                url: "{% url 'user:track-video' %}",
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: JSON.stringify({'suspended_time': suspendTime}),
+                success: function(response){
+                    if (response['success']){
+                        console.log("success");
+                    } else {
+                        console.log("error")
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
+        });
+
+
+        // Ajax post when video is ended or watched completely
+        $video.on('ended', function (){
+            console.log("Video ended");
+        });
+
+        
     });
 </script>
 
