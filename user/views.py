@@ -124,6 +124,7 @@ def my_course(request):
 # View for detailed course for enrolled course
 @login_required
 def my_course_detail_view(request, slug):
+    context = {}
     course_video = Video.objects.filter(course__slug=slug)
     lessons = Lesson.objects.filter(course__slug=slug)
     # print(course_video[0].id)
@@ -132,14 +133,14 @@ def my_course_detail_view(request, slug):
         # print(last_played_video)
         if not last_played_video:
             last_played_video = None
-        
-    finally:
-        print("finally:", last_played_video.video.video_file.url)
+    except Exception as e:
+        print(e)
+    else:
+        context['last_played_video'] = last_played_video
         
     context = {
         'videos': course_video,
         'lessons':lessons,
-        'last_played_video':last_played_video,
     }
     return render(request,'user/my_course_detail.html', context)
 
