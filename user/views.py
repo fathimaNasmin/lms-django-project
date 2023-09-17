@@ -126,9 +126,20 @@ def my_course(request):
 def my_course_detail_view(request, slug):
     course_video = Video.objects.filter(course__slug=slug)
     lessons = Lesson.objects.filter(course__slug=slug)
+    # print(course_video[0].id)
+    try:
+        last_played_video = PlayingVideo.objects.filter(course__slug=slug,student=request.user.student).latest('-updated_time')
+        # print(last_played_video)
+        if not last_played_video:
+            last_played_video = None
+        
+    finally:
+        print("finally:", last_played_video.video.video_file.url)
+        
     context = {
         'videos': course_video,
         'lessons':lessons,
+        'last_played_video':last_played_video,
     }
     return render(request,'user/my_course_detail.html', context)
 
@@ -141,14 +152,36 @@ def track_video(request):
         data['success'] = True
         req_obj = json.load(request)
         suspend_time = req_obj['suspended_time']
+        current_video_url = req_obj['currentVideoUrl']
         print(suspend_time)
-        print(req_obj['currentVideoUrl'])
+        print(current_video_url)
         print(request.user.student)
-        # playing_video_instance = PlayingVideo(pause_time=suspend_time)
-        # playing_video_instance.student = request.user
-        # playing_video_instance.course = 
-        # playing_video_instance.lesson = 
-        # playing_video_instance.video = 
+        video = Video.objects.filter(video_file=current_video_url).first()
+        print(type(video.lesson))
+        
+        # Create/update Instance in model "PlayingVideo"
+        try:
+            # Define the criteria
+            criteria = {
+                'video': video,
+                'lesson': video.lesson,
+                'course': video.course,
+                'student': request.user.student,
+            }
+
+            # Try to retrieve an existing record
+            existing_record = PlayingVideo.objects.filter(**criteria).first()
+
+            # Update the 'pause_time' if the record exists, or create a new one
+            if existing_record:
+                existing_record.pause_time = suspend_time
+                existing_record.save()
+            else:
+                # Create a new record with the specified criteria and 'pause_time'
+                criteria['pause_time'] = suspend_time
+                PlayingVideo.objects.create(**criteria)
+        except Exception as e:
+            print("Error: ",e)
         
         return HttpResponse(json.dumps(data), content_type='application/json')
     return JsonResponse({'status:200'})

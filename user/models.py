@@ -109,6 +109,7 @@ class EnrolledCourses(models.Model):
 class PlayingVideo(models.Model):
     """Keep track of playing video"""
     pause_time = models.FloatField(null=True,blank=True)
+    updated_time = models.DateTimeField(auto_now_add=True)
     # ======FOREIGN KEY AND RELATIONSHIPS=======
     course = models.ForeignKey(
         "lms_main.Course", on_delete=models.CASCADE)
