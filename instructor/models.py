@@ -2,6 +2,10 @@ from django.db import models
 
 from django.utils.text import slugify
 from PIL import Image
+
+from django.db.models.signals import pre_save, post_save
+
+
 # Create your models here.
 
 
@@ -46,3 +50,42 @@ class Level(models.Model):
 
     def __str__(self):
         return f"Level {self.name_of_level}"
+
+
+class Requirement(models.Model):
+    """requirement of each course"""
+    requirement_points = models.CharField(
+        max_length=500, default="")
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Requirement {self.requirement_points}"
+
+
+class WhatYouWillLearn(models.Model):
+    """what you'll learn of each course"""
+    points = models.CharField(
+        max_length=500, default="no points")
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"What you'll Learn {self.points}"
+
+
+class Lesson(models.Model):
+    """lesson for each course"""
+    name = models.CharField(
+        max_length=200)
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Lesson - {self.name} - {self.course.title}"

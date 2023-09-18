@@ -88,7 +88,7 @@ def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
     videos = models.Video.objects.filter(course__slug=slug)
-    lessons = models.Lesson.objects.filter(course__slug=slug)
+    lessons = instructor_models.Lesson.objects.filter(course__slug=slug)
     no_of_students_enrolled = student_model.EnrolledCourses.objects.filter(
         course__slug=slug).all().count()
     for video in videos:
@@ -650,7 +650,8 @@ def instructor_my_course(request, slug):
             lesson_id = request.POST.get("lesson_id")
             print(lesson_id)
             # lesson and video instance to initial in formset
-            lesson_query = models.Lesson.objects.filter(id=lesson_id).defer('id','course_id')
+            lesson_query = instructor_models.Lesson.objects.filter(
+                id=lesson_id).defer('id', 'course_id')
             lesson_instance = [{'name':instance.name, 'course_id': instance.course_id} for instance in lesson_query]
             print(lesson_instance)
             

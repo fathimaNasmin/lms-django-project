@@ -2,7 +2,7 @@
 from . import models as lms_main_model
 from user import models as user_model
 from student.models import Order
-from instructor.models import Category,Level
+from instructor.models import Category,Level,Requirement,WhatYouWillLearn,Lesson
 
 from django.db import models
 from PIL import Image
@@ -13,15 +13,6 @@ from django.core.validators import FileExtensionValidator
 
 from .utils import slugify_course_instance_title, calculate_video_duration
 
-
-
-# class Level(models.Model):
-#     """Level of each course"""
-#     name_of_level = models.CharField(
-#         max_length=30, null=True, blank=True, default=None)
-
-#     def __str__(self):
-#         return f"Level {self.name_of_level}"
 
 
 class Course(models.Model):
@@ -99,43 +90,43 @@ def course_slug_post_save(sender, instance, created, *args, **kwargs):
 post_save.connect(course_slug_post_save, sender=Course)
 
 
-class Requirement(models.Model):
-    """requirement of each course"""
-    requirement_points = models.CharField(
-        max_length=500, default="")
+# class Requirement(models.Model):
+#     """requirement of each course"""
+#     requirement_points = models.CharField(
+#         max_length=500, default="")
 
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        lms_main_model.Course, on_delete=models.CASCADE)
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         lms_main_model.Course, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Requirement {self.requirement_points}"
-
-
-class WhatYouWillLearn(models.Model):
-    """what you'll learn of each course"""
-    points = models.CharField(
-        max_length=500, default="no points")
-
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        lms_main_model.Course, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"What you'll Learn {self.points}"
+#     def __str__(self):
+#         return f"Requirement {self.requirement_points}"
 
 
-class Lesson(models.Model):
-    """lesson for each course"""
-    name = models.CharField(
-        max_length=200)
+# class WhatYouWillLearn(models.Model):
+#     """what you'll learn of each course"""
+#     points = models.CharField(
+#         max_length=500, default="no points")
 
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        lms_main_model.Course, on_delete=models.CASCADE)
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         lms_main_model.Course, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Lesson - {self.name} - {self.course.title}"
+#     def __str__(self):
+#         return f"What you'll Learn {self.points}"
+
+
+# class Lesson(models.Model):
+#     """lesson for each course"""
+#     name = models.CharField(
+#         max_length=200)
+
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         lms_main_model.Course, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f"Lesson - {self.name} - {self.course.title}"
 
 
 class Video(models.Model):
@@ -151,7 +142,7 @@ class Video(models.Model):
     course = models.ForeignKey(
         lms_main_model.Course, on_delete=models.CASCADE)
     lesson = models.ForeignKey(
-        lms_main_model.Lesson, on_delete=models.CASCADE)
+        Lesson, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Video - {self.course.title}-{self.lesson.name}:-{self.title}"
