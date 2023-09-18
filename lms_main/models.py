@@ -2,7 +2,7 @@
 from . import models as lms_main_model
 from user import models as user_model
 from student.models import Order
-from instructor.models import Category
+from instructor.models import Category,Level
 
 from django.db import models
 from PIL import Image
@@ -14,47 +14,14 @@ from django.core.validators import FileExtensionValidator
 from .utils import slugify_course_instance_title, calculate_video_duration
 
 
-# class Category(models.Model):
-#     """Model to store category of course"""
-#     name = models.CharField(max_length=80)
-#     icon = models.ImageField(null=True, blank=True,
-#                              upload_to='icons/category/')
-#     slug = models.SlugField(unique=True, null=True,
-#                             blank=True, max_length=300)
+
+# class Level(models.Model):
+#     """Level of each course"""
+#     name_of_level = models.CharField(
+#         max_length=30, null=True, blank=True, default=None)
 
 #     def __str__(self):
-#         return f"Category {self.name}"
-
-#     def save(self, *args, **kwargs):
-#         super().save(*args, **kwargs)
-
-#         if self.icon:
-#             img = Image.open(self.icon.path)
-#             width, height = img.size
-
-#             desired_width = 300  # Your desired width
-#             desired_height = 300  # Your desired height
-
-#             if width > desired_width or height > desired_height:
-#                 img.thumbnail((desired_width, desired_height))
-#                 img.save(self.icon.path)
-#                 self.icon_width = img.width
-#                 self.icon_height = img.height
-#                 self.save()
-
-#         # slugify the title of category
-#         if self.slug is None:
-#             self.slug = slugify(f"category{self.name}{self.id}")
-#             self.save()
-
-
-class Level(models.Model):
-    """Level of each course"""
-    name_of_level = models.CharField(
-        max_length=30, null=True, blank=True, default=None)
-
-    def __str__(self):
-        return f"Level {self.name_of_level}"
+#         return f"Level {self.name_of_level}"
 
 
 class Course(models.Model):
@@ -80,7 +47,7 @@ class Course(models.Model):
     author = models.ForeignKey(user_model.Instructor, on_delete=models.CASCADE)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE)
-    level = models.ForeignKey(lms_main_model.Level, on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Course {self.title}"

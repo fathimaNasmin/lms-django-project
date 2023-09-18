@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from . import models
 from student.models import SaveForLater, Cart, Order, OrderItems
-from instructor.models import Category
+from instructor.models import Category,Level
 
 
 # Register your models here.
