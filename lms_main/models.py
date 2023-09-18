@@ -2,6 +2,7 @@
 from . import models as lms_main_model
 from user import models as user_model
 from student.models import Order
+from instructor.models import Category
 
 from django.db import models
 from PIL import Image
@@ -13,38 +14,38 @@ from django.core.validators import FileExtensionValidator
 from .utils import slugify_course_instance_title, calculate_video_duration
 
 
-class Category(models.Model):
-    """Model to store category of course"""
-    name = models.CharField(max_length=80)
-    icon = models.ImageField(null=True, blank=True,
-                             upload_to='icons/category/')
-    slug = models.SlugField(unique=True, null=True,
-                            blank=True, max_length=300)
+# class Category(models.Model):
+#     """Model to store category of course"""
+#     name = models.CharField(max_length=80)
+#     icon = models.ImageField(null=True, blank=True,
+#                              upload_to='icons/category/')
+#     slug = models.SlugField(unique=True, null=True,
+#                             blank=True, max_length=300)
 
-    def __str__(self):
-        return f"Category {self.name}"
+#     def __str__(self):
+#         return f"Category {self.name}"
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         super().save(*args, **kwargs)
 
-        if self.icon:
-            img = Image.open(self.icon.path)
-            width, height = img.size
+#         if self.icon:
+#             img = Image.open(self.icon.path)
+#             width, height = img.size
 
-            desired_width = 300  # Your desired width
-            desired_height = 300  # Your desired height
+#             desired_width = 300  # Your desired width
+#             desired_height = 300  # Your desired height
 
-            if width > desired_width or height > desired_height:
-                img.thumbnail((desired_width, desired_height))
-                img.save(self.icon.path)
-                self.icon_width = img.width
-                self.icon_height = img.height
-                self.save()
+#             if width > desired_width or height > desired_height:
+#                 img.thumbnail((desired_width, desired_height))
+#                 img.save(self.icon.path)
+#                 self.icon_width = img.width
+#                 self.icon_height = img.height
+#                 self.save()
 
-        # slugify the title of category
-        if self.slug is None:
-            self.slug = slugify(f"category{self.name}{self.id}")
-            self.save()
+#         # slugify the title of category
+#         if self.slug is None:
+#             self.slug = slugify(f"category{self.name}{self.id}")
+#             self.save()
 
 
 class Level(models.Model):
@@ -78,7 +79,7 @@ class Course(models.Model):
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     author = models.ForeignKey(user_model.Instructor, on_delete=models.CASCADE)
     category = models.ForeignKey(
-        lms_main_model.Category, on_delete=models.CASCADE)
+        Category, on_delete=models.CASCADE)
     level = models.ForeignKey(lms_main_model.Level, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -201,45 +202,6 @@ class Video(models.Model):
         super(Video, self).save()
 
 
-# Order model to store details of order
-
-
-# class Order(models.Model):
-#     """model to store details of order"""
-#     order_no = models.CharField(max_length=200, default=0, unique=True)
-#     total_price = models.IntegerField(null=True, default=0)
-#     paid_status = models.BooleanField(default=False)
-#     order_date = models.DateTimeField(auto_now_add=True)
-#     pdf_receipt = models.FileField(
-#         upload_to='receipts/', null=True, blank=True)
-#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
-#     student = models.ForeignKey(
-#         user_model.Student, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return f"Order No:{self.order_no}"
-
-# OrderItems model to store items in the order
-
-
-# class OrderItems(models.Model):
-#     """model for storing items in the order"""
-
-#     item_price = models.IntegerField(null=True, default=0)
-#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
-#     course = models.ForeignKey(
-#         Course, on_delete=models.CASCADE)
-#     order = models.ForeignKey(
-#         Order, on_delete=models.CASCADE)
-#     student = models.ForeignKey(
-#         user_model.Student, on_delete=models.CASCADE, default=2)
-
-#     def __str__(self):
-#         return f"Order Item by {self.order.student}-{self.course} in the {self.order}"
-
-#     class Meta:
-#         # Ensure that each combination of course and student is unique
-#         unique_together = ('course', 'order', 'student')
 
 
 # =================QUIZ MODELS================================

@@ -16,7 +16,8 @@ import random
 # import:Models
 from . import models
 from user import models as user_model
-from user import models as student_model
+from student import models as student_model
+from instructor import models as instructor_models
 
 from lms_main.templatetags import course_tags
 from .utils import receipt_render_to_pdf, generate_order_number
@@ -49,9 +50,9 @@ def search(request):
 def category_detail(request, slug):
     """displays all the courses under the category"""
     print(slug)
-    category_obj = models.Category.objects.filter(slug=slug).first()
+    category_obj = instructor_models.Category.objects.filter(slug=slug).first()
     print(category_obj)
-    categories = models.Category.objects.all()
+    categories = instructor_models.Category.objects.all()
     category_courses = models.Course.objects.filter(
         status='PUBLISH', category_id=category_obj.id).all()
 
@@ -71,7 +72,7 @@ def category_detail(request, slug):
 
 def course_lists(request):
     """displays the course lists"""
-    categories = models.Category.objects.all()
+    categories = instructor_models.Category.objects.all()
     all_courses = models.Course.objects.filter(status='PUBLISH').all()
     context = {
         'categories': categories,

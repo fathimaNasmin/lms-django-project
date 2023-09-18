@@ -1,5 +1,6 @@
-from lms_main.models import Course, Category
+from lms_main.models import Course
 from student.models import Cart
+from instructor.models import Category
 from django.contrib.auth.decorators import login_required
 
 def common_context(request):

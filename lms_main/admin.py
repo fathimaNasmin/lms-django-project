@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from . import models
 from student.models import SaveForLater, Cart, Order, OrderItems
+from instructor.models import Category
 
 
 # Register your models here.
@@ -20,7 +21,7 @@ class CourseAdmin(admin.ModelAdmin):
                )
 
 
-admin.site.register(models.Category)
+admin.site.register(Category)
 admin.site.register(models.Course, CourseAdmin)
 admin.site.register(models.Level)
 admin.site.register(models.Lesson)

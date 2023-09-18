@@ -2,7 +2,8 @@ from django.test import TestCase
 from lms_main.forms import AddCourseForm
 
 from user.models import User,Instructor,Student
-from lms_main.models import Course,Level,Category
+from lms_main.models import Course,Level
+from instructor.models import Category
 
 from datetime import datetime
 

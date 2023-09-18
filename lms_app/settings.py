@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "user",
     "lms_main",
     "student",
+    "instructor",
     'django_rename_app',
 ]
 
