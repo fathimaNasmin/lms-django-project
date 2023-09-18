@@ -2,7 +2,7 @@ from django.contrib import admin
 
 
 from . import models
-from student.models import SaveForLater, Cart, Order
+from student.models import SaveForLater, Cart, Order, OrderItems
 
 
 # Register your models here.
@@ -30,4 +30,4 @@ admin.site.register(models.WhatYouWillLearn)
 admin.site.register(SaveForLater)
 admin.site.register(Cart)
 admin.site.register(Order)
-admin.site.register(models.OrderItems)
+admin.site.register(OrderItems)

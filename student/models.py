@@ -65,3 +65,22 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order No:{self.order_no}"
+
+
+class OrderItems(models.Model):
+    """model for storing items in the order"""
+
+    item_price = models.IntegerField(null=True, default=0)
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        "lms_main.Course", on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, default=2)
+
+    def __str__(self):
+        return f"Order Item by {self.order.student}-{self.course} in the {self.order}"
+
+    class Meta:
+        unique_together = ('course', 'order', 'student')
