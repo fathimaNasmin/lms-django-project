@@ -35,3 +35,18 @@ class SaveForLater(models.Model):
 
     class Meta:
         unique_together = ('course', 'student')
+
+
+class Cart(models.Model):
+    """model to store the courses added to cart"""
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Cart {self.course.title}"
+
+    class Meta:
+        unique_together = ('course', 'student')

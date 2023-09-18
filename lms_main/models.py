@@ -198,25 +198,8 @@ class Video(models.Model):
         super(Video, self).save()
 
 
-class Cart(models.Model):
-    """model to store the courses added to cart"""
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE)
-    student = models.ForeignKey(
-        user_model.Student, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Cart {self.course.title}"
-
-    class Meta:
-        # Ensure that each combination of course and student is unique
-        unique_together = ('course', 'student')
-
-
-# class SaveForLater(models.Model):
-#     """model for save for later feature"""
-#     saved_at = models.DateTimeField(auto_now_add=True)
+# class Cart(models.Model):
+#     """model to store the courses added to cart"""
 #     # ========FOREIGN KEY AND RELATIONSHIPS=======#
 #     course = models.ForeignKey(
 #         Course, on_delete=models.CASCADE)
@@ -224,10 +207,11 @@ class Cart(models.Model):
 #         user_model.Student, on_delete=models.CASCADE)
 
 #     def __str__(self):
-#         return f"{self.course.title}"
+#         return f"Cart {self.course.title}"
 
 #     class Meta:
 #         unique_together = ('course', 'student')
+
 
 # Order model to store details of order
 

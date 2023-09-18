@@ -114,7 +114,7 @@ def single_course(request, slug):
     if user.is_authenticated:
         user_enrolled_course = student_model.EnrolledCourses.objects.filter(
             course=single_course, student=user.student).exists()
-        course_exists_in_cart = models.Cart.objects.filter(
+        course_exists_in_cart = student_model.Cart.objects.filter(
             course=single_course, student=user.student)
         # print("user_enrolled_course:", user_enrolled_course)
         # print("course_exists_in_cart:", course_exists_in_cart)
@@ -158,13 +158,13 @@ def add_to_cart(request, slug):
     course = models.Course.objects.filter(slug=slug).first()
     print(f"from add to cart page:{course}", sep="\n")
     data = {}
-    course_exists_in_cart = models.Cart.objects.filter(
+    course_exists_in_cart = student_model.Cart.objects.filter(
         course=course, student=user.student).exists()
 # ifuser is authenticated
     if not course_exists_in_cart:
         if request.method == 'POST' and request.is_ajax():
             try:
-                added_to_cart = models.Cart(
+                added_to_cart = student_model.Cart(
                     course=course, student=request.user.student
                 )
                 added_to_cart.save()
@@ -194,7 +194,7 @@ def shopping_cart(request):
     current_user_items_list = []
 
     user = request.user
-    user_cart_items = models.Cart.objects.filter(student=user.student)
+    user_cart_items = student_model.Cart.objects.filter(student=user.student)
 
     for item in user_cart_items:
         current_user_items_dict = {}
@@ -246,7 +246,7 @@ def save_for_later(request):
         try:
             add_to_save_for_later = student_model.SaveForLater(
                 course=course, student=user.student)
-            remove_from_cart = models.Cart.objects.filter(
+            remove_from_cart = student_model.Cart.objects.filter(
                 course=course, student=user.student)
         except Exception as e:
             print(f"Error in try block:{e}")
@@ -274,7 +274,7 @@ def save_for_later_to_cart(request):
     course = models.Course.objects.filter(id=course_id).first()
     data = {}
 
-    course_exists_in_cart = models.Cart.objects.filter(
+    course_exists_in_cart = student_model.Cart.objects.filter(
         course=course, student=user.student).exists()
     print("course exists", course_exists_in_cart)
 
@@ -284,7 +284,7 @@ def save_for_later_to_cart(request):
                 remove_from_save_for_later = student_model.SaveForLater.objects.filter(
                     course=course, student=user.student).delete()
 
-                add_to_cart = models.Cart(
+                add_to_cart = student_model.Cart(
                     course=course, student=user.student
                 )
                 add_to_cart.save()
@@ -318,7 +318,7 @@ def remove_from_cart(request):
 
     if request.method == 'POST' and request.is_ajax():
         try:
-            remove_course_from_cart = models.Cart.objects.filter(
+            remove_course_from_cart = student_model.Cart.objects.filter(
                 course=course, student=user.student).delete()
 
             data['success'] = True
@@ -414,7 +414,7 @@ def payment_success_view(request):
                     student=order.student
                 )
                 # Delete Order Items from the Cart model
-                delete_from_cart = models.Cart.objects.filter(
+                delete_from_cart = student_model.Cart.objects.filter(
                     course=order_items.course,
                     student=order.student
                 ).delete()
