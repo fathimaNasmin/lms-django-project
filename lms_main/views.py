@@ -16,6 +16,7 @@ import random
 # import:Models
 from . import models
 from user import models as user_model
+from user import models as student_model
 
 from lms_main.templatetags import course_tags
 from .utils import receipt_render_to_pdf, generate_order_number
@@ -87,7 +88,7 @@ def single_course(request, slug):
     single_course = models.Course.objects.filter(slug=slug).first()
     videos = models.Video.objects.filter(course__slug=slug)
     lessons = models.Lesson.objects.filter(course__slug=slug)
-    no_of_students_enrolled = user_model.EnrolledCourses.objects.filter(
+    no_of_students_enrolled = student_model.EnrolledCourses.objects.filter(
         course__slug=slug).all().count()
     for video in videos:
         print(video.time_duration)
@@ -111,7 +112,7 @@ def single_course(request, slug):
         'no_of_students_enrolled': no_of_students_enrolled,
     }
     if user.is_authenticated:
-        user_enrolled_course = user_model.EnrolledCourses.objects.filter(
+        user_enrolled_course = student_model.EnrolledCourses.objects.filter(
             course=single_course, student=user.student).exists()
         course_exists_in_cart = models.Cart.objects.filter(
             course=single_course, student=user.student)
@@ -136,7 +137,7 @@ def enroll_course(request, slug):
     if request.method == 'POST' and request.is_ajax():
 
         try:
-            student_course_enroll = user_model.EnrolledCourses(
+            student_course_enroll = student_model.EnrolledCourses(
                 course=course, student=request.user.student
             )
             student_course_enroll.save()
@@ -407,7 +408,7 @@ def payment_success_view(request):
                 )
                 # generate the recipt of order and save to db
                 # AddtoEnrolled Course model
-                user_enroll_course = user_model.EnrolledCourses.objects.create(
+                user_enroll_course = student_model.EnrolledCourses.objects.create(
                     course=order_items.course,
                     student=order.student
                 )

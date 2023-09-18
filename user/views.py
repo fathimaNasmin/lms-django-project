@@ -9,7 +9,8 @@ from . import forms as user_forms
 from lms_main import forms as lms_main_forms
 import json
 from django.contrib import messages
-from .models import Student, Instructor, User, EnrolledCourses, PlayingVideo
+from .models import Student, Instructor, User, PlayingVideo
+from student.models import EnrolledCourses
 from lms_main.models import Course, Video, Lesson
 from .custom_auth_backend import EmailBackend
 

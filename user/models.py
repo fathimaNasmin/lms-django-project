@@ -90,20 +90,20 @@ class Instructor(models.Model):
             return "/static/images/profile/user.png"
 
 
-class EnrolledCourses(models.Model):
-    """model for enrolled courses by students"""
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        "lms_main.Course", on_delete=models.CASCADE)
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE)
+# class EnrolledCourses(models.Model):
+#     """model for enrolled courses by students"""
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         "lms_main.Course", on_delete=models.CASCADE)
+#     student = models.ForeignKey(
+#         Student, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Course Enrolled {self.course.title}-{self.student}"
+#     def __str__(self):
+#         return f"Course Enrolled {self.course.title}-{self.student}"
 
-    class Meta:
-        # Ensure that each combination of course and student is unique
-        unique_together = ('course', 'student')
+#     class Meta:
+#         # Ensure that each combination of course and student is unique
+#         unique_together = ('course', 'student')
 
 
 class PlayingVideo(models.Model):
