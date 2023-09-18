@@ -11,8 +11,8 @@ import json
 from django.contrib import messages
 from .models import Student, Instructor, User, PlayingVideo
 from student.models import EnrolledCourses
-from lms_main.models import Course, Video
-from instructor.models import Lesson
+from lms_main.models import Video
+from instructor.models import Lesson, Course
 from .custom_auth_backend import EmailBackend
 
 from lms_app import settings

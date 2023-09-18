@@ -8,7 +8,7 @@ class EnrolledCourses(models.Model):
     """model for enrolled courses by students"""
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
-        "lms_main.Course", on_delete=models.CASCADE)
+        "instructor.Course", on_delete=models.CASCADE)
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE)
 
@@ -25,7 +25,7 @@ class SaveForLater(models.Model):
     saved_at = models.DateTimeField(auto_now_add=True)
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
-        "lms_main.Course", on_delete=models.CASCADE)
+        "instructor.Course", on_delete=models.CASCADE)
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE)
 
@@ -40,7 +40,7 @@ class Cart(models.Model):
     """model to store the courses added to cart"""
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
-        "lms_main.Course", on_delete=models.CASCADE)
+        "instructor.Course", on_delete=models.CASCADE)
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE)
 
@@ -73,7 +73,7 @@ class OrderItems(models.Model):
     item_price = models.IntegerField(null=True, default=0)
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     course = models.ForeignKey(
-        "lms_main.Course", on_delete=models.CASCADE)
+        "instructor.Course", on_delete=models.CASCADE)
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE)
     student = models.ForeignKey(
