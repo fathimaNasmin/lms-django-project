@@ -234,7 +234,8 @@ def shopping_cart(request):
 def save_for_later(request):
     """View for to add course to 'save forlater'"""
     user = request.user
-    user_saved = models.SaveForLater.objects.filter(student=user.student)
+    user_saved = student_model.SaveForLater.objects.filter(
+        student=user.student)
     context = {
         'user_saved_courses': user_saved
     }
@@ -243,7 +244,7 @@ def save_for_later(request):
     if request.method == 'POST' and request.is_ajax():
         course = models.Course.objects.get(id=request.POST['course_id'])
         try:
-            add_to_save_for_later = models.SaveForLater(
+            add_to_save_for_later = student_model.SaveForLater(
                 course=course, student=user.student)
             remove_from_cart = models.Cart.objects.filter(
                 course=course, student=user.student)
@@ -280,7 +281,7 @@ def save_for_later_to_cart(request):
     if not course_exists_in_cart:
         if request.method == 'POST' and request.is_ajax():
             try:
-                remove_from_save_for_later = models.SaveForLater.objects.filter(
+                remove_from_save_for_later = student_model.SaveForLater.objects.filter(
                     course=course, student=user.student).delete()
 
                 add_to_cart = models.Cart(

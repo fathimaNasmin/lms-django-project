@@ -214,21 +214,20 @@ class Cart(models.Model):
         unique_together = ('course', 'student')
 
 
-class SaveForLater(models.Model):
-    """model for save for later feature"""
-    saved_at = models.DateTimeField(auto_now_add=True)
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE)
-    student = models.ForeignKey(
-        user_model.Student, on_delete=models.CASCADE)
+# class SaveForLater(models.Model):
+#     """model for save for later feature"""
+#     saved_at = models.DateTimeField(auto_now_add=True)
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         Course, on_delete=models.CASCADE)
+#     student = models.ForeignKey(
+#         user_model.Student, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.course.title}"
+#     def __str__(self):
+#         return f"{self.course.title}"
 
-    class Meta:
-        # Ensure that each combination of course and student is unique
-        unique_together = ('course', 'student')
+#     class Meta:
+#         unique_together = ('course', 'student')
 
 # Order model to store details of order
 
