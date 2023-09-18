@@ -387,7 +387,7 @@ def payment_success_view(request):
         # create order items
         try:
             # create order
-            order = models.Order.objects.create(
+            order = student_model.Order.objects.create(
                 student=user.student,
                 total_price=request.session['amount_to_pay'],
                 paid_status=True,
@@ -401,7 +401,7 @@ def payment_success_view(request):
                                         item['price'] * item['discount'] / 100)
                 # print(item_price)
 
-                order_items = models.OrderItems.objects.create(
+                order_items = student_model.OrderItems.objects.create(
                     course=course,
                     item_price=item_price,
                     order=order,
@@ -419,7 +419,7 @@ def payment_success_view(request):
                     student=order.student
                 ).delete()
             # generate receipt in pdf
-            order_items = models.OrderItems.objects.filter(
+            order_items = student_model.OrderItems.objects.filter(
                 order__id=order.id)
             data = {'order': order, 'order_items': order_items}
             pdf_receipt = receipt_render_to_pdf(
@@ -452,7 +452,7 @@ def payment_failure_view(request):
 # @login_required
 # def order_receipt_view(request, order_no):
 #     print(order_no)
-#     pdf_doc = models.Order.objects.filter(
+#     pdf_doc = student_model.Order.objects.filter(
 #         student=request.user.student, order_no=order_no)
 #     print(pdf_doc)
 #     response = HttpResponse(pdf_doc.pdf_receipt,

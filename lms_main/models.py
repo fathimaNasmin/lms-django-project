@@ -1,5 +1,8 @@
+# importing models 
 from . import models as lms_main_model
 from user import models as user_model
+from student.models import Order
+
 from django.db import models
 from PIL import Image
 from django.utils.text import slugify
@@ -198,38 +201,23 @@ class Video(models.Model):
         super(Video, self).save()
 
 
-# class Cart(models.Model):
-#     """model to store the courses added to cart"""
+# Order model to store details of order
+
+
+# class Order(models.Model):
+#     """model to store details of order"""
+#     order_no = models.CharField(max_length=200, default=0, unique=True)
+#     total_price = models.IntegerField(null=True, default=0)
+#     paid_status = models.BooleanField(default=False)
+#     order_date = models.DateTimeField(auto_now_add=True)
+#     pdf_receipt = models.FileField(
+#         upload_to='receipts/', null=True, blank=True)
 #     # ========FOREIGN KEY AND RELATIONSHIPS=======#
-#     course = models.ForeignKey(
-#         Course, on_delete=models.CASCADE)
 #     student = models.ForeignKey(
 #         user_model.Student, on_delete=models.CASCADE)
 
 #     def __str__(self):
-#         return f"Cart {self.course.title}"
-
-#     class Meta:
-#         unique_together = ('course', 'student')
-
-
-# Order model to store details of order
-
-
-class Order(models.Model):
-    """model to store details of order"""
-    order_no = models.CharField(max_length=200, default=0, unique=True)
-    total_price = models.IntegerField(null=True, default=0)
-    paid_status = models.BooleanField(default=False)
-    order_date = models.DateTimeField(auto_now_add=True)
-    pdf_receipt = models.FileField(
-        upload_to='receipts/', null=True, blank=True)
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    student = models.ForeignKey(
-        user_model.Student, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Order No:{self.order_no}"
+#         return f"Order No:{self.order_no}"
 
 # OrderItems model to store items in the order
 
