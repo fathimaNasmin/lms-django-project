@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from . import models
 from student.models import SaveForLater, Cart, Order, OrderItems
-from instructor.models import Category,Level,Requirement,WhatYouWillLearn,Lesson,Course
+from instructor.models import Category,Level,Requirement,WhatYouWillLearn,Lesson,Course,Video
 
 
 # Register your models here.
@@ -25,7 +25,7 @@ admin.site.register(Category)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(models.Level)
 admin.site.register(Lesson)
-admin.site.register(models.Video)
+admin.site.register(Video)
 admin.site.register(Requirement)
 admin.site.register(WhatYouWillLearn)
 admin.site.register(SaveForLater)

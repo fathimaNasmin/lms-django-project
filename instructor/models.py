@@ -5,6 +5,9 @@ from PIL import Image
 
 from django.db.models.signals import pre_save, post_save
 
+from lms_main.utils import calculate_video_duration
+
+from django.core.validators import FileExtensionValidator
 
 
 
@@ -157,3 +160,34 @@ def course_slug_post_save(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(course_slug_post_save, sender=Course)
+
+
+class Video(models.Model):
+    """videos of each courses"""
+    title = models.CharField(
+        max_length=100)
+    video_file = models.FileField(upload_to='videos/', null=True, blank=True,
+                                  validators=[FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
+    time_duration = models.FloatField(null=True, blank=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
+
+    # ========FOREIGN KEY AND RELATIONSHIPS=======#
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        Lesson, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Video - {self.course.title}-{self.lesson.name}:-{self.title}"
+
+    def save(self, *args, **kwargs):
+        # super().save(*args, **kwargs)
+        # duration is saved in 'seconds'
+        if self.video_file.path:
+            duration = calculate_video_duration(self.video_file.path)
+            print(duration)
+
+        if duration:
+            self.time_duration = duration
+
+        super(Video, self).save()

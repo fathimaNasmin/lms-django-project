@@ -10,7 +10,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from PIL import Image
 
-from instructor.models import Lesson,Course
+from instructor.models import Lesson,Course,Video
 
 class User(AbstractUser):
     username = models.CharField(_("Username"), max_length=150)
@@ -102,5 +102,5 @@ class PlayingVideo(models.Model):
         Student, on_delete=models.CASCADE)
     lesson = models.ForeignKey(
         Lesson, on_delete=models.CASCADE)
-    video = models.ForeignKey("lms_main.Video", on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
     

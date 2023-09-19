@@ -87,7 +87,7 @@ def course_lists(request):
 def single_course(request, slug):
     """view for single course in detail"""
     single_course = models.Course.objects.filter(slug=slug).first()
-    videos = models.Video.objects.filter(course__slug=slug)
+    videos = instructor_models.Video.objects.filter(course__slug=slug)
     lessons = instructor_models.Lesson.objects.filter(course__slug=slug)
     no_of_students_enrolled = student_model.EnrolledCourses.objects.filter(
         course__slug=slug).all().count()

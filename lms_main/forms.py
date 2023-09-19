@@ -3,9 +3,9 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-from .models import Video, Question, QuizOption
+from .models import Question, QuizOption
 
-from instructor.models import Category,Requirement, WhatYouWillLearn, Lesson, Course
+from instructor.models import Category,Requirement, WhatYouWillLearn, Lesson, Course,Video
 
 
 # Custom form validation by inheritinf BaseInlineFormSet

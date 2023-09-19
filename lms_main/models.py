@@ -85,35 +85,35 @@ from .utils import slugify_course_instance_title, calculate_video_duration
 
 
 
-class Video(models.Model):
-    """videos of each courses"""
-    title = models.CharField(
-        max_length=100)
-    video_file = models.FileField(upload_to='videos/', null=True, blank=True,
-                                  validators=[FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
-    time_duration = models.FloatField(null=True, blank=True)
-    upload_date = models.DateTimeField(auto_now_add=True)
+# class Video(models.Model):
+#     """videos of each courses"""
+#     title = models.CharField(
+#         max_length=100)
+#     video_file = models.FileField(upload_to='videos/', null=True, blank=True,
+#                                   validators=[FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
+#     time_duration = models.FloatField(null=True, blank=True)
+#     upload_date = models.DateTimeField(auto_now_add=True)
 
-    # ========FOREIGN KEY AND RELATIONSHIPS=======#
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE)
+#     # ========FOREIGN KEY AND RELATIONSHIPS=======#
+#     course = models.ForeignKey(
+#         Course, on_delete=models.CASCADE)
+#     lesson = models.ForeignKey(
+#         Lesson, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Video - {self.course.title}-{self.lesson.name}:-{self.title}"
+#     def __str__(self):
+#         return f"Video - {self.course.title}-{self.lesson.name}:-{self.title}"
 
-    def save(self, *args, **kwargs):
-        # super().save(*args, **kwargs)
-        # duration is saved in 'seconds'
-        if self.video_file.path:
-            duration = calculate_video_duration(self.video_file.path)
-            print(duration)
+#     def save(self, *args, **kwargs):
+#         # super().save(*args, **kwargs)
+#         # duration is saved in 'seconds'
+#         if self.video_file.path:
+#             duration = calculate_video_duration(self.video_file.path)
+#             print(duration)
 
-        if duration:
-            self.time_duration = duration
+#         if duration:
+#             self.time_duration = duration
 
-        super(Video, self).save()
+#         super(Video, self).save()
 
 
 
