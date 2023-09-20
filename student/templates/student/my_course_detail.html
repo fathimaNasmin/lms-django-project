@@ -319,7 +319,7 @@
 
             $.ajax({
                 type:"POST",
-                url: "{% url 'user:track-video' %}",
+                url: "{% url 'student:track-video' %}",
                 contentType: 'application/json',
                 headers: { 'X-CSRFToken': csrftoken },
                 data: JSON.stringify({

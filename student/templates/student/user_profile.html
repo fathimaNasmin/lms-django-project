@@ -26,7 +26,7 @@
         </div>
 
         <div class="w-75 mx-auto">
-            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST" enctype="multipart/form-data">
+            <form id="update-form-id" action="{% url 'student:update-profile' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ u_form|crispy }}
                 {{ p_form|crispy }}
@@ -64,7 +64,7 @@
         console.log(formData)
 
         $.ajax({
-            url: "{% url 'user:update-profile' %}",
+            url: "{% url 'student:update-profile' %}",
             type: "POST",
             header: { 'X-CSRFToken': '{% csrf_token %}' },
             data: formData,
@@ -86,7 +86,7 @@
                     update_form_id.each(function () {
                         this.reset();
                     });
-                    window.location.href = "{% url 'user:dashboard' %}";
+                    window.location.href = "{% url 'student:dashboard' %}";
                 }
                 else {
                     var u_form_errors = response['u_form_errors']

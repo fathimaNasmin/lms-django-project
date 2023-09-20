@@ -65,7 +65,7 @@ class DashboardPageTest(TestCase):
 
     def test_login_url_available_by_name(self):  
         """Test Function to check url available by name"""
-        response = self.client.get(reverse("user:dashboard"))
+        response = self.client.get(reverse("student:dashboard"))
         self.assertEqual(response.status_code, 302)
 
 
