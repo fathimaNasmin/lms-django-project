@@ -11,6 +11,8 @@ from django.core.validators import FileExtensionValidator
 
 
 
+
+
 class Category(models.Model):
     """Model to store category of course"""
     name = models.CharField(max_length=80)
@@ -216,3 +218,8 @@ class QuizOption(models.Model):
 
     def __str__(self):
         return f"Options-{self.question_id.question_text}"
+
+
+# =================VIDEO RELATED MODEL =====================
+
+

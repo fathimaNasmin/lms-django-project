@@ -91,16 +91,16 @@ class Instructor(models.Model):
             return "/static/images/profile/user.png"
 
 
-class PlayingVideo(models.Model):
-    """Keep track of playing video"""
-    pause_time = models.FloatField(null=True,blank=True)
-    updated_time = models.DateTimeField(auto_now_add=True)
-    # ======FOREIGN KEY AND RELATIONSHIPS=======
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE)
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+# class PlayingVideo(models.Model):
+#     """Keep track of playing video"""
+#     pause_time = models.FloatField(null=True,blank=True)
+#     updated_time = models.DateTimeField(auto_now_add=True)
+#     # ======FOREIGN KEY AND RELATIONSHIPS=======
+#     course = models.ForeignKey(
+#         Course, on_delete=models.CASCADE)
+#     student = models.ForeignKey(
+#         Student, on_delete=models.CASCADE)
+#     lesson = models.ForeignKey(
+#         Lesson, on_delete=models.CASCADE)
+#     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     

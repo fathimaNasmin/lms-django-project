@@ -84,3 +84,17 @@ class OrderItems(models.Model):
 
     class Meta:
         unique_together = ('course', 'order', 'student')
+
+
+class PlayingVideo(models.Model):
+    """Keep track of playing video"""
+    pause_time = models.FloatField(null=True, blank=True)
+    updated_time = models.DateTimeField(auto_now_add=True)
+    # ======FOREIGN KEY AND RELATIONSHIPS=======
+    course = models.ForeignKey(
+        "instructor.Course", on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        "instructor.Lesson", on_delete=models.CASCADE)
+    video = models.ForeignKey("instructor.Video", on_delete=models.CASCADE)
