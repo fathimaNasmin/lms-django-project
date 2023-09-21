@@ -166,7 +166,7 @@
                                                             <div class="col-8">
                                                                 <div class="shopping-cont">
                                     
-                                                                    <a href="{% url 'lms_main:instructor-my-course' course.slug %}" class="text-decoration-none">
+                                                                    <a href="{% url 'instructor:instructor-my-course' course.slug %}" class="text-decoration-none">
                                                                         <h4>{{ course.title }}</h4>
                                                                     </a>
                                     
@@ -495,7 +495,7 @@
             console.log(formData)
 
             $.ajax({
-                url: "{% url 'lms_main:instructor-dashboard' %}",
+                url: "{% url 'instructor:instructor-dashboard' %}",
                 type: "POST",
                 header: { 'X-CSRFToken': csrftoken },
                 data: formData,
@@ -548,7 +548,7 @@
                 // console.log(formData)
 
                 $.ajax({
-                    url: "{% url 'lms_main:instructor-dashboard' %}",
+                    url: "{% url 'instructor:instructor-dashboard' %}",
                     type: "POST",
                     headers: { 'X-CSRFToken': csrftoken },
                     data: formData,
@@ -624,7 +624,7 @@
                 console.log(courseId)
 
                 $.ajax({
-                    url: "{% url 'lms_main:instructor-delete-course' %}",
+                    url: "{% url 'instructor:instructor-delete-course' %}",
                     type: "POST",
                     headers: { 'X-CSRFToken': csrftoken },
                     data: '&course_id=' + courseId,

@@ -24,7 +24,7 @@
         </div>
 
         <div class="w-75 mx-auto">
-            <form id="signup-form-id" action="{% url 'lms_main:instructor-signup' %}" method="POST" novalidate>
+            <form id="signup-form-id" action="{% url 'instructor:instructor-signup' %}" method="POST" novalidate>
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-flex justify-content-center">
@@ -39,7 +39,7 @@
             </div>
             <hr style="height: 12px;">
             <div class="my-2 d-flex justify-content-center">
-                <p>Already have an account? <a href="{% url 'lms_main:instructor-login' %}">Log in</a></p>
+                <p>Already have an account? <a href="{% url 'instructor:instructor-login' %}">Log in</a></p>
             </div>
 
         </div>
@@ -69,7 +69,7 @@
         var signup_form_id = $("#signup-form-id")
 
         $.ajax({
-            url: "{% url 'lms_main:instructor-signup' %}",
+            url: "{% url 'instructor:instructor-signup' %}",
             type: "POST",
             header: { 'X-CSRFToken': '{% csrf_token %}' },
             data: signup_form_id.serialize(),

@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('lms_main.urls')),
     path('user/', include('user.urls')),
     path('student/', include('student.urls')),
-    # path('instructor/', include('instructor.urls')),
+    path('instructor/', include('instructor.urls')),
 
 ]
 

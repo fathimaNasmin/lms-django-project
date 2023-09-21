@@ -27,8 +27,8 @@
                 <div class="col-lg-6">
                     <div class="header-opening-time text-lg-right text-center">
                         
-                        <p>Instructor:&nbsp;<a href="{% url 'lms_main:instructor-signup' %}">SignUp</a>
-                            <span>/&nbsp;</span><a href="{% url 'lms_main:instructor-login' %}">Login</a></p>
+                        <p>Instructor:&nbsp;<a href="{% url 'instructor:instructor-signup' %}">SignUp</a>
+                            <span>/&nbsp;</span><a href="{% url 'instructor:instructor-login' %}">Login</a></p>
                         
                     </div>
                 </div>
@@ -138,10 +138,10 @@
                                         <a href="{% url 'lms_main:home' %}">Home</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{% url 'lms_main:instructor-dashboard' %}">Dashboard</a>
+                                        <a href="{% url 'instructor:instructor-dashboard' %}">Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{% url 'lms_main:instructor-update-profile' %}">Profile</a>
+                                        <a href="{% url 'instructor:instructor-update-profile' %}">Profile</a>
                                     </li>
         
         

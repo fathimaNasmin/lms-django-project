@@ -33,28 +33,5 @@ urlpatterns = [
          lms_main_view.payment_success_view, name='payment-success'),
     path('payment-failure/',
          lms_main_view.payment_failure_view, name='payment-failure'),
-   
-
-    # ==============INSTRUCTOR URLS=====================
-    path('instructor/instructor-signup/', lms_main_view.instructor_signup,
-         name='instructor-signup'),
-    path('instructor/instructor-login/', lms_main_view.instructor_login, name='instructor-login'),
-    path('instructor/instructor-logout/', lms_main_view.instructor_logout,
-         name='instructor-logout'),
-    path('instructor/instructor-dashboard/', lms_main_view.instructor_dashboard,
-         name='instructor-dashboard'),
-    path('instructor/instructor-dashboard/my-course/<slug:slug>/', lms_main_view.instructor_my_course,
-         name='instructor-my-course'),
-    path('instructor/instructor-dashboard/delete-course', lms_main_view.instructor_delete_course,
-         name='instructor-delete-course'),
-    
-    
-    
-     
-    path('instructor-edit-course/', lms_main_view.instructor_edit_course,
-         name='instructor-edit-course'),
-    
-    path('instructor-update-profile/', lms_main_view.update_instructor_profile,
-         name='instructor-update-profile'),
 
 ]

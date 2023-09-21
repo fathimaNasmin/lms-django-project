@@ -306,7 +306,7 @@
 
             // Send lesson id to the django view using ajax
             $.ajax({
-                url:"{% url 'lms_main:instructor-my-course' course.slug %}",
+                url:"{% url 'instructor:instructor-my-course' course.slug %}",
                 type: "POST",
                 headers: { 'X-CSRFToken': csrftoken },
                 contentType: "application/json",
@@ -342,7 +342,7 @@
             // console.log(formData)
 
             $.ajax({
-                url: "{% url 'lms_main:instructor-my-course' course.slug %}",
+                url: "{% url 'instructor:instructor-my-course' course.slug %}",
                 type: "POST",
                 headers: { 'X-CSRFToken': csrftoken },
                 data: formData,
@@ -413,7 +413,7 @@
             console.log(formData)
 
             $.ajax({
-                url: "{% url 'lms_main:instructor-my-course' course.slug %}",
+                url: "{% url 'instructor:instructor-my-course' course.slug %}",
                 type: "POST",
                 headers: { 'X-CSRFToken': csrftoken },
                 data: formData,

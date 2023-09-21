@@ -32,7 +32,7 @@ class InstructorSignUpViewTestCase(TestCase):
         """tests for signup page view"""
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "user/instructor/instructor_signup.html")
+        self.assertTemplateUsed(response, "instructor/instructor_signup.html")
         self.assertContains(response, "<h4>Signup and start teaching</h4>")
         self.assertNotContains(response, "Not on the page")
 
@@ -89,7 +89,7 @@ class InstructorLoginViewTest(TestCase):
     def tests_login_view_page_GET(self):
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'user/instructor/instructor_login.html')
+        self.assertTemplateUsed(response, 'instructor/instructor_login.html')
 
     
     def test_login_success(self):

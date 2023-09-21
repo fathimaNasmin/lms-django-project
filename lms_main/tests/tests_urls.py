@@ -32,7 +32,7 @@ class InstructorSignUpPageTest(TestCase):
     def test_template_name_correct(self):  
         """Test Function to check template name correct"""
         response = self.client.get(reverse("lms_main:instructor-signup"))
-        self.assertTemplateUsed(response, "user/instructor/instructor_signup.html")
+        self.assertTemplateUsed(response, "instructor/instructor_signup.html")
 
     
     def test_template_content(self):
@@ -58,7 +58,7 @@ class InstructorLoginPageTest(TestCase):
     def test_login_template_name_correct(self):  
         """Test Function to check template name correct"""
         response = self.client.get(reverse("lms_main:instructor-login"))
-        self.assertTemplateUsed(response, "user/instructor/instructor_login.html")
+        self.assertTemplateUsed(response, "instructor/instructor_login.html")
 
     
     def test_template_content(self):
