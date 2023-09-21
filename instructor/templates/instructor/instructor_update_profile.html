@@ -25,7 +25,7 @@
         </div>
 
         <div class="w-75 mx-auto">
-            <form id="update-form-id" action="{% url 'user:update-profile' %}" method="POST"
+            <form id="update-form-id" action="{% url 'instructor:instructor-update-profile' %}" method="POST"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ u_form|crispy }}
@@ -64,7 +64,7 @@
         console.log(formData)
 
         $.ajax({
-            url: "{% url 'user:instructor-update-profile' %}",
+            url: "{% url 'instructor:instructor-update-profile' %}",
             type: "POST",
             header: { 'X-CSRFToken': '{% csrf_token %}' },
             data: formData,

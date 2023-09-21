@@ -59,7 +59,7 @@ def instructor_signup(request):
 
 def instructor_login(request):
     """View for authenticating Instructor"""
-
+    context={}
     if request.method == "POST" and request.is_ajax():
         form = user_forms.InstructorLoginForm(request, data=request.POST)
         data = {}
@@ -96,11 +96,9 @@ def instructor_login(request):
         else:
             data1['form_errors'] = form.errors
             return HttpResponse(json.dumps(data), content_type='application/json')
-    else:
-        form = user_forms.InstructorLoginForm()
-    context = {
-        'form': form,
-    }
+   
+    form = user_forms.InstructorLoginForm()
+    context['form'] =form 
     return render(request, 'instructor/instructor_login.html', context)
 
 

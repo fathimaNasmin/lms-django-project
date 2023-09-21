@@ -7,8 +7,10 @@ app_name = 'instructor'
 urlpatterns = [
     path('instructor-signup/', instructor_view.instructor_signup,
          name='instructor-signup'),
+    
     path('instructor-login/',
          instructor_view.instructor_login, name='instructor-login'),
+    
     path('instructor-logout/', instructor_view.instructor_logout,
          name='instructor-logout'),
     path('instructor-dashboard/', instructor_view.instructor_dashboard,

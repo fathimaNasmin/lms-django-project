@@ -26,7 +26,7 @@
         </div>
 
         <div class="w-75 mx-auto">
-            <form id="add-course-form-id" action="{% url 'student:update-profile' %}" method="POST"
+            <form id="add-course-form-id" action="{% url 'instructor:instructor-update-profile' %}" method="POST"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ course_form|crispy }}
