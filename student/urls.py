@@ -1,7 +1,5 @@
 from django.urls import path
-from . import views as user_view
-from lms_main import views as lms_main_views
-from student import views as student_views
+from . import views as student_views
 
 app_name = 'student'
 

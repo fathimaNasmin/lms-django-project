@@ -165,4 +165,4 @@ def update_student_profile(request):
         'u_form': update_user_info,
         'p_form': update_profile_image
     }
-    return render(request, 'user/user_profile.html', context)
+    return render(request, 'student/user_profile.html', context)
