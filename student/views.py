@@ -53,25 +53,19 @@ def my_course_detail_view(request, slug):
     course_video = Video.objects.filter(course__slug=slug)
     lessons = Lesson.objects.filter(course__slug=slug)
     watched_video = WatchedVideo.objects.filter(course__slug=slug,student=request.user.student)
-    # print("watched_video:",watched_video[0].video.title)
-    for video in watched_video:
-        print(video.video.title)
     
-    try:
-        last_played_video = PlayingVideo.objects.filter(course__slug=slug,student=request.user.student).latest('-updated_time')
-        # print(last_played_video)
-        if not last_played_video:
-            last_played_video = None
-    except Exception as e:
-        print(e)
-    else:
-        context['last_played_video'] = last_played_video
+    last_played_video = PlayingVideo.objects.filter(course__slug=slug,student=request.user.student).latest('updated_time')
+    print(last_played_video.video.video_file.url)
+    if not last_played_video:
+        last_played_video = None
         
     context = {
         'videos': course_video,
         'lessons':lessons,
         'watched_video': watched_video,
+        'last_played_video':last_played_video
     }
+    print(context)
     return render(request,'student/my_course_detail.html', context)
 
 
@@ -132,26 +126,28 @@ def save_watched_video(request):
             video_file=current_video_url).first()
     
 
-        # Create/update Instance in model "PlayingVideo"
-        try:
-            # Define the criteria
-            criteria = {
-                'video': video,
-                'lesson': video.lesson,
-                'course': video.course,
-                'student': request.user.student,
-            }
+        
+        # Check existence
+        watched_video = WatchedVideo.objects.filter(course__slug=slug,video__video_file=current_video_url).exists()
+        # Create Instance in model "Watched Video"
+        if not watched_video:
+            try:
+                # Define the criteria
+                criteria = {
+                    'video': video,
+                    'lesson': video.lesson,
+                    'course': video.course,
+                    'student': request.user.student,
+                }
 
-            # Try to save data to watchedvideo model
-            watched_video = WatchedVideo.objects.create(**criteria)
+                # Try to save data to watchedvideo model
+                watched_video = WatchedVideo.objects.create(**criteria)
 
-        except Exception as e:
-            print("Error Ocuured on saving Watched_Video")
-            print(e)
-        else:
-            print("succesfully saved data")
-            watched_video = serializers.serialize('json', [watched_video, ])
-            print(watched_video)
+            except Exception as e:
+                print("Error Ocuured on saving Watched_Video")
+                print(e)
+            else:
+                print("succesfully saved data")
 
         return HttpResponse(json.dumps(data), content_type='application/json')
     return JsonResponse({'status:200'})

@@ -19,7 +19,7 @@
                 {% if last_played_video %}
                 <video id="videoFrame" preload="preload" width="100%" height="100%" controls muted>
                     <source id="videoSource" src="{{ last_played_video.video.video_file.url }}" type="video/mp4">
-                        </source>
+                    </source>
                 </video>
 
                 {% else %}
@@ -215,7 +215,7 @@
                                 <li class="d-inline list-inline-item">
                                     <!-- <a id="video-id-link" href="{{ video.video_file.url}}"
                                         class="text-decoration-none text-secondary">{{video.title}}</a> -->
-                                        <button class="btn btn-link text-decoration-none text-dark" id="video-btn" data-videoUrl="{{ video.video_file.url}}">{{video.title}}</button>
+                                        <button class="btn btn-link text-decoration-none text-dark video-btn" data-videoUrl="{{ video.video_file.url}}">{{video.title}}</button>
             
                                 </li>
                                 <li style="float: right;"><span class="time d-none d-md-block">
@@ -273,32 +273,27 @@
     const buttonContainer = document.getElementById('accordionExample');
     const video = document.getElementById('videoFrame');
     const videoSource = document.getElementById('videoSource');
-     console.log("loaded")
 
-    console.log("{{ last_played_video.pause_time }}")
+
     document.addEventListener('DOMContentLoaded', function () {
-        var pauseTime = "{{ last_played_video.pause_time }}";
+        let pauseTime = "{{ last_played_video.pause_time }}";
+        pauseTime = Number(pauseTime)
 
-        // Set the currentTime of the video to the retrieved pause_time
-        if (!isNaN(pauseTime)) {
-            video.currentTime = pauseTime;
-        }
-
-        // Add an event listener to play the video when metadata is loaded
         video.addEventListener('loadedmetadata', function () {
-            this.play();
-        });
+             // Set the currentTime of the video to the retrieved pause_time
+             video.onplay = function(){
+                if (!isNaN(pauseTime)) {
+                     console.log(pauseTime);
+                     video.currentTime = pauseTime;
+                     video.play();
+                 }
+             }
+            
+        })
+       
+
     });
-    //  console.log(video.currentTime)
-
-    //  video.onpause = function() {
-    //     console.log(video.currentTime)
-    //  }
-
-
-    //  video.onended = function(){
-    //     console.log("Video ended")
-    //  }
+    
     
     // Add a click event listener to the parent element
     buttonContainer.addEventListener('click', function (event) {
@@ -307,6 +302,7 @@
             event.preventDefault();
             const videoUrl = event.target.getAttribute('data-videoUrl');
             // console.log('Clicked on button with video URL:', videoUrl);
+            document.querySelector('.video-btn').style.color = 'red';
             videoSource.setAttribute('src', videoUrl);
             video.load();
             video.play();
@@ -315,9 +311,6 @@
 
     $(document).ready(function (){
 
-        $(video).on('playing', function(event){
-            console.log("Started Playing");
-        })
 
         $(video).on('pause', function (event) {
             event.preventDefault();
@@ -338,7 +331,7 @@
                     if (response['success']){
                         console.log("success");
                     } else {
-                        console.log("error")
+                        console.log("error");
                     }
                 },
                 error: function (response) {
@@ -355,7 +348,7 @@
             console.log("Video ended");
             let currentVideoUrl = videoSource.getAttribute('src');
             currentVideoUrl = currentVideoUrl.replace('/media/', '');
-             console.log(currentVideoUrl);
+            console.log(currentVideoUrl);
 
             $.ajax({
                 type: "POST",

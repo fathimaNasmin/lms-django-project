@@ -98,6 +98,9 @@ class PlayingVideo(models.Model):
     lesson = models.ForeignKey(
         "instructor.Lesson", on_delete=models.CASCADE)
     video = models.ForeignKey("instructor.Video", on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('course', 'student', 'lesson', 'video')
 
 
 # Store videos that are already watched
@@ -114,4 +117,7 @@ class WatchedVideo(models.Model):
     
     def __str__(self):
         return f"Watched Video - {self.course.title}-{self.video.title}"
+    
+    class Meta:
+        unique_together = ('course', 'student', 'lesson', 'video')
     
