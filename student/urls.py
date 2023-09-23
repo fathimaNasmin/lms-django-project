@@ -10,6 +10,8 @@ urlpatterns = [
     path('my-course-detail/<slug:slug>',
          student_views.my_course_detail_view, name='my-course-detail'),
     path('my-course/track-video', student_views.track_video, name='track-video'),
+    path('my-course/save-watched-video',
+         student_views.save_watched_video, name='save-watched-video'),
     path('update_profile/', student_views.update_student_profile, name='update-profile'),
 
 

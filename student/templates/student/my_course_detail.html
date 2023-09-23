@@ -17,7 +17,7 @@
         <div class="col-8 border border-danger px-5 py-2">
             <div class="w-100 h-25">
                 {% if last_played_video %}
-                <video id="videoFrame" preload="preload" width="100%" height="100%" autoplay controls muted>
+                <video id="videoFrame" preload="preload" width="100%" height="100%" controls muted>
                     <source id="videoSource" src="{{ last_played_video.video.video_file.url }}" type="video/mp4">
                         </source>
                 </video>
@@ -206,6 +206,11 @@
                     <div id="id{{lesson.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
+                                {% for watch_video in watched_video %}
+                                    {% if watch_video.video.title == video.title %}
+                                        <li class="d-inline list-inline-item"><i class="fa-solid fa-check" style="color: green;"></i></li>
+                                    {% endif %}
+                                {% endfor %}
                                 <li class="d-inline list-inline-item"><i class="fa-solid fa-play"></i></li>
                                 <li class="d-inline list-inline-item">
                                     <!-- <a id="video-id-link" href="{{ video.video_file.url}}"
@@ -310,6 +315,10 @@
 
     $(document).ready(function (){
 
+        $(video).on('playing', function(event){
+            console.log("Started Playing");
+        })
+
         $(video).on('pause', function (event) {
             event.preventDefault();
             let suspendTime = (this.currentTime).toFixed(2);
@@ -341,7 +350,32 @@
 
         // Ajax post when video is ended or watched completely
         $(video).on('ended', function (){
+            event.preventDefault();
+
             console.log("Video ended");
+            let currentVideoUrl = videoSource.getAttribute('src');
+            currentVideoUrl = currentVideoUrl.replace('/media/', '');
+             console.log(currentVideoUrl);
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'student:save-watched-video' %}",
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: JSON.stringify({
+                    'currentVideoUrl': currentVideoUrl
+                }),
+                success: function (response) {
+                    if (response['success']) {
+                        console.log("success");
+                    } else {
+                        console.log("error")
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
         });
 
         

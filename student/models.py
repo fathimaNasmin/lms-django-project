@@ -98,3 +98,20 @@ class PlayingVideo(models.Model):
     lesson = models.ForeignKey(
         "instructor.Lesson", on_delete=models.CASCADE)
     video = models.ForeignKey("instructor.Video", on_delete=models.CASCADE)
+
+
+# Store videos that are already watched
+class WatchedVideo(models.Model):
+    completed_time = models.DateTimeField(auto_now_add=True)
+    # ======FOREIGN KEY AND RELATIONSHIPS=======
+    course = models.ForeignKey(
+        "instructor.Course", on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        "instructor.Lesson", on_delete=models.CASCADE)
+    video = models.ForeignKey("instructor.Video", on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"Watched Video - {self.course.title}-{self.video.title}"
+    

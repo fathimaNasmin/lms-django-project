@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, Http404
 import json
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 
 from user.custom_auth_backend import EmailBackend
 # Models
-from student.models import EnrolledCourses, PlayingVideo
+from student.models import EnrolledCourses, PlayingVideo,WatchedVideo
 from instructor.models import Lesson, Course, Video
 
 # forms
@@ -51,7 +52,11 @@ def my_course_detail_view(request, slug):
     context = {}
     course_video = Video.objects.filter(course__slug=slug)
     lessons = Lesson.objects.filter(course__slug=slug)
-    # print(course_video[0].id)
+    watched_video = WatchedVideo.objects.filter(course__slug=slug,student=request.user.student)
+    # print("watched_video:",watched_video[0].video.title)
+    for video in watched_video:
+        print(video.video.title)
+    
     try:
         last_played_video = PlayingVideo.objects.filter(course__slug=slug,student=request.user.student).latest('-updated_time')
         # print(last_played_video)
@@ -65,6 +70,7 @@ def my_course_detail_view(request, slug):
     context = {
         'videos': course_video,
         'lessons':lessons,
+        'watched_video': watched_video,
     }
     return render(request,'student/my_course_detail.html', context)
 
@@ -78,11 +84,11 @@ def track_video(request):
         req_obj = json.load(request)
         suspend_time = req_obj['suspended_time']
         current_video_url = req_obj['currentVideoUrl']
-        print(suspend_time)
-        print(current_video_url)
-        print(request.user.student)
+        # print(suspend_time)
+        # print(current_video_url)
+        # print(request.user.student)
         video = Video.objects.filter(video_file=current_video_url).first()
-        print(type(video.lesson))
+        # print(type(video.lesson))
 
         # Create/update Instance in model "PlayingVideo"
         try:
@@ -110,6 +116,47 @@ def track_video(request):
 
         return HttpResponse(json.dumps(data), content_type='application/json')
     return JsonResponse({'status:200'})
+
+
+# view for posting the watched video
+@login_required
+def save_watched_video(request):
+    data = {}
+    if request.method == "POST" and request.is_ajax():
+        data['success'] = True
+        req_obj = json.load(request)
+        current_video_url = req_obj['currentVideoUrl']
+        print(current_video_url)
+        print(request.user.student)
+        video = Video.objects.filter(
+            video_file=current_video_url).first()
+    
+
+        # Create/update Instance in model "PlayingVideo"
+        try:
+            # Define the criteria
+            criteria = {
+                'video': video,
+                'lesson': video.lesson,
+                'course': video.course,
+                'student': request.user.student,
+            }
+
+            # Try to save data to watchedvideo model
+            watched_video = WatchedVideo.objects.create(**criteria)
+
+        except Exception as e:
+            print("Error Ocuured on saving Watched_Video")
+            print(e)
+        else:
+            print("succesfully saved data")
+            watched_video = serializers.serialize('json', [watched_video, ])
+            print(watched_video)
+
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return JsonResponse({'status:200'})
+
+
 
 
 @login_required
