@@ -114,6 +114,8 @@ class Course(models.Model):
     slug = models.SlugField(unique=True, null=True,
                             blank=True, max_length=300)
     status = models.CharField(choices=STATUS, max_length=100, null=True)
+    course_duration = models.FloatField(null=True, blank=True,default=0)
+    
     # ========FOREIGN KEY AND RELATIONSHIPS=======#
     author = models.ForeignKey("user.Instructor", on_delete=models.CASCADE)
     category = models.ForeignKey(
@@ -148,20 +150,6 @@ class Course(models.Model):
                 self.save()
 
 
-def course_slug_pre_save(sender, instance, *args, **kwargs):
-    if instance.slug is None:
-        slugify_course_instance_title(instance, save=False)
-
-
-pre_save.connect(course_slug_pre_save, sender=Course)
-
-
-def course_slug_post_save(sender, instance, created, *args, **kwargs):
-    if created:
-        slugify_course_instance_title(instance, save=True)
-
-
-post_save.connect(course_slug_post_save, sender=Course)
 
 
 class Video(models.Model):

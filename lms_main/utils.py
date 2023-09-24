@@ -74,3 +74,8 @@ def generate_order_number():
     timestamp = time.strftime("%Y%m%d%H%M%S")
     invoice_number = f"{timestamp}#{randint(1, 99999)}"
     return invoice_number
+
+
+def progress_percentage():
+    """calculate the progress percentage of each course"""
+    pass

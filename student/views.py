@@ -13,6 +13,7 @@ from instructor.models import Lesson, Course, Video
 from user import forms as user_forms
 from .forms import UpdateProfileForm
 
+from django.db.models import Sum
 
 
 @login_required
@@ -20,6 +21,14 @@ def dashboard(request):
     print("you are in dashboard")
     user = request.user
     my_courses = EnrolledCourses.objects.filter(student=user.student)
+    for course in my_courses:
+        print(course.course.title)
+    # watched_videos = WatchedVideo.objects.filter(student=user.student)
+    # print(watched_videos[0].video.time_duration)
+    # all_videos = Video.objects.all()
+    # for each_video in all_videos:
+    #     print(each_video.time_duration)
+        
 
     if user:
         context = {
