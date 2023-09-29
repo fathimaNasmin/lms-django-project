@@ -18,22 +18,65 @@ from django.db.models import Sum
 
 @login_required
 def dashboard(request):
+    enrolled_courses = []
+    watched_duration = 0
     print("you are in dashboard")
     user = request.user
-    my_courses = EnrolledCourses.objects.filter(student=user.student)
-    for course in my_courses:
-        print(course.course.title)
-    # watched_videos = WatchedVideo.objects.filter(student=user.student)
-    # print(watched_videos[0].video.time_duration)
-    # all_videos = Video.objects.all()
-    # for each_video in all_videos:
-    #     print(each_video.time_duration)
+    enrolled_course_by_student = Course.objects.filter(enrolledcourses__student=user.student)
+    
+    watched_video_by_student = Course.objects.filter(
+        watchedvideo__student=user.student)
+    
+    watched_video = WatchedVideo.objects.filter(student=user.student)
+    print(watched_video[0].video.time_duration)
+    # print(watched_video[0].video.time_duration)
+    
+    for my_course in enrolled_course_by_student:
+        course_dict = {}
+        course_dict['title'] = my_course.title
+        course_dict['slug'] = my_course.slug
+        course_dict['image'] = my_course.featured_image.url
+        course_dict['course_duration'] = my_course.course_duration
+        
+        # for watched_video in watched_video_by_student:
+        #     if(my_course.title == watched_video.title):
+        #         watched_duration = watched_video.video_set.aggregate(Sum('time_duration'))
+        #         course_dict['watched_duration'] = watched_duration['time_duration__sum']
+        #     else:
+        #         course_dict['watched_duration'] = 0.0
+        for video in watched_video:
+            if (my_course.title == video.course.title):
+                watched_duration += video.video.time_duration
+                course_dict['watched_duration'] = watched_duration
+            else:
+                course_dict['watched_duration'] = 0.0
+
+        enrolled_courses.append(course_dict)
+    print(enrolled_courses)
+                
+    # for video in watched_video_by_student:
+    #     print(video.video_set.aggregate(Sum('time_duration')))
+    #     # print(video.watchedvideo_set.filter(video_id=video.id))
+    #     for v in video.watchedvideo_set.all():
+    #         print
+    #         print(v.video_id)
+        
+    
+        
+    # print(watched_time_duration)
+    # print(dir(WatchedVideo))
+    # for duration in watched_time_duration:
+    #     print(duration['time_duration__sum'])
+        # print(duration.time_duration__sum)
+        
         
 
     if user:
         context = {
             'user': user,
-            'my_courses': my_courses,
+            'my_courses': enrolled_course_by_student,
+            'watched_video': watched_video_by_student,
+            'enrolled_courses': enrolled_courses,
         }
         return render(request, 'student/dashboard.html', context)
     return Http404

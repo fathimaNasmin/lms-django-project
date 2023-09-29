@@ -2,6 +2,7 @@
 {% extends 'lms_main/base.html' %}
 
 {% load static %}
+{% load progress_tags %}
 
 {% block navbar %}
 {% include 'lms_main/components/navbar.html' %}
@@ -50,17 +51,17 @@
         </div>
         <div class="col-9" style="background: #edf0f2;">
             <div class="row justify-content-evenly">
-                {% for course in my_courses %}
+                {% for course in enrolled_courses %}
                 <div class="col-lg-3 col-md-6 col-sm-8">
                     <div class="singel-publication mt-30 h-100">
                         <div class="image">
-                            <img src="{{ course.course.featured_image.url }}" alt="enrolled-course">
+                            <img src="{{ course.image }}" alt="enrolled-course-image">
                             
                         </div>
                         <div class="cont">
                             <div class="name">
-                                <a href="{% url 'student:my-course-detail' course.course.slug %}">
-                                    <h6>{{ course.course.title }}</h6>
+                                <a href="{% url 'student:my-course-detail' course.slug %}">
+                                    <h6>{{ course.title }}</h6>
                                 </a>
                             </div>
                             
@@ -69,7 +70,10 @@
                         <div class="row">
                             <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
                                 aria-valuemax="100">
-                                <div class="progress-bar bg-success" style="width: 25%">25%</div>
+                                <div class="progress-bar bg-success" style="width: {% progress_percentage course.watched_duration course.course_duration %}%">
+                                    {% progress_percentage course.watched_duration course.course_duration %}
+                                    %</div>
+                                
                             </div>
                         </div>
                     </div> <!-- singel publication -->
